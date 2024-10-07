@@ -2,8 +2,8 @@
 
 return [
     'acl' => [
-        'leads'           => 'Leads',
-        'lead'            => 'Lead',
+        'leads'           => 'Ordens',
+        'lead'            => 'Orden',
         'quotes'          => 'Cotações',
         'mail'            => 'Correio',
         'inbox'           => 'Caixa de entrada',
@@ -365,18 +365,18 @@ return [
                     'title'   => 'Pesquisa',
 
                     'tabs' => [
-                        'leads'    => 'Leads',
+                        'leads'    => 'Ordens',
                         'quotes'   => 'Cotações',
                         'persons'  => 'Pessoas',
                         'products' => 'Produtos',
                     ],
 
                     'explore-all-products'          => 'Explorar todos os Produtos',
-                    'explore-all-leads'             => 'Explorar todos os Leads',
+                    'explore-all-leads'             => 'Explorar todos os Ordens',
                     'explore-all-contacts'          => 'Explorar todos os Contatos',
                     'explore-all-quotes'            => 'Explorar todas as Cotações',
                     'explore-all-matching-products' => 'Explorar todos os produtos correspondentes ":query" (:count)',
-                    'explore-all-matching-leads'    => 'Explorar todos os leads correspondentes ":query" (:count)',
+                    'explore-all-matching-leads'    => 'Explorar todos os Ordens correspondentes ":query" (:count)',
                     'explore-all-matching-contacts' => 'Explorar todos os contatos correspondentes ":query" (:count)',
                     'explore-all-matching-quotes'   => 'Explorar todas as cotações correspondentes ":query" (:count)',
                 ],
@@ -465,7 +465,7 @@ return [
             'address-info-info' => 'Informações sobre o endereço relacionado à Venda.',
             'quote-items'       => 'Itens da Venda',
             'search-products'   => 'Buscar Produtos',
-            'link-to-lead'      => 'Vincular ao Lead',
+            'link-to-lead'      => 'Vincular a ordem',
             'quote-item-info'   => 'Adicionar Solicitação de Produto para esta Venda.',
             'quote-name'        => 'Nome da Venda',
             'quantity'          => 'Quantidade',
@@ -878,11 +878,11 @@ return [
             ],
 
             'helpers' => [
-                'update-related-leads'       => 'Atualizar leads relacionados',
+                'update-related-leads'       => 'Atualizar ordens relacionados',
                 'send-email-to-sales-owner'  => 'Enviar e-mail ao responsável por vendas',
                 'send-email-to-participants' => 'Enviar e-mail aos participantes',
                 'add-webhook'                => 'Adicionar Webhook',
-                'update-lead'                => 'Atualizar Lead',
+                'update-lead'                => 'Atualizar Orden',
                 'update-person'              => 'Atualizar Pessoa',
                 'send-email-to-person'       => 'Enviar e-mail para a pessoa',
                 'add-tag'                    => 'Adicionar Tag',
@@ -983,7 +983,7 @@ return [
                 'attributes'               => 'Atributos',
                 'attributes-info'          => 'Adicione atributos personalizados ao formulário.',
                 'background-color'         => 'Cor de Fundo',
-                'create-lead'              => 'Criar Lead',
+                'create-lead'              => 'Criar Ordem',
                 'customize-webform'        => 'Personalizar Formulário da Web',
                 'customize-webform-info'   => 'Personalize seu formulário web com cores dos elementos à sua escolha.',
                 'description'              => 'Descrição',
@@ -993,7 +993,7 @@ return [
                 'form-submit-button-color' => 'Cor do Botão de Enviar Formulário',
                 'form-title-color'         => 'Cor do Título do Formulário',
                 'general'                  => 'Geral',
-                'leads'                    => 'Leads',
+                'leads'                    => 'Ordem',
                 'person'                   => 'Pessoa',
                 'save-btn'                 => 'Salvar Formulário da Web',
                 'submit-button-label'      => 'Rótulo do Botão de Enviar',
@@ -1010,7 +1010,7 @@ return [
                 'code-snippet'              => 'Trecho de Código',
                 'copied'                    => 'Copiado',
                 'copy'                      => 'Copiar',
-                'create-lead'               => 'Criar Lead',
+                'create-lead'               => 'Criar Ordem',
                 'customize-webform'         => 'Personalizar Formulário da Web',
                 'customize-webform-info'    => 'Personalize seu formulário web com cores dos elementos à sua escolha.',
                 'description'               => 'Descrição',
@@ -1490,7 +1490,7 @@ return [
                 'id'            => 'ID',
                 'done'          => 'Concluído',
                 'not-done'      => 'Não Concluído',
-                'lead'          => 'Lead',
+                'lead'          => 'Ordem',
                 'mass-delete'   => 'Excluir em Massa',
                 'mass-update'   => 'Atualizar em Massa',
                 'schedule-from' => 'Agendado de',
@@ -1517,7 +1517,7 @@ return [
             'schedule_from'   => 'Agendado de',
             'location'        => 'Localização',
             'comment'         => 'Comentário',
-            'lead'            => 'Lead',
+            'lead'            => 'Ordem',
             'participants'    => 'Participantes',
             'general'         => 'Geral',
             'persons'         => 'Pessoas',
@@ -1590,8 +1590,8 @@ return [
             'forward'                    => 'Encaminhar',
             'delete'                     => 'Excluir',
             'enter-mails'                => 'Insira o email',
-            'rotten-days'                => 'Lead apodrecido há :days dias',
-            'search-an-existing-lead'    => 'Pesquisar um lead existente',
+            'rotten-days'                => 'Ordem apodrecido há :days dias',
+            'search-an-existing-lead'    => 'Pesquisar um ordem existente',
             'search-an-existing-contact' => 'Pesquisar um contato existente',
             'message'                    => 'Mensagem',
             'add-attachments'            => 'Adicionar Anexos',
@@ -1601,15 +1601,15 @@ return [
             'add-new-contact'            => 'Adicionar Novo Contato',
             'description'                => 'Descrição',
             'search'                     => 'Pesquisar...',
-            'add-new-lead'               => 'Adicionar Novo Lead',
+            'add-new-lead'               => 'Adicionar Novo Ordem',
             'create-new-contact'         => 'Criar Novo Contato',
             'save-contact'               => 'Salvar Contato',
-            'create-lead'                => 'Criar Lead',
+            'create-lead'                => 'Criar Ordem',
             'linked-contact'             => 'Contato Vinculado',
             'link-to-contact'            => 'Vincular ao Contato',
-            'link-to-lead'               => 'Vincular ao Lead',
-            'linked-lead'                => 'Lead Vinculado',
-            'lead-details'               => 'Detalhes do Lead',
+            'link-to-lead'               => 'Vincular a Ordem',
+            'linked-lead'                => 'Ordem Vinculado',
+            'lead-details'               => 'Detalhes da Ordem',
             'contact-person'             => 'Pessoa de Contato',
             'product'                    => 'Produto',
 
@@ -1639,26 +1639,26 @@ return [
 
 
     'leads' => [
-        'create-success'    => 'Lead criado com sucesso.',
-        'update-success'    => 'Lead atualizado com sucesso.',
-        'destroy-success'   => 'Lead excluído com sucesso.',
-        'destroy-failed'    => 'O Lead não pode ser excluído.',
+        'create-success'    => 'Ordem criado com sucesso.',
+        'update-success'    => 'Ordem atualizado com sucesso.',
+        'destroy-success'   => 'Ordem excluído com sucesso.',
+        'destroy-failed'    => 'O Ordem não pode ser excluído.',
 
         'index' => [
             'title'      => 'Ordens',
-            'create-btn' => 'Criar Lead',
+            'create-btn' => 'Criar Ordem',
 
             'datagrid' => [
                 'id'                  => 'ID',
                 'sales-person'        => 'Vendedor',
                 'subject'             => 'Assunto',
                 'source'              => 'Fonte',
-                'lead-value'          => 'Valor do Lead',
-                'lead-type'           => 'Tipo de Lead',
+                'lead-value'          => 'Valor do Ordem',
+                'lead-type'           => 'Tipo de Ordem',
                 'tag-name'            => 'Nome da Tag',
                 'contact-person'      => 'Pessoa de Contato',
                 'stage'               => 'Estágio',
-                'rotten-lead'         => 'Lead Apodrecido',
+                'rotten-lead'         => 'Ordem Apodrecido',
                 'expected-close-date' => 'Data Prevista para Fechamento',
                 'created-at'          => 'Criado Em',
                 'no'                  => 'Não',
@@ -1669,16 +1669,16 @@ return [
             ],
 
             'kanban' => [
-                'rotten-days'            => 'Lead apodrecido há :days dias',
-                'empty-list'             => 'Sua lista de Leads está vazia',
-                'empty-list-description' => 'Crie um lead para organizar seus objetivos.',
-                'create-lead-btn'        => 'Criar Lead',
+                'rotten-days'            => 'Ordem apodrecido há :days dias',
+                'empty-list'             => 'Sua lista de Ordens está vazia',
+                'empty-list-description' => 'Crie um ordem para organizar seus objetivos.',
+                'create-lead-btn'        => 'Criar Ordem',
 
                 'columns' => [
                     'contact-person'      => 'Pessoa de Contato',
                     'id'                  => 'ID',
-                    'lead-type'           => 'Tipo de Lead',
-                    'lead-value'          => 'Valor do Lead',
+                    'lead-type'           => 'Tipo de ordem',
+                    'lead-value'          => 'Valor do ordem',
                     'sales-person'        => 'Vendedor',
                     'source'              => 'Fonte',
                     'title'               => 'Título',
@@ -1709,10 +1709,10 @@ return [
         ],
 
         'create' => [
-            'title'          => 'Criar Lead',
+            'title'          => 'Criar Ordem',
             'save-btn'       => 'Salvar',
             'details'        => 'Detalhes',
-            'details-info'   => 'Insira as informações básicas do lead',
+            'details-info'   => 'Insira as informações básicas da ordem',
             'contact-person' => 'Pessoa de Contato',
             'contact-info'   => 'Informações sobre a Pessoa de Contato',
             'products'       => 'Produtos',
@@ -1720,10 +1720,10 @@ return [
         ],
 
         'edit' => [
-            'title'          => 'Editar Lead',
+            'title'          => 'Editar Ordem',
             'save-btn'       => 'Salvar',
             'details'        => 'Detalhes',
-            'details-info'   => 'Insira as informações básicas do lead',
+            'details-info'   => 'Insira as informações básicas do Ordem',
             'contact-person' => 'Pessoa de Contato',
             'contact-info'   => 'Informações sobre a Pessoa de Contato',
             'products'       => 'Produtos',
@@ -1750,7 +1750,7 @@ return [
         ],
 
         'view' => [
-            'title'       => 'Lead: :title',
+            'title'       => 'Ordem: :title',
             'rotten-days' => ':days dias',
 
             'tabs'        => [
@@ -1760,7 +1760,7 @@ return [
             ],
 
             'attributes' => [
-                'title' => 'Sobre o Lead',
+                'title' => 'Sobre o Ordem',
             ],
 
             'quotes'=> [
@@ -1776,7 +1776,7 @@ return [
                 'download'        => 'Baixar',
                 'destroy-success' => 'Cotação excluída com sucesso.',
                 'empty-title'     => 'Nenhuma Cotação Encontrada',
-                'empty-info'      => 'Nenhuma cotação foi encontrada para este Lead',
+                'empty-info'      => 'Nenhuma cotação foi encontrada para este Ordem',
                 'add-btn'         => 'Adicionar Cotação',
             ],
 
@@ -1789,7 +1789,7 @@ return [
                 'add-more'     => 'Adicionar Mais',
                 'total'        => 'Total',
                 'empty-title'  => 'Nenhum Produto Encontrado',
-                'empty-info'   => 'Nenhum produto foi encontrado para este Lead',
+                'empty-info'   => 'Nenhum produto foi encontrado para este Ordem',
                 'add-product'  => 'Adicionar Produto',
             ],
 
@@ -1851,19 +1851,19 @@ return [
             ],
 
             'over-all' => [
-                'average-lead-value'    => 'Valor Médio do Lead',
-                'total-leads'           => 'Total de Leads',
-                'average-leads-per-day' => 'Média de Leads por Dia',
+                'average-lead-value'    => 'Valor Médio do Ordem',
+                'total-leads'           => 'Total de Ordens',
+                'average-leads-per-day' => 'Média de Ordens por Dia',
                 'total-quotations'      => 'Total de Cotações',
                 'total-persons'         => 'Total de Pessoas',
                 'total-organizations'   => 'Total de Organizações',
             ],
 
             'total-leads' => [
-                'title' => 'Leads',
-                'total' => 'Total de Leads',
-                'won'   => 'Leads Ganhos',
-                'lost'  => 'Leads Perdidos',
+                'title' => 'Ordens',
+                'total' => 'Total de Ordens',
+                'won'   => 'Ordens Ganhos',
+                'lost'  => 'Ordens Perdidos',
             ],
 
             'revenue-by-sources' => [
@@ -1891,7 +1891,7 @@ return [
             ],
 
             'open-leads-by-states' => [
-                'title'       => 'Leads Abertos por Estados',
+                'title'       => 'Ordens Abertos por Estados',
                 'empty-title' => 'Nenhum Dado Disponível',
                 'empty-info'  => 'Nenhum dado disponível para o intervalo selecionado',
             ],
@@ -1901,9 +1901,9 @@ return [
     'layouts' => [
         'app-version'          => 'Versão : :version',
         'dashboard'            => 'Painel',
-        'leads'                => 'Leads',
-        'quotes'               => 'Cotações',
-        'quote'                => 'Cotação',
+        'leads'                => 'Ordens',
+        'quotes'               => 'Vendas',
+        'quote'                => 'Venda',
         'mail'                 => [
             'title'   => 'Email',
             'compose' => 'Compor',
@@ -1932,8 +1932,8 @@ return [
         'roles-info'           => 'Adicionar, editar ou excluir funções no CRM',
         'users'                => 'Usuários',
         'users-info'           => 'Adicionar, editar ou excluir usuários no CRM',
-        'lead'                 => 'Lead',
-        'lead-info'            => 'Gerenciar todas as configurações relacionadas a leads no CRM',
+        'lead'                 => 'Ordem',
+        'lead-info'            => 'Gerenciar todas as configurações relacionadas a ordens no CRM',
         'pipelines'            => 'Pipelines',
         'pipelines-info'       => 'Adicionar, editar ou excluir pipelines do CRM',
         'sources'              => 'Fontes',
