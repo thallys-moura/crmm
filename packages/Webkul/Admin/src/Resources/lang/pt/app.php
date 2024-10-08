@@ -366,7 +366,7 @@ return [
 
                     'tabs' => [
                         'leads'    => 'Ordens',
-                        'quotes'   => 'Cotações',
+                        'quotes'   => 'Vendas',
                         'persons'  => 'Pessoas',
                         'products' => 'Produtos',
                     ],
@@ -413,17 +413,17 @@ return [
         'index' => [
             'title'          => 'Vendas',
             'create-btn'     => 'Criar Venda',
-            'create-success' => 'Cotação criada com sucesso.',
-            'update-success' => 'Cotação atualizada com sucesso.',
-            'delete-success' => 'Cotação excluída com sucesso.',
-            'delete-failed'  => 'A cotação não pode ser excluída.',
+            'create-success' => 'Venda criada com sucesso.',
+            'update-success' => 'Venda atualizada com sucesso.',
+            'delete-success' => 'Venda excluída com sucesso.',
+            'delete-failed'  => 'A Venda não pode ser excluída.',
 
             'datagrid' => [
                 'subject'        => 'Produto',
                 'sales-person'   => 'Vendedor',
                 'expired-at'     => 'Expirado em',
                 'created-at'     => 'Criado em',
-                'expired-quotes' => 'Cotação Expirada',
+                'expired-quotes' => 'Venda Expirada',
                 'person'         => 'Cliente',
                 'subtotal'       => 'Subtotal',
                 'discount'       => 'Forma de Pagamento',
@@ -436,7 +436,7 @@ return [
             ],
 
             'pdf' => [
-                'title'            => 'Cotação',
+                'title'            => 'Venda',
                 'grand-total'      => 'Total Geral',
                 'adjustment'       => 'Ajuste',
                 'discount'         => 'Desconto',
@@ -452,7 +452,7 @@ return [
                 'expired-at'       => 'Expirado em',
                 'sales-person'     => 'Vendedor',
                 'date'             => 'Data',
-                'quote-id'         => 'ID da Cotação',
+                'quote-id'         => 'ID da Venda',
             ],
         ],
 
@@ -466,6 +466,7 @@ return [
             'quote-items'       => 'Itens da Venda',
             'search-products'   => 'Buscar Produtos',
             'link-to-lead'      => 'Vincular a ordem',
+            'person'            => 'Cliente',
             'quote-item-info'   => 'Adicionar Solicitação de Produto para esta Venda.',
             'quote-name'        => 'Nome da Venda',
             'quantity'          => 'Quantidade',
@@ -1774,10 +1775,10 @@ return [
                 'delete'          => 'Excluir',
                 'edit'            => 'Editar',
                 'download'        => 'Baixar',
-                'destroy-success' => 'Cotação excluída com sucesso.',
-                'empty-title'     => 'Nenhuma Cotação Encontrada',
-                'empty-info'      => 'Nenhuma cotação foi encontrada para este Ordem',
-                'add-btn'         => 'Adicionar Cotação',
+                'destroy-success' => 'Venda excluída com sucesso.',
+                'empty-title'     => 'Nenhuma Venda Encontrada',
+                'empty-info'      => 'Nenhuma Venda foi encontrada para este Ordem',
+                'add-btn'         => 'Adicionar Venda',
             ],
 
             'products' => [
