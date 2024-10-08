@@ -91,13 +91,13 @@
 
                             <p class="text-sm text-gray-600 dark:text-white">@lang('admin::app.quotes.create.quote-info-info')</p>
                         </div>
-
-                        <div class="w-1/2">
+                        
+                        <div class="w-1/2 flex gap-4">
                             <x-admin::attributes
                                 :custom-attributes="app('Webkul\Attribute\Repositories\AttributeRepository')->findWhere([
                                     'entity_type' => 'quotes',
-                                    ['code', 'IN', ['subject']],
-                                ])"
+                                    ['code', 'IN', ['person_id']],
+                                ])->sortBy('sort_order')"
                                 :custom-validations="[
                                     'expired_at' => [
                                         'required',
@@ -107,8 +107,28 @@
                                 ]"
                                 :entity="$quote"
                             />
-                        
 
+                            <x-admin::attributes.edit.lookup />
+
+                            @php
+                                $leadId = old('lead-id') ?? optional($quote->leads->first())->id;
+
+                                $lookUpEntityData = app('Webkul\Attribute\Repositories\AttributeRepository')->getLookUpEntity('leads', $leadId);
+                            @endphp
+
+                            <x-admin::form.control-group class="w-full">
+                                <x-admin::form.control-group.label>
+                                    @lang('admin::app.quotes.create.link-to-lead')
+                                </x-admin::form.control-group.label>
+        
+                                <v-lookup-component
+                                    :attribute="{'code': 'lead_id', 'name': 'Lead', 'lookup_type': 'leads'}"
+                                    :value='@json($lookUpEntityData)'
+                                ></v-lookup-component>
+                            </x-admin::form.control-group>
+                        </div>
+
+                        <div class="w-1/2">                            
                             <x-admin::attributes
                                 :custom-attributes="app('Webkul\Attribute\Repositories\AttributeRepository')->findWhere([
                                         'entity_type' => 'quotes',
@@ -141,41 +161,7 @@
                                 />
                             </div>
 
-                            <div class="flex gap-4">
-                                <x-admin::attributes
-                                    :custom-attributes="app('Webkul\Attribute\Repositories\AttributeRepository')->findWhere([
-                                        'entity_type' => 'quotes',
-                                        ['code', 'IN', ['person_id']],
-                                    ])->sortBy('sort_order')"
-                                    :custom-validations="[
-                                        'expired_at' => [
-                                            'required',
-                                            'date_format:yyyy-MM-dd',
-                                            'after:' .  \Carbon\Carbon::yesterday()->format('Y-m-d')
-                                        ],
-                                    ]"
-                                    :entity="$quote"
-                                />
 
-                                <x-admin::attributes.edit.lookup />
-
-                                @php
-                                    $leadId = old('lead-id') ?? optional($quote->leads->first())->id;
-
-                                    $lookUpEntityData = app('Webkul\Attribute\Repositories\AttributeRepository')->getLookUpEntity('leads', $leadId);
-                                @endphp
-
-                                <x-admin::form.control-group class="w-full">
-                                    <x-admin::form.control-group.label>
-                                        @lang('admin::app.quotes.create.link-to-lead')
-                                    </x-admin::form.control-group.label>
-            
-                                    <v-lookup-component
-                                        :attribute="{'code': 'lead_id', 'name': 'Lead', 'lookup_type': 'leads'}"
-                                        :value='@json($lookUpEntityData)'
-                                    ></v-lookup-component>
-                                </x-admin::form.control-group>
-                            </div>
                         </div>
                     </div>
 
@@ -202,7 +188,7 @@
                             <x-admin::attributes
                                 :custom-attributes="app('Webkul\Attribute\Repositories\AttributeRepository')->findWhere([
                                         'entity_type' => 'quotes',
-                                        ['code', 'IN', ['billing_address', 'shipping_address']],
+                                        ['code', 'IN', ['shipping_address']],
                                     ])"
                                 :entity="$quote"
                             />
