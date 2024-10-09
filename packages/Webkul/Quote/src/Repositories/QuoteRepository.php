@@ -21,6 +21,7 @@ class QuoteRepository extends Repository
         'person.name',
         'user_id',
         'user.name',
+        'raca'
     ];
 
     /**
