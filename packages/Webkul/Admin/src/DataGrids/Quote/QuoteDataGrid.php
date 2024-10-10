@@ -25,16 +25,21 @@ class QuoteDataGrid extends DataGrid
                 'quotes.tax_amount',
                 'quotes.adjustment_amount',
                 'quotes.grand_total',
+                'billing_status.status',
+                'leads.billing_status_id',
                 'quotes.created_at',
                 'users.id as user_id',
                 'users.name as sales_person',
                 'persons.id as person_id',
                 'persons.name as person_name',
-                'quotes.expired_at as expired_quotes'
+                'quotes.expired_at as expired_quotes',
             )
             ->leftJoin('users', 'quotes.user_id', '=', 'users.id')
-            ->leftJoin('persons', 'quotes.person_id', '=', 'persons.id');
-
+            ->leftJoin('persons', 'quotes.person_id', '=', 'persons.id')
+            ->leftJoin('lead_quotes', 'quotes.id', '=', 'lead_quotes.quote_id')
+            ->leftJoin('leads', 'lead_quotes.lead_id', '=', 'leads.id')
+            ->leftJoin('billing_status', 'leads.billing_status_id', '=', 'billing_status.id');
+    
         if ($userIds = bouncer()->getAuthorizedUserIds()) {
             $queryBuilder->whereIn('quotes.user_id', $userIds);
         }
@@ -45,6 +50,7 @@ class QuoteDataGrid extends DataGrid
         $this->addFilter('person_name', 'persons.name');
         $this->addFilter('expired_at', 'quotes.expired_at');
         $this->addFilter('created_at', 'quotes.created_at');
+        $this->addFilter('status', 'billing_status.status');
 
         if (request()->input('expired_quotes.in') == 1) {
             $this->addFilter('expired_quotes', DB::raw('DATEDIFF(NOW(), '.$tablePrefix.'quotes.expired_at) >= '.$tablePrefix.'NOW()'));
@@ -156,6 +162,30 @@ class QuoteDataGrid extends DataGrid
             'sortable'   => true,
             'filterable' => true,
             'closure'    => fn ($row) => core()->formatBasePrice($row->grand_total, 2),
+        ]);
+
+        $this->addColumn([
+            'index'      => 'status',
+            'label'      => trans('admin::app.quotes.index.datagrid.status'),
+            'type'       => 'string',
+            'filterable' => true,
+            'sortable'   => true,
+            'closure'    => function ($row) {
+                // Adicione a lógica condicional para o status
+                if ($row->billing_status_id == 1) {
+                    return '<span style="background-color: green; color: white; border-radius: 10px; padding: 3px 8px;">Pago</span>';
+                } elseif ($row->billing_status_id == 2) {
+                    return '<span style="background-color: #23af91; color: white; border-radius: 10px; padding: 2px 5px;">Pagou Parc.</span>';
+                } elseif ($row->billing_status_id == 3) {
+                    return '<span style="background-color: red; color: white; border-radius: 10px; padding: 2px 5px;">Não Pagou</span>';
+                } elseif ($row->billing_status_id == 4) {
+                    return '<span style="background-color: red; color: white; border-radius: 10px; padding: 2px 5px;">Cancelado</span>';
+                } elseif ($row->billing_status_id == 5) {
+                    return '<span style="background-color: yellow; color: black; border-radius: 10px; padding: 2px 5px;">Pendente</span>';                    
+                } else {
+                    return '<span style="background-color: gray; color: white; border-radius: 10px; padding: 2px 5px;">Valor inválido</span>';
+                }
+            }
         ]);
 
         $this->addColumn([

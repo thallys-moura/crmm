@@ -433,6 +433,7 @@ return [
                 'edit'           => 'Editar',
                 'delete'         => 'Excluir',
                 'print'          => 'Imprimir',
+                'status'         => 'Status do Pagamento'
             ],
 
             'pdf' => [
@@ -446,6 +447,7 @@ return [
                 'quantity'         => 'Quantidade',
                 'price'            => 'Preço',
                 'product-name'     => 'Nome do Produto',
+                'status'           => 'Status do Pagamento',
                 'sku'              => 'SKU',
                 'shipping-address' => 'Endereço de Entrega',
                 'billing-address'  => 'Endereço de Cobrança',
