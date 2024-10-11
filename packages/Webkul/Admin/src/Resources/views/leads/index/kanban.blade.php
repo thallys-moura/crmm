@@ -120,9 +120,9 @@
                             <template #item="{ element, index }">
                                 {!! view_render_event('admin.leads.index.kanban.content.stage.body.card.before') !!}
 
-                                <a
+                                <div
                                     class="lead-item flex cursor-pointer flex-col gap-5 rounded-md border border-gray-100 bg-gray-50 p-2 dark:border-gray-400 dark:bg-gray-400"
-                                    :href="'{{ route('admin.leads.view', 'replaceId') }}'.replace('replaceId', element.id)"
+                                    @click="openLeadDetails('{{ route('admin.leads.view', 'replaceId') }}'.replace('replaceId', element.id))"
                                 >
                                     {!! view_render_event('admin.leads.index.kanban.content.stage.body.card.header.before') !!}
 
@@ -204,11 +204,17 @@
                                             >
                                                 @{{ tag.name }}
                                             </div>
+                                                <!-- Modal de confirmação -->
+                                                {!! view_render_event('admin.leads.index.kanban.content.stage.body.card.tag.after') !!}
+                                            </template>
+                                        </div>
+                                        <div
+                                            style="width: 115px;" class="secondary-button lead-item flex cursor-pointer gap-1 rounded-md border  bg-gray-200 px-2 py-1 text-xs font-medium dark:bg-gray-800 dark:text-white"
+                                            role="button"
+                                            @click.stop="openModal(element)"
+                                        ><span class="icon-note text-sm"></span>Observação</div>
+                                </div>
 
-                                            {!! view_render_event('admin.leads.index.kanban.content.stage.body.card.tag.after') !!}
-                                        </template>
-                                    </div>
-                                </a>
 
                                 {!! view_render_event('admin.leads.index.kanban.content.stage.body.card.after') !!}
                             </template>
@@ -253,6 +259,8 @@
                         '#ECFCCB': '#65A30D',
                         '#DCFCE7': '#16A34A',
                     },
+                    showModal: false,  // Controla a visibilidade do modal
+                    selectedLead: null,  // Armazena o lead selecionado
                 };
             },
 
@@ -273,6 +281,62 @@
             },
 
             methods: {
+                // Variável para controlar a visibilidade do modal
+                showModal: false,
+                selectedLead: null,
+
+                openLeadDetails(url) {
+                    window.location.href = url; // Simula o comportamento do <a>
+                },
+
+                 /**
+                 * Abre o modal de confirmação.
+                 *
+                 * @param {object} lead - O objeto lead a ser marcado como concluído.
+                 */
+                openModal(lead) {
+                    this.selectedLead = lead;
+                    this.showModal = true; // Exibe o modal
+                },
+
+                /**
+                 * Fecha o modal de confirmação.
+                 */
+                closeModal() {
+                    this.showModal = false; // Oculta o modal
+                    this.selectedLead = null; // Reseta o lead selecionado
+                },
+
+                /**
+                 * Confirma a marcação do lead como concluído.
+                 */
+                confirmMarkAsCompleted() {
+                    if (!this.selectedLead) {
+                        return;
+                    }
+
+                    // Realiza a requisição para marcar o lead como concluído
+                    this.$axios
+                        .put(`{{ route('admin.leads.update', 'replace') }}`.replace('replace', this.selectedLead.id), {
+                            status: 'completed'
+                        })
+                        .then(response => {
+                            this.$emitter.emit('add-flash', { type: 'success', message: 'Lead marcado como concluído!' });
+
+                            // Atualiza o status do lead localmente
+                            this.selectedLead.status = 'completed';
+
+                            // Fecha o modal
+                            this.closeModal();
+                        })
+                        .catch(error => {
+                            this.$emitter.emit('add-flash', { type: 'error', message: 'Erro ao marcar o lead como concluído!' });
+
+                            // Fecha o modal
+                            this.closeModal();
+                        });
+                },
+
                 /**
                  * Initialization: This function checks for any previously saved filters in local storage and applies them as needed.
                  *
