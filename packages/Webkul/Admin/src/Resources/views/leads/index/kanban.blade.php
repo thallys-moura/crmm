@@ -208,13 +208,7 @@
                                                 {!! view_render_event('admin.leads.index.kanban.content.stage.body.card.tag.after') !!}
                                             </template>
                                         </div>
-                                        <div
-                                            style="width: 115px;" class="secondary-button lead-item flex cursor-pointer gap-1 rounded-md border  bg-gray-200 px-2 py-1 text-xs font-medium dark:bg-gray-800 dark:text-white"
-                                            role="button"
-                                            @click.stop="openModal(element)"
-                                        ><span class="icon-note text-sm"></span>Observação</div>
                                 </div>
-
 
                                 {!! view_render_event('admin.leads.index.kanban.content.stage.body.card.after') !!}
                             </template>
@@ -281,32 +275,9 @@
             },
 
             methods: {
-                // Variável para controlar a visibilidade do modal
-                showModal: false,
-                selectedLead: null,
-
                 openLeadDetails(url) {
                     window.location.href = url; // Simula o comportamento do <a>
                 },
-
-                 /**
-                 * Abre o modal de confirmação.
-                 *
-                 * @param {object} lead - O objeto lead a ser marcado como concluído.
-                 */
-                openModal(lead) {
-                    this.selectedLead = lead;
-                    this.showModal = true; // Exibe o modal
-                },
-
-                /**
-                 * Fecha o modal de confirmação.
-                 */
-                closeModal() {
-                    this.showModal = false; // Oculta o modal
-                    this.selectedLead = null; // Reseta o lead selecionado
-                },
-
                 /**
                  * Confirma a marcação do lead como concluído.
                  */

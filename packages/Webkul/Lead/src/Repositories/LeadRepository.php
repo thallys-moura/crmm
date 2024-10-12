@@ -105,6 +105,26 @@ class LeadRepository extends Repository
         });
     }
 
+    public function getStatusQuery($statusTerm = null, $createdAtRange = null)
+    {
+        $query = $this->scopeQuery(function ($query) use ($statusTerm, $createdAtRange) {
+            return $query->from('billing_status')->select(
+                    'billing_status.id as id',
+                    'billing_status.status as status',
+                )
+                ->when($statusTerm, function ($query) use ($statusTerm) {
+                    return $query->where('billing_status.name', 'like', "%$statusTerm%");
+                });
+        });
+
+        //    // Debug da query completa
+        //     $sql = $query->toSql();
+        //     $bindings = $query->getBindings();
+
+        //     // Exibe a query e os bindings para depuração
+        //     dd(vsprintf(str_replace('?', "'%s'", $sql), $bindings));
+        return $query->get();
+    }
     /**
      * Create.
      *

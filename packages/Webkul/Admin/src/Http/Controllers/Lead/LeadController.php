@@ -8,6 +8,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Event;
 use Illuminate\View\View;
+use Illuminate\Http\Request;
+
 use Prettus\Repository\Criteria\RequestCriteria;
 use Webkul\Admin\DataGrids\Lead\LeadDataGrid;
 use Webkul\Admin\Http\Controllers\Controller;
@@ -198,6 +200,7 @@ class LeadController extends Controller
     public function view(int $id): View
     {
         $lead = $this->leadRepository->findOrFail($id);
+        $status = $this->getStatus();
 
         if (
             $userIds = bouncer()->getAuthorizedUserIds()
@@ -206,7 +209,7 @@ class LeadController extends Controller
             return redirect()->route('admin.leads.index');
         }
 
-        return view('admin::leads.view', compact('lead'));
+        return view('admin::leads.view', compact('lead', 'status'));
     }
 
     /**
@@ -483,6 +486,41 @@ class LeadController extends Controller
             ->only('label', 'value');
     }
 
+    public function getStatus()
+    {
+        $status = $this->leadRepository->getStatusQuery();
+
+        return $status;
+    }
+
+    public function saveObservacao(Request $request)
+    {   
+        // Validação dos dados do formulário
+        $validated = $request->validate([
+            'status_id' => 'required|integer',
+            'comment' => 'required|string',
+            'lead_id' => 'required|integer',
+            'payment_date' => 'required|date'
+        ]);
+    
+        // Busca o lead correspondente
+        $lead = $this->leadRepository->find($request->input('lead_id'));
+        
+        // Verifica se o lead foi encontrado
+        if (!$lead) {
+            return response()->json(['error' => 'Lead não encontrado.'], 404);  // Retorna erro 404 se o lead não for encontrado
+        }
+        // Salva o comentário diretamente no lead (caso tenha um campo 'comment' no banco de dados)
+        $lead->billing_observation = $validated['comment'];
+        $lead->billing_status_id = $validated['status_id'];
+        $lead->payment_date = $validated['payment_date'];
+
+        $lead->save();
+
+        // Retorna uma resposta ou redireciona
+        return redirect()->route('admin.leads.view', $lead->id)
+                            ->with('success', 'Observação salva com sucesso!');
+    }
     /**
      * Get columns for the kanban view.
      */

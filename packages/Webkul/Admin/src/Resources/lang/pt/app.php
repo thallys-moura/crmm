@@ -525,7 +525,7 @@ return [
     'contacts' => [
         'persons' => [
             'index' => [
-                'title'          => 'Pessoas',
+                'title'          => 'Pessoa',
                 'create-btn'     => 'Criar Pessoa',
                 'create-success' => 'Pessoa criada com sucesso.',
                 'update-success' => 'Pessoa atualizada com sucesso.',
@@ -1816,6 +1816,14 @@ return [
                 'create-success'  => 'Tag criada com sucesso.',
                 'destroy-success' => 'Tag excluída com sucesso.',
             ],
+            'billing' => [
+                'billing'   => 'Faturamento',
+                'comment'   => 'Observação',
+                'save-btn'  => 'Salvar',
+                'status'    => 'Status do Pagamento',
+                'payment_date' => 'Data do Pagamento',
+            ]
+            
         ],
     ],
 
