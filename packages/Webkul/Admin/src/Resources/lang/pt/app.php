@@ -433,6 +433,7 @@ return [
                 'edit'           => 'Editar',
                 'delete'         => 'Excluir',
                 'print'          => 'Imprimir',
+                'status'         => 'Status do Pagamento'
             ],
 
             'pdf' => [
@@ -446,6 +447,7 @@ return [
                 'quantity'         => 'Quantidade',
                 'price'            => 'Preço',
                 'product-name'     => 'Nome do Produto',
+                'status'           => 'Status do Pagamento',
                 'sku'              => 'SKU',
                 'shipping-address' => 'Endereço de Entrega',
                 'billing-address'  => 'Endereço de Cobrança',
@@ -523,7 +525,7 @@ return [
     'contacts' => [
         'persons' => [
             'index' => [
-                'title'          => 'Pessoas',
+                'title'          => 'Pessoa',
                 'create-btn'     => 'Criar Pessoa',
                 'create-success' => 'Pessoa criada com sucesso.',
                 'update-success' => 'Pessoa atualizada com sucesso.',
@@ -1814,6 +1816,14 @@ return [
                 'create-success'  => 'Tag criada com sucesso.',
                 'destroy-success' => 'Tag excluída com sucesso.',
             ],
+            'billing' => [
+                'billing'   => 'Faturamento',
+                'comment'   => 'Observação',
+                'save-btn'  => 'Salvar',
+                'status'    => 'Status do Pagamento',
+                'payment_date' => 'Data do Pagamento',
+            ]
+            
         ],
     ],
 

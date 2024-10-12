@@ -434,6 +434,8 @@ return [
                 'edit'           => 'Edit',
                 'delete'         => 'Delete',
                 'print'          => 'Print',
+                'status'         => 'Status'
+
             ],
 
             'pdf' => [
@@ -447,6 +449,7 @@ return [
                 'quantity'         => 'Quantity',
                 'price'            => 'Price',
                 'product-name'     => 'Product Name',
+                'status'           => 'Status',
                 'sku'              => 'SKU',
                 'shipping-address' => 'Shipping Address',
                 'billing-address'  => 'Billing Address',

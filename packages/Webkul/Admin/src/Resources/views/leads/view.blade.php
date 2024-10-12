@@ -75,11 +75,12 @@
                             :entity="$lead"
                             entity-control-name="lead_id"
                         />
-
-                        <!-- Activity Action -->
-                        <x-admin::activities.actions.activity
-                            :entity="$lead"
+                        
+                        <!-- Billing Status Activity Action -->
+                        <x-admin::modal.observacao
+                            :entity="$status"
                             entity-control-name="lead_id"
+                            :lead-id="$lead->id"
                         />
                     @endif
 

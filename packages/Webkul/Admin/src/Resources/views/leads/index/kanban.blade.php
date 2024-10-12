@@ -120,9 +120,9 @@
                             <template #item="{ element, index }">
                                 {!! view_render_event('admin.leads.index.kanban.content.stage.body.card.before') !!}
 
-                                <a
+                                <div
                                     class="lead-item flex cursor-pointer flex-col gap-5 rounded-md border border-gray-100 bg-gray-50 p-2 dark:border-gray-400 dark:bg-gray-400"
-                                    :href="'{{ route('admin.leads.view', 'replaceId') }}'.replace('replaceId', element.id)"
+                                    @click="openLeadDetails('{{ route('admin.leads.view', 'replaceId') }}'.replace('replaceId', element.id))"
                                 >
                                     {!! view_render_event('admin.leads.index.kanban.content.stage.body.card.header.before') !!}
 
@@ -204,11 +204,11 @@
                                             >
                                                 @{{ tag.name }}
                                             </div>
-
-                                            {!! view_render_event('admin.leads.index.kanban.content.stage.body.card.tag.after') !!}
-                                        </template>
-                                    </div>
-                                </a>
+                                                <!-- Modal de confirmação -->
+                                                {!! view_render_event('admin.leads.index.kanban.content.stage.body.card.tag.after') !!}
+                                            </template>
+                                        </div>
+                                </div>
 
                                 {!! view_render_event('admin.leads.index.kanban.content.stage.body.card.after') !!}
                             </template>
@@ -253,6 +253,8 @@
                         '#ECFCCB': '#65A30D',
                         '#DCFCE7': '#16A34A',
                     },
+                    showModal: false,  // Controla a visibilidade do modal
+                    selectedLead: null,  // Armazena o lead selecionado
                 };
             },
 
@@ -273,6 +275,39 @@
             },
 
             methods: {
+                openLeadDetails(url) {
+                    window.location.href = url; // Simula o comportamento do <a>
+                },
+                /**
+                 * Confirma a marcação do lead como concluído.
+                 */
+                confirmMarkAsCompleted() {
+                    if (!this.selectedLead) {
+                        return;
+                    }
+
+                    // Realiza a requisição para marcar o lead como concluído
+                    this.$axios
+                        .put(`{{ route('admin.leads.update', 'replace') }}`.replace('replace', this.selectedLead.id), {
+                            status: 'completed'
+                        })
+                        .then(response => {
+                            this.$emitter.emit('add-flash', { type: 'success', message: 'Lead marcado como concluído!' });
+
+                            // Atualiza o status do lead localmente
+                            this.selectedLead.status = 'completed';
+
+                            // Fecha o modal
+                            this.closeModal();
+                        })
+                        .catch(error => {
+                            this.$emitter.emit('add-flash', { type: 'error', message: 'Erro ao marcar o lead como concluído!' });
+
+                            // Fecha o modal
+                            this.closeModal();
+                        });
+                },
+
                 /**
                  * Initialization: This function checks for any previously saved filters in local storage and applies them as needed.
                  *

@@ -103,7 +103,7 @@
                         </div>
 
                         {!! view_render_event('admin.contacts.quotes.create.attribute.form_controls.before') !!}
-                        
+
                         <div class="w-1/2 flex gap-4">
                             <x-admin::attributes
                                 :custom-attributes="app('Webkul\Attribute\Repositories\AttributeRepository')->findWhere([
@@ -119,7 +119,6 @@
                                 ]"
                                 :entity="$quote"
                             />
-                            
                             <x-admin::attributes.edit.lookup />
                             
                             @php
