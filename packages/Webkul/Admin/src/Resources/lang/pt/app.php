@@ -419,7 +419,8 @@ return [
             'delete-failed'  => 'A Venda não pode ser excluída.',
 
             'datagrid' => [
-                'subject'        => 'Produto',
+                'subject'        => 'Assunto',
+                'product'        => 'Produto',
                 'sales-person'   => 'Vendedor',
                 'expired-at'     => 'Expirado em',
                 'created-at'     => 'Criado em',

@@ -33,11 +33,14 @@ class QuoteDataGrid extends DataGrid
                 'persons.id as person_id',
                 'persons.name as person_name',
                 'quotes.expired_at as expired_quotes',
+                'products.name as product',
             )
             ->leftJoin('users', 'quotes.user_id', '=', 'users.id')
             ->leftJoin('persons', 'quotes.person_id', '=', 'persons.id')
             ->leftJoin('lead_quotes', 'quotes.id', '=', 'lead_quotes.quote_id')
             ->leftJoin('leads', 'lead_quotes.lead_id', '=', 'leads.id')
+            ->leftJoin('lead_products', 'lead_products.lead_id', '=', 'leads.id')
+            ->leftJoin('products', 'products.id', '=', 'lead_products.product_id')
             ->leftJoin('billing_status', 'leads.billing_status_id', '=', 'billing_status.id');
     
         if ($userIds = bouncer()->getAuthorizedUserIds()) {
@@ -51,6 +54,7 @@ class QuoteDataGrid extends DataGrid
         $this->addFilter('expired_at', 'quotes.expired_at');
         $this->addFilter('created_at', 'quotes.created_at');
         $this->addFilter('status', 'billing_status.status');
+        $this->addFilter('product', 'product.name');
 
         if (request()->input('expired_quotes.in') == 1) {
             $this->addFilter('expired_quotes', DB::raw('DATEDIFF(NOW(), '.$tablePrefix.'quotes.expired_at) >= '.$tablePrefix.'NOW()'));
@@ -67,8 +71,8 @@ class QuoteDataGrid extends DataGrid
     public function prepareColumns(): void
     {
         $this->addColumn([
-            'index'      => 'subject',
-            'label'      => trans('admin::app.quotes.index.datagrid.subject'),
+            'index'      => 'product',
+            'label'      => trans('admin::app.quotes.index.datagrid.product'),
             'type'       => 'string',
             'filterable' => true,
             'sortable'   => true,
