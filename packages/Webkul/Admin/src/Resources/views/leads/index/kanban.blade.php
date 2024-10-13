@@ -39,15 +39,6 @@
                                 <span class="text-xs font-medium dark:text-white">
                                     @{{ stage.name }} (@{{ stage.leads.meta.total }})
                                 </span>
-
-                                @if (bouncer()->hasPermission('leads.create'))
-                                    <a
-                                        :href="'{{ route('admin.leads.create') }}' + '?stage_id=' + stage.id"
-                                        class="icon-add cursor-pointer rounded p-1 text-lg text-gray-600 transition-all hover:bg-gray-200 hover:text-gray-800 dark:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-white"
-                                        target="_blank"
-                                    >
-                                    </a>
-                                @endif
                             </div>
 
                             <!-- Stage Total Leads and Amount -->
@@ -103,15 +94,6 @@
                                                 @lang('admin::app.leads.index.kanban.empty-list-description')
                                             </p>
                                         </div>
-
-                                        @if (bouncer()->hasPermission('leads.create'))
-                                            <a
-                                                :href="'{{ route('admin.leads.create') }}' + '?stage_id=' + stage.id"
-                                                class="secondary-button"
-                                            >
-                                                @lang('admin::app.leads.index.kanban.create-lead-btn')
-                                            </a>
-                                        @endif
                                     </div>
                                 </div>
                             </template>
