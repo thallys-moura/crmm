@@ -155,23 +155,8 @@
                         {!! view_render_event('admin.contacts.quotes.create.attribute.form_controls.before') !!}
 
                         <div class="w-1/2">
-
-
-                            <x-admin::attributes
-                                :custom-attributes="app('Webkul\Attribute\Repositories\AttributeRepository')->findWhere([
-                                        'entity_type' => 'quotes',
-                                        ['code', 'IN', ['description']],
-                                    ])"
-                                :custom-validations="[
-                                    'expired_at' => [
-                                        'required',
-                                        'date_format:yyyy-MM-dd',
-                                        'after:' .  \Carbon\Carbon::yesterday()->format('Y-m-d')
-                                    ],
-                                ]"
-                            />
-                            
                             <div class="flex gap-4">
+
                                 <x-admin::attributes
                                     :custom-attributes="app('Webkul\Attribute\Repositories\AttributeRepository')->findWhere([
                                         'entity_type' => 'quotes',
@@ -188,6 +173,19 @@
                                 />
                             </div>
 
+                                <x-admin::attributes
+                                    :custom-attributes="app('Webkul\Attribute\Repositories\AttributeRepository')->findWhere([
+                                            'entity_type' => 'quotes',
+                                            ['code', 'IN', ['description']],
+                                        ])"
+                                    :custom-validations="[
+                                        'expired_at' => [
+                                            'required',
+                                            'date_format:yyyy-MM-dd',
+                                            'after:' .  \Carbon\Carbon::yesterday()->format('Y-m-d')
+                                        ],
+                                    ]"
+                                />
 
                         </div>
 
