@@ -160,10 +160,12 @@
                                 <x-admin::attributes
                                     :custom-attributes="app('Webkul\Attribute\Repositories\AttributeRepository')->findWhere([
                                         'entity_type' => 'quotes',
-                                        ['code', 'IN', ['expired_at', 'user_id']],
-                                    ])->sortBy('sort_order')"
+                                        ['code', 'IN', ['created_at', 'user_id']],
+                                    ])->sortBy(function ($attribute) {
+                                            return $attribute->code == 'created_at' ? 2 : 1;
+                                    })"
                                     :custom-validations="[
-                                        'expired_at' => [
+                                        'created_at' => [
                                             'required',
                                             'date_format:yyyy-MM-dd',
                                             'after:' .  \Carbon\Carbon::yesterday()->format('Y-m-d')
