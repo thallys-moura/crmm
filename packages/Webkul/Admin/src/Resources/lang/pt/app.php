@@ -521,6 +521,25 @@ return [
             'product-name'      => 'Nome do Produto',
             'action'            => 'Ação',
         ],
+        
+        'common' => [
+            'contact' => [
+                'name'           => 'Nome',
+                'email'          => 'Email',
+                'contact-number' => 'Número de Contato',
+                'organization'   => 'Organização',
+            ],
+    
+            'products' => [
+                'product-name' => 'Nome do Produto',
+                'quantity'     => 'Quantidade',
+                'price'        => 'Preço',
+                'amount'       => 'Montante',
+                'action'       => 'Ação',
+                'add-more'     => 'Adicionar Mais',
+                'total'        => 'Total',
+            ],
+        ],
     ],
 
     'contacts' => [

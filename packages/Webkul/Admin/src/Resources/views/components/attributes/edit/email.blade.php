@@ -3,6 +3,7 @@
         :attribute="{{ json_encode($attribute) }}"
         :validations="'{{ $validations }}'"
         :value="{{ json_encode(old($attribute->code) ?? $value) }}"
+        :hide-fields= {{ json_encode(old(hide_fields) ?? false) }}"
     >
         <div class="mb-2 flex items-center">
             <input
@@ -34,7 +35,7 @@
         <template v-for="(email, index) in emails">
             <div class="mb-2 flex items-center">
                 <x-admin::form.control-group.control
-                    type="text"
+                    type="email"
                     ::id="attribute.code"
                     ::name="`${attribute['code']}[${index}][value]`"
                     class="rounded-r-none"
@@ -43,26 +44,28 @@
                     v-model="email['value']"
                 />
 
-                <div class="relative">
-                    <x-admin::form.control-group.control
-                        type="select"
-                        ::id="attribute.code"
-                        ::name="`${attribute['code']}[${index}][label]`"
-                        class="rounded-l-none ltr:mr-6 ltr:pr-8 rtl:ml-6 rtl:pl-8"
-                        rules="required"
-                        ::label="attribute.name"
-                        v-model="email['label']"
-                    >
-                        <option value="work">@lang('admin::app.common.custom-attributes.work')</option>
-                        <option value="home">@lang('admin::app.common.custom-attributes.home')</option>
-                    </x-admin::form.control-group.control>
-                </div>
+                <div v-if="!hideFields">
+                    <div class="relative">
+                        <x-admin::form.control-group.control
+                            type="select"
+                            ::id="attribute.code"
+                            ::name="`${attribute['code']}[${index}][label]`"
+                            class="rounded-l-none ltr:mr-6 ltr:pr-8 rtl:ml-6 rtl:pl-8"
+                            rules="required"
+                            ::label="attribute.name"
+                            v-model="email['label']"
+                        >
+                            <option value="work">@lang('admin::app.common.custom-attributes.work')</option>
+                            <option value="home">@lang('admin::app.common.custom-attributes.home')</option>
+                        </x-admin::form.control-group.control>
+                    </div>
 
-                <i
-                    v-if="emails.length > 1"
-                    class="icon-delete ml-1 cursor-pointer rounded-md p-1.5 text-2xl transition-all hover:bg-gray-100 dark:hover:bg-gray-950"
-                    @click="remove(email)"
-                ></i>
+                    <i
+                        v-if="emails.length > 1"
+                        class="icon-delete ml-1 cursor-pointer rounded-md p-1.5 text-2xl transition-all hover:bg-gray-100 dark:hover:bg-gray-950"
+                        @click="remove(email)"
+                    ></i>
+                </div>
             </div>
 
             <x-admin::form.control-group.error ::name="`${attribute['code']}[${index}][value]`"/>
@@ -70,22 +73,41 @@
             <x-admin::form.control-group.error ::name="`${attribute['code']}[${index}].value`"/>
         </template>
 
-        <span
-            class="flex cursor-pointer items-center gap-2 text-brandColor"
-            @click="add"
-        >
-            <i class="icon-add text-md !text-brandColor"></i>
+        <div v-if="!hideFields">
+            <span
+                class="flex cursor-pointer items-center gap-2 text-brandColor"
+                @click="add"
+            >
+                <i class="icon-add text-md !text-brandColor"></i>
 
-            @lang("admin::app.common.custom-attributes.add-more")
-        </span>
+                @lang("admin::app.common.custom-attributes.add-more")
+            </span>
+        </div>
+
     </script>
 
     <script type="module">
         app.component('v-email-component', {
             template: '#v-email-component-template',
 
-            props: ['validations', 'attribute', 'value'],
-
+            props: {
+                validations: {
+                    type: String, // ou outro tipo adequado (ex: Object se houver mais validações)
+                    default: ''
+                },
+                attribute: {
+                    type: Object, // Supondo que o atributo seja um objeto
+                    required: true
+                },
+                value: {
+                    type: [String, Array, Object], // Depende de como os valores de email são estruturados
+                    default: () => [{'value': '', 'label': 'work'}] // Valor padrão adequado
+                },
+                hideFields: {
+                    type: Boolean,
+                    default: false
+                },
+            },
             data() {
                 return {
                     emails: this.value || [{'value': '', 'label': 'work'}],

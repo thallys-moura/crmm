@@ -3,6 +3,7 @@
         :attribute="{{ json_encode($attribute) }}"
         :validations="'{{ $validations }}'"
         :value="{{ json_encode(old($attribute->code) ?? $value) }}"
+        :hide-fields= {{ json_encode(old(hide_fields) ?? false) }}"
     >
         <div class="mb-2 flex items-center">
             <input
@@ -34,7 +35,7 @@
         <template v-for="(contactNumber, index) in contactNumbers">
             <div class="mb-2 flex items-center">
                 <x-admin::form.control-group.control
-                    type="text"
+                    ::type="attribute.type"
                     ::id="attribute.code"
                     ::name="`${attribute['code']}[${index}][value]`"
                     class="rounded-r-none"
@@ -42,27 +43,28 @@
                     ::label="attribute.name"
                     v-model="contactNumber['value']"
                 />
+                <div v-if="!hideFields">
+                    <div class="relative">
+                        <x-admin::form.control-group.control
+                            type="select"
+                            ::id="attribute.code"
+                            ::name="`${attribute['code']}[${index}][label]`"
+                            class="rounded-l-none ltr:mr-6 ltr:pr-8 rtl:ml-6 rtl:pl-8"
+                            rules="required"
+                            ::label="attribute.name"
+                            v-model="contactNumber['label']"
+                        >
+                            <option value="work">@lang('admin::app.common.custom-attributes.work')</option>
+                            <option value="home">@lang('admin::app.common.custom-attributes.home')</option>
+                        </x-admin::form.control-group.control>
+                    </div>
 
-                <div class="relative">
-                    <x-admin::form.control-group.control
-                        type="select"
-                        ::id="attribute.code"
-                        ::name="`${attribute['code']}[${index}][label]`"
-                        class="rounded-l-none ltr:mr-6 ltr:pr-8 rtl:ml-6 rtl:pl-8"
-                        rules="required"
-                        ::label="attribute.name"
-                        v-model="contactNumber['label']"
-                    >
-                        <option value="work">@lang('admin::app.common.custom-attributes.work')</option>
-                        <option value="home">@lang('admin::app.common.custom-attributes.home')</option>
-                    </x-admin::form.control-group.control>
+                    <i
+                        v-if="contactNumbers.length > 1"
+                        class="icon-delete ml-1 cursor-pointer rounded-md p-1.5 text-2xl transition-all hover:bg-gray-100 dark:hover:bg-gray-950"
+                        @click="remove(contactNumber)"
+                    ></i>
                 </div>
-
-                <i
-                    v-if="contactNumbers.length > 1"
-                    class="icon-delete ml-1 cursor-pointer rounded-md p-1.5 text-2xl transition-all hover:bg-gray-100 dark:hover:bg-gray-950"
-                    @click="remove(contactNumber)"
-                ></i>
             </div>
 
             <x-admin::form.control-group.error ::name="`${attribute['code']}[${index}][value]`"/>
@@ -70,22 +72,41 @@
             <x-admin::form.control-group.error ::name="`${attribute['code']}[${index}].value`"/>
         </template>
 
-        <span
-            class="flex cursor-pointer items-center gap-2 text-brandColor"
-            @click="add"
-        >
-            <i class="icon-add text-md !text-brandColor"></i>
+        <div v-if="!hideFields">
+            <span
+                class="flex cursor-pointer items-center gap-2 text-brandColor"
+                @click="add"
+            >
+                <i class="icon-add text-md !text-brandColor"></i>
 
-            @lang("admin::app.common.custom-attributes.add-more")
-        </span>
+                @lang("admin::app.common.custom-attributes.add-more")
+            </span>
+        </div>
+
     </script>
 
     <script type="module">
         app.component('v-phone-component', {
             template: '#v-phone-component-template',
 
-            props: ['validations', 'attribute', 'value'],
-
+            props: {
+                validations: {
+                    type: String,
+                    default: ''
+                },
+                attribute: {
+                    type: Object,
+                    required: true
+                },
+                value: {
+                    type: [String, Array, Object], 
+                    default: () => [{'value': '', 'label': 'work'}]
+                },
+                hideFields: {
+                    type: Boolean,
+                    default: false
+                },
+            },
             data() {
                 return {
                     contactNumbers: this.value || [{'value': '', 'label': 'work'}],

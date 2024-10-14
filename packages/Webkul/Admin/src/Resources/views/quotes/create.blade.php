@@ -84,9 +84,59 @@
                     {!! view_render_event('admin.contacts.quotes.create.tabs.after') !!}
                 </div>
 
-                <div class="flex flex-col gap-4 px-4 py-2">
+                <div class="flex flex-col gap-1">
                     {!! view_render_event('admin.contacts.quotes.create.quote_information.before') !!}
-                    
+                    <!-- Contact Person -->
+                    <div 
+                        class="flex gap-4" 
+                        id="contact-person"
+                    >
+                        <div class="w-full" style="width: 50rem;">
+
+                            <div class="w-full mb-4">
+                                <p class="text-base font-semibold dark:text-white">
+                                    @lang('admin::app.leads.create.contact-person')
+                                </p>
+
+                                <p class="text-gray-600 dark:text-white">
+                                    @lang('admin::app.leads.create.contact-info')
+                                </p>
+                            </div>
+
+                            <!-- Contact Person Component -->
+                            @include('admin::quotes.common.contact')
+                        </div>
+
+                        {!! view_render_event('admin.contacts.quotes.create.address_information.before') !!}                                    
+                        <!-- Address information -->
+                        <div 
+                           class="grid w-full gap-4" id="address-info"
+                        >
+                            <div class="flex flex-col gap-1">
+                                <p class="text-base font-semibold text-gray-800 dark:text-white">
+                                    @lang('admin::app.quotes.create.address-info')
+                                </p>
+    
+                                <p class="text-sm text-gray-600 dark:text-white">@lang('admin::app.quotes.create.address-info-info')</p>
+                            </div>
+    
+                            <div class="w-1/2">
+                                {!! view_render_event('admin.contacts.quotes.create.address_information.attributes.before') !!}
+    
+                                <x-admin::attributes
+                                    :custom-attributes="app('Webkul\Attribute\Repositories\AttributeRepository')->findWhere([
+                                            'entity_type' => 'quotes',
+                                            ['code', 'IN', ['shipping_address']],
+                                        ])"
+                                    :entity="$quote"
+                                />
+    
+                                {!! view_render_event('admin.contacts.quotes.create.address_information.attributes.after') !!}
+                            </div>
+                        </div>
+    
+                        {!! view_render_event('admin.contacts.quotes.create.address_information.after') !!}
+                    </div>
                     <!-- Quote information -->
                     <div 
                         id="quote-info"
@@ -103,53 +153,6 @@
                         </div>
 
                         {!! view_render_event('admin.contacts.quotes.create.attribute.form_controls.before') !!}
-
-                        <div class="w-1/2 flex gap-4">
-                            <x-admin::attributes
-                                :custom-attributes="app('Webkul\Attribute\Repositories\AttributeRepository')->findWhere([
-                                    'entity_type' => 'quotes',
-                                    ['code', 'IN', ['person_id']],
-                                ])->sortBy('sort_order')"
-                                :custom-validations="[
-                                    'expired_at' => [
-                                        'required',
-                                        'date_format:yyyy-MM-dd',
-                                        'after:' .  \Carbon\Carbon::yesterday()->format('Y-m-d')
-                                    ],
-                                ]"
-                                :entity="$quote"
-                            />
-                            <x-admin::attributes.edit.lookup />
-                            
-                            @php
-                                $lookUpEntityData = app('Webkul\Attribute\Repositories\AttributeRepository')->getLookUpEntity('leads', request('id'));
-                            @endphp
-
-                            <x-admin::form.control-group class="w-full">
-                                <x-admin::form.control-group.label>
-                                    @lang('admin::app.quotes.create.link-to-lead')
-                                </x-admin::form.control-group.label>
-        
-                                <v-lookup-component
-                                    :attribute="{'code': 'lead_id', 'name': 'Lead', 'lookup_type': 'leads'}"
-                                    :value='@json($lookUpEntityData)'
-                                ></v-lookup-component>
-                            </x-admin::form.control-group>
-                            
-                            <label class="relative inline-flex cursor-pointer items-center">
-                                <input
-                                    type="checkbox"
-                                    name="raca"
-                                    :value="1"
-                                    id="raca"
-                                    class="peer sr-only"
-                                    v-model="raca"
-                                >
-
-                                <div class="peer h-5 w-9 cursor-pointer rounded-full bg-gray-200 after:absolute after:top-0 after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-blue-300 dark:bg-gray-800 dark:after:border-white dark:after:bg-white dark:peer-checked:bg-gray-950 after:ltr:left-0.5 peer-checked:after:ltr:translate-x-full after:rtl:right-0.5 peer-checked:after:rtl:-translate-x-full"></div>
-                                <span class="ml-2 text-sm font-medium text-gray-900" style="margin-left: 5px;"> Espano?</span>
-                            </label>
-                        </div>
 
                         <div class="w-1/2">
 
@@ -193,37 +196,7 @@
 
                     {!! view_render_event('admin.contacts.quotes.create.quote_information.after') !!}
 
-                    {!! view_render_event('admin.contacts.quotes.create.address_information.before') !!}
-
-                    <!-- Address information -->
-                    <div 
-                        id="address-info"
-                        class="flex flex-col gap-4" 
-                    >
-                        <div class="flex flex-col gap-1">
-                            <p class="text-base font-semibold text-gray-800 dark:text-white">
-                                @lang('admin::app.quotes.create.address-info')
-                            </p>
-
-                            <p class="text-sm text-gray-600 dark:text-white">@lang('admin::app.quotes.create.address-info-info')</p>
-                        </div>
-
-                        <div class="w-1/2">
-                            {!! view_render_event('admin.contacts.quotes.create.address_information.attributes.before') !!}
-
-                            <x-admin::attributes
-                                :custom-attributes="app('Webkul\Attribute\Repositories\AttributeRepository')->findWhere([
-                                        'entity_type' => 'quotes',
-                                        ['code', 'IN', ['shipping_address']],
-                                    ])"
-                                :entity="$quote"
-                            />
-
-                            {!! view_render_event('admin.contacts.quotes.create.address_information.attributes.after') !!}
-                        </div>
-                    </div>
-
-                    {!! view_render_event('admin.contacts.quotes.create.address_information.after') !!}
+                  
 
                     {!! view_render_event('admin.contacts.quotes.create.quote_items.before') !!}
 
