@@ -18,6 +18,7 @@ use Webkul\Admin\Http\Resources\QuoteResource;
 use Webkul\Core\Traits\PDFHandler;
 use Webkul\Lead\Repositories\LeadRepository;
 use Webkul\Quote\Repositories\QuoteRepository;
+use Webkul\Quote\Models\PaymentMethod;
 
 class QuoteController extends Controller
 {
@@ -53,8 +54,16 @@ class QuoteController extends Controller
     public function create(): View
     {
         $lead = $this->leadRepository->find(request('id'));
+        $paymentMethods = PaymentMethod::pluck('name', 'id'); // Obtenha todos os métodos de pagamento
 
-        return view('admin::quotes.create', compact('lead'));
+        return view('admin::quotes.create', compact('lead', 'paymentMethods'));
+    }
+
+    public function getPaymentMethods()
+    {
+        $paymentMethods = PaymentMethod::select('id', 'name')->get();
+
+        return response()->json($paymentMethods);
     }
 
     /**

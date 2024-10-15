@@ -5,6 +5,7 @@ namespace Webkul\Quote\Models;
 use Illuminate\Database\Eloquent\Model;
 use Webkul\Attribute\Traits\CustomAttribute;
 use Webkul\Contact\Models\PersonProxy;
+use Webkul\Contact\Models\paymentMethod;
 use Webkul\Lead\Models\LeadProxy;
 use Webkul\Quote\Contracts\Quote as QuoteContract;
 use Webkul\User\Models\UserProxy;
@@ -41,6 +42,7 @@ class Quote extends Model implements QuoteContract
         'user_id',
         'person_id',
         'raca',
+        'payment_method_id',
     ];
 
     /**
@@ -73,5 +75,13 @@ class Quote extends Model implements QuoteContract
     public function leads()
     {
         return $this->belongsToMany(LeadProxy::modelClass(), 'lead_quotes');
+    }
+
+    /**
+     * The leads that belong to the quote.
+     */
+    public function paymentMethod()
+    {
+        return $this->belongsTo(PaymentMethod::class);
     }
 }

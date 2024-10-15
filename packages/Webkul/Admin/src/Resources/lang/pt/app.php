@@ -489,6 +489,9 @@ return [
             'adjustment-amount' => 'Valor do Ajuste',
             'product-name'      => 'Nome do Produto',
             'action'            => 'Ação',
+            'payment-methods'   => 'Forma de Pagamento',
+            'payment-methods-info' => 'Selecione...'
+
         ],
 
         'edit' => [

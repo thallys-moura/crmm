@@ -188,15 +188,29 @@
                                         ],
                                     ]"
                                 />
-
+                                    
+                                {!! view_render_event('admin.contacts.quotes.create.attribute.form_controls.after') !!}
+                                <div class="mb-4 mb-2.5 w-full">
+                                    <x-admin::form.control-group>
+                                        <x-admin::form.control-group.label class="required">
+                                            @lang('admin::app.quotes.create.payment-methods')
+                                        </x-admin::form.control-group.label>
+                                    
+                                        <select name="payment_method" class="border custom-select rounded border border-gray-200 px-2.5 py-2 text-sm font-normal text-gray-800 transition-all hover:border-gray-400 focus:border-gray-400 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-gray-400">
+                                            <option value=""> @lang('admin::app.quotes.create.payment-methods-info')  </option>
+                                            @foreach($paymentMethods as $id => $name)
+                                                <option value="{{ $id }}">{{ $name }}</option>
+                                            @endforeach
+                                        </select>
+                                    
+                                        <x-admin::form.control-group.error control-name="payment_method" />
+                                    </x-admin::form.control-group>
+                                </div>
+                               
+                     
                         </div>
-
-                        {!! view_render_event('admin.contacts.quotes.create.attribute.form_controls.after') !!}
-                    </div>
-
-                    {!! view_render_event('admin.contacts.quotes.create.quote_information.after') !!}
-
-                  
+                        {!! view_render_event('admin.contacts.quotes.create.quote_information.after') !!}
+                    </div>       
 
                     {!! view_render_event('admin.contacts.quotes.create.quote_items.before') !!}
 
@@ -565,7 +579,14 @@
                             'discount_amount': 0,
                             'tax_amount': 0,
                         }],
+                        selectedPaymentMethod: null, // Armazena o método de pagamento selecionado
+                        paymentMethods: [], // Lista de métodos de pagamento
                     }
+                },
+                
+                mounted() {
+                    // Carrega os métodos de pagamento ao montar o componente
+                    this.loadPaymentMethods();
                 },
 
                 computed: {
@@ -627,6 +648,23 @@
                 },
 
                 methods: {
+                    // Carrega os métodos de pagamento da API
+                    loadPaymentMethods() {
+                        axios.get('payment-method') // Faz a requisição para a rota configurada
+                            .then(response => {
+                                this.paymentMethods = response.data; // Armazena os métodos de pagamento na variável
+                                console.log(this.paymentMethods);
+                            })
+                            .catch(error => {
+                                console.error("Erro ao carregar métodos de pagamento:", error);
+                            });
+                    },
+
+
+                    selectPaymentMethod(method) {
+                        
+                        this.selectedPaymentMethod = method;
+                    },
                     /**
                      * Add a new product.
                      * 
