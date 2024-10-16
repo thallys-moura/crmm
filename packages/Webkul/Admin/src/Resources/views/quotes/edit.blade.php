@@ -77,8 +77,53 @@
                 </div>
 
                 <div class="flex flex-col gap-4 px-4 py-2">
-                    {!! view_render_event('admin.contacts.quotes.edit.quote_information.before', ['quote' => $quote]) !!}
+                    {!! view_render_event('admin.contacts.quotes.edit.quote_information.before', ['quote' => $quote, 'person' => $person]) !!}
+                    <div 
+                    class="flex gap-4" 
+                    id="contact-person"
+                >
+                    <div class="w-full" style="width: 50rem;">
 
+                        <div class="w-full mb-4">
+                            <p class="text-base font-semibold dark:text-white">
+                                @lang('admin::app.leads.create.contact-person')
+                            </p>
+
+                            <p class="text-gray-600 dark:text-white">
+                                @lang('admin::app.leads.create.contact-info')
+                            </p>
+                        </div>
+
+                        <!-- Contact Person Component -->
+                        @include('admin::quotes.common.contact', ['quote' => $quote, 'person' => $person])
+                    </div>
+                    <!-- Address information -->
+                    <div 
+                    class="grid w-full gap-4" id="address-info"
+                    >
+                        <div class="flex flex-col gap-1">
+                            <p class="text-base font-semibold text-gray-800 dark:text-white">
+                                @lang('admin::app.quotes.create.address-info')
+                            </p>
+
+                            <p class="text-sm text-gray-600 dark:text-white">@lang('admin::app.quotes.create.address-info-info')</p>
+                        </div>
+
+                        <div class="w-1/2">
+                            {!! view_render_event('admin.contacts.quotes.create.address_information.attributes.before') !!}
+
+                            <x-admin::attributes
+                                :custom-attributes="app('Webkul\Attribute\Repositories\AttributeRepository')->findWhere([
+                                        'entity_type' => 'quotes',
+                                        ['code', 'IN', ['shipping_address']],
+                                    ])"
+                                :entity="$quote"
+                            />
+
+                            {!! view_render_event('admin.contacts.quotes.create.address_information.attributes.after') !!}
+                        </div>
+                    </div>
+                </div>
                     <!-- Quote information -->
                     <div 
                         id="quote-info"
@@ -91,56 +136,6 @@
 
                             <p class="text-sm text-gray-600 dark:text-white">@lang('admin::app.quotes.create.quote-info-info')</p>
                         </div>
-                        
-                        <div class="w-1/2 flex gap-4">
-                            <x-admin::attributes
-                                :custom-attributes="app('Webkul\Attribute\Repositories\AttributeRepository')->findWhere([
-                                    'entity_type' => 'quotes',
-                                    ['code', 'IN', ['person_id']],
-                                ])->sortBy('sort_order')"
-                                :custom-validations="[
-                                    'expired_at' => [
-                                        'required',
-                                        'date_format:yyyy-MM-dd',
-                                        'after:' .  \Carbon\Carbon::yesterday()->format('Y-m-d')
-                                    ],
-                                ]"
-                                :entity="$quote"
-                            />
-
-                            <x-admin::attributes.edit.lookup />
-
-                            @php
-                                $leadId = old('lead-id') ?? optional($quote->leads->first())->id;
-
-                                $lookUpEntityData = app('Webkul\Attribute\Repositories\AttributeRepository')->getLookUpEntity('leads', $leadId);
-                            @endphp
-
-                            <x-admin::form.control-group class="w-full">
-                                <x-admin::form.control-group.label>
-                                    @lang('admin::app.quotes.create.link-to-lead')
-                                </x-admin::form.control-group.label>
-        
-                                <v-lookup-component
-                                    :attribute="{'code': 'lead_id', 'name': 'Lead', 'lookup_type': 'leads'}"
-                                    :value='@json($lookUpEntityData)'
-                                ></v-lookup-component>
-                            </x-admin::form.control-group>
-                            <label class="relative inline-flex cursor-pointer items-center">
-                                <input
-                                    type="checkbox"
-                                    name="isEspano"
-                                    :value="true"
-                                    id="raca"
-                                    class="peer sr-only"
-                                    v-model="raca"
-                                    @if(old('raca', $quote->raca)) checked @endif  
-                                >
-    
-                                <div class="peer h-5 w-9 cursor-pointer rounded-full bg-gray-200 after:absolute after:top-0 after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-blue-300 dark:bg-gray-800 dark:after:border-white dark:after:bg-white dark:peer-checked:bg-gray-950 after:ltr:left-0.5 peer-checked:after:ltr:translate-x-full after:rtl:right-0.5 peer-checked:after:rtl:-translate-x-full"></div>
-                                <span class="ml-2 text-sm font-medium text-gray-900" style="margin-left: 5px;"> Espano?</span>
-                            </label>
-                        </div>
 
                         <div class="w-1/2">                            
                             <x-admin::attributes
@@ -149,7 +144,7 @@
                                         ['code', 'IN', ['description']],
                                     ])"
                                 :custom-validations="[
-                                    'expired_at' => [
+                                    'created_at' => [
                                         'required',
                                         'date_format:yyyy-MM-dd',
                                         'after:' .  \Carbon\Carbon::yesterday()->format('Y-m-d')
@@ -162,8 +157,10 @@
                                 <x-admin::attributes
                                     :custom-attributes="app('Webkul\Attribute\Repositories\AttributeRepository')->findWhere([
                                         'entity_type' => 'quotes',
-                                        ['code', 'IN', ['expired_at', 'user_id']],
-                                    ])->sortBy('sort_order')"
+                                        ['code', 'IN', ['user_id', 'created_at']],
+                                    ])->sortBy(function ($attribute) {
+                                            return $attribute->code == 'created_at' ? 2 : 1;
+                                    })"
                                     :custom-validations="[
                                         'expired_at' => [
                                             'required',
@@ -177,39 +174,26 @@
 
 
                         </div>
+                        <div class="mb-4 mb-2.5 w-full">
+                            <x-admin::form.control-group>
+                                <x-admin::form.control-group.label class="required">
+                                    @lang('admin::app.quotes.create.payment-methods')
+                                </x-admin::form.control-group.label>
+                                <select name="payment_method_id" class="border custom-select rounded border border-gray-200 px-2.5 py-2 text-sm font-normal text-gray-800 transition-all hover:border-gray-400 focus:border-gray-400 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-gray-400">
+                                    <option value=""> @lang('admin::app.quotes.create.payment-methods-info')  </option>
+                                    @foreach($paymentMethods as $id => $name)
+                                        <option value="{{ $id }}" {{ old('payment_method_id', $quote->payment_method_id ?? '') == $id ? 'selected' : '' }}>
+                                            {{ $name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            
+                                <x-admin::form.control-group.error control-name="payment_method_id" />
+                            </x-admin::form.control-group>
+                        </div>
                     </div>
 
                     {!! view_render_event('admin.contacts.quotes.edit.quote_information.after', ['quote' => $quote]) !!}
-
-                    {!! view_render_event('admin.contacts.quotes.edit.address_information.before', ['quote' => $quote]) !!}
-
-                    <!-- Address information -->
-                    <div 
-                        id="address-info"
-                        class="flex flex-col gap-4" 
-                    >
-                        <div class="flex flex-col gap-1">
-                            <p class="text-base font-semibold text-gray-800 dark:text-white">
-                                @lang('admin::app.quotes.create.address-info')
-                            </p>
-
-                            <p class="text-sm text-gray-600 dark:text-white">
-                                @lang('admin::app.quotes.create.address-info-info')
-                            </p>
-                        </div>
-
-                        <div class="w-1/2">
-                            <x-admin::attributes
-                                :custom-attributes="app('Webkul\Attribute\Repositories\AttributeRepository')->findWhere([
-                                        'entity_type' => 'quotes',
-                                        ['code', 'IN', ['shipping_address']],
-                                    ])"
-                                :entity="$quote"
-                            />
-                        </div>
-                    </div>
-
-                    {!! view_render_event('admin.contacts.quotes.edit.address_information.after', ['quote' => $quote]) !!}
 
                     {!! view_render_event('admin.contacts.quotes.edit.quote_information.before', ['quote' => $quote]) !!}
 
@@ -692,7 +676,14 @@
                         state: this.product['product_id'] ? 'old' : '',
 
                         products: [],
+                        paymentMethods: [], // Lista de métodos de pagamento
+
                     }
+                },
+
+                mounted() {
+                    // Carrega os métodos de pagamento ao montar o componente
+                    this.loadPaymentMethods();
                 },
 
                 computed: {
@@ -728,6 +719,16 @@
                 },
 
                 methods: {
+                    loadPaymentMethods() {
+                        axios.get('payment-method') // Faz a requisição para a rota configurada
+                            .then(response => {
+                                this.paymentMethods = response.data; // Armazena os métodos de pagamento na variável
+                            })
+                            .catch(error => {
+                                console.error("Erro ao carregar métodos de pagamento:", error);
+                            });
+                    },
+
                     /**
                      * Add the product.
                      * 

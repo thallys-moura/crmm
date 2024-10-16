@@ -653,7 +653,6 @@
                         axios.get('payment-method') // Faz a requisição para a rota configurada
                             .then(response => {
                                 this.paymentMethods = response.data; // Armazena os métodos de pagamento na variável
-                                console.log(this.paymentMethods);
                             })
                             .catch(error => {
                                 console.error("Erro ao carregar métodos de pagamento:", error);

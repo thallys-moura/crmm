@@ -131,8 +131,23 @@ class QuoteController extends Controller
     public function edit(int $id): View
     {
         $quote = $this->quoteRepository->findOrFail($id);
+        // Acessa a pessoa associada à quote
+        $person = $quote->person;
 
-        return view('admin::quotes.edit', compact('quote'));
+        //Métodos de Pagamento
+        $paymentMethods = PaymentMethod::pluck('name', 'id'); // Obtenha todos os métodos de pagamento
+
+        if ($person) {
+            // Verificar se os valores de contact_numbers e emails não são nulos e extrair o valor correto
+            $person->contact_numbers = is_array($person->contact_numbers) ? $person->contact_numbers : json_decode($person->contact_numbers, true);
+            $person->emails = is_array($person->emails) ? $person->emails : json_decode($person->emails, true);
+            $person->raca = is_array( $quote->raca) ?  $quote->raca : json_decode($quote->raca, true);
+
+        }
+        // Acessa o método de pagamento associado à quote
+        $paymentMethod = $quote->payment_method_id;
+
+        return view('admin::quotes.edit', compact('quote', 'person', 'paymentMethods'));
     }
 
     /**
@@ -140,18 +155,53 @@ class QuoteController extends Controller
      */
     public function update(AttributeForm $request, int $id): RedirectResponse
     {
+        // Pessoa da Requisição
+        $person_request = $request->input('person');
+
+        // Encontrar a quote existente
+        $quote = $this->quoteRepository->findOrFail($id);
+
+        // Obter o lead relacionado à quote
+        $lead = $quote->leads()->first();
+
+        // Atualizar os dados da pessoa
+        $person = $lead->person;
+        
+        $person->update([
+            'name' => $person_request['name'],
+            'emails' => [0 => ['value' => $person_request['emails'][0]['value']]],
+            'contact_numbers' => [0 => ['value' => $person_request['contact_numbers'][0]['value']]],
+        ]);
+
+        // Atualizar o lead com os novos dados
+        $data_lead = [
+            'entity_type' => 'leads',
+            'lead_type_id' => '1',
+            'lead_pipeline_id' => '1',
+            'lead_pipeline_stage_id' => '1',
+            'lead_source_id' => '1',
+            'user_id' => $request->input('user_id'),
+            'raca' => $request->input('raca'),
+            'description' => $request->input('description'),
+            'person_id' => $person->id,
+            'lead_value' => $request->input('grand_total'),
+        ];
+
+        // Atualizando o lead existente
+        $lead->update($data_lead);
+
+        // Evento antes da atualização da quote
         Event::dispatch('quote.update.before', $id);
 
-        $quote = $this->quoteRepository->update($request->all(), $id);
+        // Atualizar a quote
+        $data_quote = $request->all();
+        $data_quote['person_id'] = $person->id;
+        $this->quoteRepository->update($data_quote, $id);
 
-        $quote->leads()->detach();
+        // Desanexar e anexar novamente o lead à quote
+        $quote->leads()->sync([$lead->id]);
 
-        if (request('lead_id')) {
-            $lead = $this->leadRepository->find(request('lead_id'));
-
-            $lead->quotes()->attach($quote->id);
-        }
-
+        // Evento após a atualização da quote
         Event::dispatch('quote.update.after', $quote);
 
         session()->flash('success', trans('admin::app.quotes.index.update-success'));

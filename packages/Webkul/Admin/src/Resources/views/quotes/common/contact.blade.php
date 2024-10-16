@@ -1,7 +1,6 @@
 {!! view_render_event('admin.quotes.create.contact_person.form_controls.before') !!}
 
-<v-contact-component :data="person"></v-contact-component>
-
+<v-contact-component :data="{{ json_encode($person ?? []) }}"></v-contact-component>
 {!! view_render_event('admin.quotes.create.contact_person.form_controls.after') !!}
 
 @pushOnce('scripts')
@@ -20,8 +19,8 @@
                             <x-admin::form.control-group.control
                                 type="text"
                                 id="name" 
-                                name="name"
-                                value="" 
+                                name="person[name]"
+                                value="{{ old('person.name', $person->name ?? '') }}"
                                 label="Person" 
                             />
                             <label class="relative inline-flex cursor-pointer items-center">
@@ -31,7 +30,8 @@
                                     :value="1"
                                     id="raca"
                                     class="peer sr-only"
-                                    v-model="raca"
+                                    value="{{ old('person.raca', $person->raca ?? '') }}"
+                                    {{ old('person.raca', $person->raca ?? '') == 1 ? 'checked' : '' }}
                                 >
 
                                 <div class="peer h-5 w-9 cursor-pointer rounded-full bg-gray-200 after:absolute after:top-0 after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-blue-300 dark:bg-gray-800 dark:after:border-white dark:after:bg-white dark:peer-checked:bg-gray-950 after:ltr:left-0.5 peer-checked:after:ltr:translate-x-full after:rtl:right-0.5 peer-checked:after:rtl:-translate-x-full"></div>
@@ -51,7 +51,7 @@
                         
                         <v-email-component
                             :attribute="{'code': 'person[emails]', 'name': 'Email'}"
-                            :value="person.emails"
+                            value="{{ old('person.email', $person->email ?? '') }}"
                             :hide-fields="true"
                         ></v-email-component>
                     </div>
@@ -68,7 +68,7 @@
 
                         <v-phone-component
                             :attribute="{'code': 'person[contact_numbers]', 'name': 'Contact Numbers', 'type': 'phone'}"
-                            :value="person.contact_numbers"
+                            :value='@json(old("person.contact_numbers", $person->contact_numbers ?? []))'
                             validations="required"
                             :hide-fields="true"
                         ></v-phone-component>
@@ -87,8 +87,12 @@
                 return {
                     is_searching: false,
 
-                    person: this.data ? this.data : {
-                        'name': ''
+                    // Preenche os dados da pessoa se estiver disponível
+                    person: this.data && Object.keys(this.data).length > 0 ? this.data : {
+                        'name': '',
+                        'emails': [{ value: '' }],
+                        'contact_numbers': [{ value: '' }],
+                        'raca': false
                     },
 
                     persons: [],
@@ -108,6 +112,10 @@
             },
 
             methods: {
+                
+            },
+
+            mounted() {
                 
             }
         });
