@@ -196,14 +196,14 @@
                                             @lang('admin::app.quotes.create.payment-methods')
                                         </x-admin::form.control-group.label>
                                     
-                                        <select name="payment_method" class="border custom-select rounded border border-gray-200 px-2.5 py-2 text-sm font-normal text-gray-800 transition-all hover:border-gray-400 focus:border-gray-400 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-gray-400">
+                                        <select name="payment_method_id" class="border custom-select rounded border border-gray-200 px-2.5 py-2 text-sm font-normal text-gray-800 transition-all hover:border-gray-400 focus:border-gray-400 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-gray-400">
                                             <option value=""> @lang('admin::app.quotes.create.payment-methods-info')  </option>
                                             @foreach($paymentMethods as $id => $name)
                                                 <option value="{{ $id }}">{{ $name }}</option>
                                             @endforeach
                                         </select>
                                     
-                                        <x-admin::form.control-group.error control-name="payment_method" />
+                                        <x-admin::form.control-group.error control-name="payment_method_id" />
                                     </x-admin::form.control-group>
                                 </div>
                                
