@@ -17,6 +17,10 @@ use Webkul\Admin\Http\Requests\MassDestroyRequest;
 use Webkul\Admin\Http\Resources\QuoteResource;
 use Webkul\Core\Traits\PDFHandler;
 use Webkul\Lead\Repositories\LeadRepository;
+use Webkul\Admin\Http\Controllers\Lead\LeadController;
+use Webkul\Lead\Models\Lead;
+use Webkul\Contact\Models\Person;
+
 use Webkul\Quote\Repositories\QuoteRepository;
 use Webkul\Quote\Models\PaymentMethod;
 
@@ -70,13 +74,46 @@ class QuoteController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(AttributeForm $request): RedirectResponse
-    {
+    {   
+
+        //Pessoa da Requisição
+        $person_request = request('person');
+
+        //Objeto Lead(Ordem)
+        $data_lead = array();
+        $data_lead['entity_type'] = 'leads';
+        $data_lead['lead_type_id'] = '1';
+        $data_lead['lead_pipeline_id'] = '1';
+        $data_lead['lead_pipeline_stage_id'] = '1';
+        $data_lead['lead_source_id'] = '1';
+        $data_lead['user_id'] = request('user_id');
+        $data_lead['status'] = '1';
+        $data_lead['raca'] = request('raca');
+        $data_lead['description'] = request('description');
+        $data_lead['person'] = array(
+            'name' => request('name'),
+            'email' => [0 => ['value' => $person_request['emails'][0]['value']]],
+            'contact_numbers' => [0 => ['value' => $person_request['contact_numbers'][0]['value']]],
+        );
+
+        //Salvando Pessoa da Venda e Ordem
+        $person = Person::create($data_lead['person']);
+        $data_lead['person']['id'] = $person->id;
+        $data_lead['person_id'] = $person->id;
+        $data_lead['lead_value'] = request('grand_total');
+
+        //Salvando Ordem
+        $lead = Lead::create($data_lead);
+
         Event::dispatch('quote.create.before');
 
-        $quote = $this->quoteRepository->create($request->all());
+        $data_quote = $request->all();
+        $data_quote['person']['id'] = $person->id;
+        $data_quote['person_id'] = $person->id;
 
-        if (request('lead_id')) {
-            $lead = $this->leadRepository->find(request('lead_id'));
+        $quote = $this->quoteRepository->create($data_quote);
+        if ($lead->id) {
+            $lead = $this->leadRepository->find($lead->id);
 
             $lead->quotes()->attach($quote->id);
         }

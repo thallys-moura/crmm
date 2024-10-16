@@ -132,18 +132,7 @@ class LeadRepository extends Repository
      */
     public function create(array $data)
     {
-        if (! empty($data['person']['id'])) {
-            $person = $this->personRepository->update(array_merge($data['person'], [
-                'entity_type' => 'persons',
-            ]), $data['person']['id']);
-        } else {
-            $person = $this->personRepository->create(array_merge($data['person'], [
-                'entity_type' => 'persons',
-            ]));
-        }
-
         $lead = parent::create(array_merge([
-            'person_id'              => $person->id,
             'lead_pipeline_id'       => 1,
             'lead_pipeline_stage_id' => 1,
         ], $data));
