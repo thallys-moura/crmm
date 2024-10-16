@@ -19,6 +19,8 @@
         </template>
 
         <template v-else>
+            <!-- Modal Component -->
+            <v-dialog ref="dialog"></v-dialog>
             <div class="flex flex-col gap-4">
                 @include('admin::leads.index.kanban.toolbar')
 
@@ -260,6 +262,11 @@
                 openLeadDetails(url) {
                     window.location.href = url; // Simula o comportamento do <a>
                 },
+
+                openModal() {
+                    this.$refs.observacaoModal.open();
+                },
+
                 /**
                  * Confirma a marcação do lead como concluído.
                  */
@@ -471,6 +478,15 @@
                         .catch(error => {
                             this.$emitter.emit('add-flash', { type: 'error', message: error.response.data.message });
                         });
+                    console.log('testando entrar aqui');
+                    // Abre o modal para atualização do status
+                    console.log(this.$refs);
+                    // Certifique-se de que a referência do modal está disponível
+                    if (this.$refs.dialog && typeof this.$refs.dialog.openDialog === 'function') {
+                        this.$refs.dialog.openDialog(this.selectedLead);
+                    } else {
+                        console.error('O modal não foi encontrado ou o método openDialog não está disponível.');
+                    }
                 },
 
                 /**
@@ -587,5 +603,78 @@
                 },
             }
         });
+
+        // Modal (Dialog) Component
+        app.component('v-dialog', {
+            template: `   
+            <template>   
+                <Teleport to="body">
+                    <div v-if="isOpen" class="dialog-overlay">
+                        <div class="dialog-content">
+                            <h3>Atualizar Status</h3>
+                            <p>Lead: @{{ lead ? lead.name : 'N/A' }}</p>
+                            <select v-model="status">
+                                <option value="open">Aberto</option>
+                                <option value="in_progress">Em Progresso</option>
+                                <option value="completed">Concluído</option>
+                            </select>
+                            <button @click="save">Salvar</button>
+                            <button @click="closeDialog">Cancelar</button>
+                        </div>
+                    </div>
+                </Teleport>
+            </template>  
+            `,
+
+            data() {
+                return {
+                    isOpen: false,
+                    lead: null,
+                    status: '',
+                };
+            },
+
+            methods: {
+                openDialog(lead) {
+                    this.isOpen = true;
+                    this.lead = lead;
+                },
+
+                closeDialog() {
+                    this.isOpen = false;
+                    this.lead = null;
+                },
+
+                save() {
+                    console.log(`Salvando status ${this.status} para o lead ${this.lead.name}`);
+                    // Aqui você pode enviar o status atualizado via Axios ou qualquer outra requisição.
+                    this.closeDialog();
+                }
+            }
+        });
     </script>
+    <style>
+        /* Estilos para garantir que o modal seja suspenso */
+        .dialog-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000; /* Certifique-se de que o modal esteja acima de outros elementos */
+        }
+        
+        .dialog-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 400px;
+            max-width: 100%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        </style>
 @endPushOnce

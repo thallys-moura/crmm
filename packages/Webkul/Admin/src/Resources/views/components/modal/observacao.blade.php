@@ -32,7 +32,7 @@
             <x-admin::form
                 v-slot="{ meta, errors, handleSubmit }"
                 as="div"
-                ref="modalForm"
+                ref="observacaoModal"
             >
                 <form @submit="handleSubmit($event, save)">
                     @csrf
