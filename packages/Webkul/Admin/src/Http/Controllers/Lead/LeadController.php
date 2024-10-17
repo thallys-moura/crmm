@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Event;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
@@ -491,6 +492,33 @@ class LeadController extends Controller
         $status = $this->leadRepository->getStatusQuery();
 
         return $status;
+    }
+
+    /***
+     * Salva um link de Rastreio no Objeto Lead 
+     */
+    public function saveTrackingLink(Request $request)
+    {   
+        $data = $request->all();
+        $id = $data['lead_id'];
+
+        $lead = $this->leadRepository->findOrFail($id);
+
+        Event::dispatch('lead.update.before', $lead->id);
+
+        // Valida e atualiza o link de rastreamento
+        $request->validate([
+            'tracking_link' => 'required'
+        ]);
+
+        $lead->tracking_link = $data['tracking_link'];
+        $lead->save();
+
+        Event::dispatch('lead.update.after', $lead->id);
+
+        return response()->json([
+            'message' => 'Link de rastreamento atualizado com sucesso!',
+        ], 200);
     }
 
     public function saveObservacao(Request $request)

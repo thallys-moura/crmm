@@ -57,4 +57,7 @@ Route::controller(LeadController::class)->prefix('leads')->group(function () {
     });
 
     Route::post('observacao/salvar','saveObservacao')->name('admin.leads.observacao.salvar');
+
+    Route::put('{id}/saveTrackingLink', 'saveTrackingLink')->name('admin.leads.tracking.link');
+
 });

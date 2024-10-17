@@ -478,15 +478,14 @@
                         .catch(error => {
                             this.$emitter.emit('add-flash', { type: 'error', message: error.response.data.message });
                         });
-                    console.log('testando entrar aqui');
-                    // Abre o modal para atualização do status
-                    console.log(this.$refs);
-                    // Certifique-se de que a referência do modal está disponível
-                    if (this.$refs.dialog && typeof this.$refs.dialog.openDialog === 'function') {
-                        this.$refs.dialog.openDialog(this.selectedLead);
-                    } else {
-                        console.error('O modal não foi encontrado ou o método openDialog não está disponível.');
+
+                    // Verifica se o quadro de destino é o de ID 2
+                    if (stage.id === 2) {
+                        // Abre o modal para atualização do status apenas se o quadro for de ID 2
+                        this.selectedLead = event.added.element; // Armazena o lead selecionado
+                        this.$refs.dialog.openDialog(this.selectedLead); // Abre o diálogo
                     }
+
                 },
 
                 /**
@@ -607,30 +606,40 @@
         // Modal (Dialog) Component
         app.component('v-dialog', {
             template: `   
-            <template>   
-                <Teleport to="body">
-                    <div v-if="isOpen" class="dialog-overlay">
-                        <div class="dialog-content">
-                            <h3>Atualizar Status</h3>
-                            <p>Lead: @{{ lead ? lead.name : 'N/A' }}</p>
-                            <select v-model="status">
-                                <option value="open">Aberto</option>
-                                <option value="in_progress">Em Progresso</option>
-                                <option value="completed">Concluído</option>
-                            </select>
-                            <button @click="save">Salvar</button>
-                            <button @click="closeDialog">Cancelar</button>
-                        </div>
-                    </div>
-                </Teleport>
-            </template>  
+                        <template>
+                            <Teleport to="body">
+                                <div v-if="isOpen" class="dialog-overlay">
+                                    <div class="dialog-content">
+                                        
+
+                                        <span class="text-xs font-medium dark:text-white">
+                                            Informe o Link de Rastreio
+                                        </span>
+
+                                        <!-- Campo de input para o link de rastreamento -->
+                                        <input 
+                                            v-model="trackingLink" 
+                                            type="text" 
+                                            placeholder="Insira o link de rastreio"
+                                            class="input-field"
+                                        />
+
+                                        <!-- Botões de ação -->
+                                        <div class="button-group">
+                                            <button @click="save" class="primary-button">Salvar</button>
+                                            <button @click="closeDialog" class='secondary-button'>Cancelar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Teleport>
+                        </template>  
             `,
 
             data() {
                 return {
                     isOpen: false,
-                    lead: null,
-                    status: '',
+                    status: 'open',
+                    trackingLink: '' // Variável para armazenar o link de rastreamento
                 };
             },
 
@@ -645,36 +654,74 @@
                     this.lead = null;
                 },
 
+                /***
+                 * Faz chamada Ajax para salvar o link de rastreamento
+                */
                 save() {
-                    console.log(`Salvando status ${this.status} para o lead ${this.lead.name}`);
-                    // Aqui você pode enviar o status atualizado via Axios ou qualquer outra requisição.
-                    this.closeDialog();
+                    if(!this.trackingLink){
+                        this.$emitter.emit('add-flash', { type: 'error','Link de Rastreamento é obrigatório' });
+                        return;
+                    }
+
+                    //Faz uma requisição PUT para atualizar o link de rastreamento
+                    this.$axios.put(
+                            `/admin/leads/${this.lead.id}/saveTrackingLink`,
+                        {
+                            tracking_link: this.trackingLink,
+                            lead_id: this.lead.id
+                        }).then(response => {
+                            this.$emitter.emit('add-flash', {type: 'sucess', message: response.data.message });
+                            this.closeDialog();
+                        }).catch(error => {
+                            this.$emitter.emit('add-flash', { type: 'error', message: error.response.data.message });
+                        });
                 }
             }
         });
     </script>
-    <style>
-        /* Estilos para garantir que o modal seja suspenso */
+    <style scoped>
         .dialog-overlay {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.5);
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
             display: flex;
-            align-items: center;
             justify-content: center;
-            z-index: 1000; /* Certifique-se de que o modal esteja acima de outros elementos */
+            align-items: center;
         }
         
         .dialog-content {
-            background: white;
+            background-color: white;
             padding: 20px;
             border-radius: 8px;
-            width: 400px;
-            max-width: 100%;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            width: 300px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-        </style>
+        
+        .close-button-dialog {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
 @endPushOnce
