@@ -659,7 +659,7 @@
                 */
                 save() {
                     if(!this.trackingLink){
-                        this.$emitter.emit('add-flash', { type: 'error','Link de Rastreamento é obrigatório' });
+                        this.$emitter.emit('add-flash', { type: 'error', message: 'Link de Rastreamento é obrigatório' });
                         return;
                     }
 
