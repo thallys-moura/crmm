@@ -505,7 +505,9 @@
                     if (stage.id === 2) {
                         // Abre o modal para atualização do status apenas se o quadro for de ID 2
                         this.selectedLead = event.added.element; // Armazena o lead selecionado
-                        this.$refs.dialog.openDialog(this.selectedLead); // Abre o diálogo
+                        if(!this.selectedLead.tracking_link){
+                            this.$refs.dialog.openDialog(this.selectedLead); // Abre o diálogo
+                        }
                     }
 
                 },
@@ -692,7 +694,12 @@
                             tracking_link: this.trackingLink,
                             lead_id: this.lead.id
                         }).then(response => {
-                            this.$emitter.emit('add-flash', {type: 'sucess', message: response.data.message });
+
+                            // Atualiza o tracking_link do lead no frontend
+                            this.lead.tracking_link = this.trackingLink;
+                            
+                            this.$emitter.emit('add-flash', {type: 'success', message: response.data.message });
+
                             this.closeDialog();
                         }).catch(error => {
                             this.$emitter.emit('add-flash', { type: 'error', message: error.response.data.message });

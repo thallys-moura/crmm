@@ -55,25 +55,30 @@
             
                 {!! view_render_event('admin.leads.view.person.email.before', ['lead' => $lead]) !!}
 
-                @foreach ($lead->person->emails as $email)
-                    <div class="flex gap-1">
-                        <a 
-                            class="text-brandColor"
-                            href="mailto:{{ $email['value'] }}"
-                        >
-                            {{ $email['value'] }}
-                        </a>
+                @if (!empty($lead->person->emails) && is_array($lead->person->emails) && count($lead->person->emails) > 0)
+                    @foreach ($lead->person->emails as $email)
+                        <div class="flex gap-1">
+                            <a 
+                                class="text-brandColor"
+                                href="mailto:{{ $email['value'] }}"
+                            >
+                                {{ $email['value'] }}
+                            </a>
 
-                        <span class="text-gray-500 dark:text-gray-300">
-                            ({{ $email['label'] }})
-                        </span>
-                    </div>
-                @endforeach
+                            <span class="text-gray-500 dark:text-gray-300">
+                                ({{ $email['label'] }})
+                            </span>
+                        </div>
+                    @endforeach
+                @else
+                    <p class="text-gray-500 dark:text-gray-300">
+                        Nenhum email disponível.
+                    </p>
+                @endif
 
                 {!! view_render_event('admin.leads.view.person.email.after', ['lead' => $lead]) !!}
 
                 {!! view_render_event('admin.leads.view.person.contact_numbers.before', ['lead' => $lead]) !!}
-            
                 @foreach ($lead->person->contact_numbers as $contactNumber)
                     <div class="flex gap-1">
                         <a  
@@ -82,10 +87,11 @@
                         >
                             {{ $contactNumber['value'] }}
                         </a>
-
-                        <span class="text-gray-500 dark:text-gray-300">
-                            ({{ $contactNumber['label'] }})
-                        </span>
+                        @if (array_key_exists('label', $contactNumber))
+                            <span class="text-gray-500 dark:text-gray-300">
+                                ({{ $contactNumber['label'] }})
+                            </span>
+                        @endif
                     </div>
                 @endforeach
 

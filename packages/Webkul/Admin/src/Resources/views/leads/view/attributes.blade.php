@@ -26,7 +26,7 @@
             <x-admin::attributes.view
                 :custom-attributes="app('Webkul\Attribute\Repositories\AttributeRepository')->findWhere([
                     'entity_type' => 'leads',
-                    ['code', 'NOTIN', ['title', 'description', 'lead_pipeline_id', 'lead_pipeline_stage_id']]
+                    ['code', 'IN', ['lead_value', 'tracking_link', 'created_at']]
                 ])"
                 :entity="$lead"
                 :url="route('admin.leads.attributes.update', $lead->id)"
