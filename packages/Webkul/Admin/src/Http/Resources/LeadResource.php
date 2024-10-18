@@ -25,6 +25,7 @@ class LeadResource extends JsonResource
             'closed_at'            => $this->closed_at,
             'created_at'           => $this->created_at,
             'updated_at'           => $this->updated_at,
+            'tracking_link'        => $this->tracking_link,
             'person'               => new PersonResource($this->person),
             'user'                 => new UserResource($this->user),
             'type'                 => new TypeResource($this->type),

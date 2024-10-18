@@ -125,7 +125,7 @@
                                                 </span>
                                             </div>
                                         </div>
-
+                                        
                                         <div
                                             class="group relative"
                                             v-if="element.rotten_days > 0"
@@ -175,6 +175,14 @@
                                             @{{ element.type.name }}
                                         </div>
 
+                                        <div v-if="element.tracking_link" class="rounded-xl bg-green-200 px-2 py-1 text-xs font-medium dark:bg-gray-800 dark:text-white">
+                                            <!-- Verifica se há um tracking link vinculado -->
+                                            <button v-if="element.tracking_link"
+                                                    @click.stop="openTrackingLink(element)" 
+                                                    class="tracking-button">
+                                                Rastrear Envio
+                                            </button>
+                                        </div>
                                         <!-- Tags -->
                                         <template v-for="tag in element.tags">
                                             {!! view_render_event('admin.leads.index.kanban.content.stage.body.card.tag.before') !!}
@@ -239,6 +247,7 @@
                     },
                     showModal: false,  // Controla a visibilidade do modal
                     selectedLead: null,  // Armazena o lead selecionado
+                    trackingLink: null,
                 };
             },
 
@@ -259,6 +268,19 @@
             },
 
             methods: {
+                openTrackingLink(element) {
+                    // Verifica se o link já contém 'http://' ou 'https://'
+                    if (!/^https?:\/\//i.test(element.tracking_link)) {
+                        // Se não, adiciona 'http://' ao link
+                        this.trackingLink = 'http://' + element.tracking_link;
+                    }
+                    window.open(this.trackingLink, '_blank'); // Abre o link de rastreamento em uma nova aba
+                },
+
+                logElementData(element) {
+                    console.log(element);
+                },
+
                 openLeadDetails(url) {
                     window.location.href = url; // Simula o comportamento do <a>
                 },
@@ -483,7 +505,9 @@
                     if (stage.id === 2) {
                         // Abre o modal para atualização do status apenas se o quadro for de ID 2
                         this.selectedLead = event.added.element; // Armazena o lead selecionado
-                        this.$refs.dialog.openDialog(this.selectedLead); // Abre o diálogo
+                        if(!this.selectedLead.tracking_link){
+                            this.$refs.dialog.openDialog(this.selectedLead); // Abre o diálogo
+                        }
                     }
 
                 },
@@ -670,7 +694,12 @@
                             tracking_link: this.trackingLink,
                             lead_id: this.lead.id
                         }).then(response => {
-                            this.$emitter.emit('add-flash', {type: 'sucess', message: response.data.message });
+
+                            // Atualiza o tracking_link do lead no frontend
+                            this.lead.tracking_link = this.trackingLink;
+                            
+                            this.$emitter.emit('add-flash', {type: 'success', message: response.data.message });
+
                             this.closeDialog();
                         }).catch(error => {
                             this.$emitter.emit('add-flash', { type: 'error', message: error.response.data.message });

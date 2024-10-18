@@ -1,6 +1,6 @@
 <x-admin::layouts>
     <x-slot:title>
-        @lang('admin::app.leads.view.title', ['title' => $lead->title])
+        @lang('admin::app.leads.view.title', ['title' => $lead->id])
     </x-slot>
 
     <!-- Content -->

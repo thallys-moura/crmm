@@ -32,7 +32,7 @@
             <x-admin::form
                 v-slot="{ meta, errors, handleSubmit }"
                 as="div"
-                ref="observacaoModal"
+                ref="modalForm"
             >
                 <form @submit="handleSubmit($event, save)">
                     @csrf
@@ -197,6 +197,8 @@
                             alert('Observação salva com sucesso!');
                         }
                     } catch (error) {
+                        this.$refs.observacaoModal.close();
+
                         console.error('Erro ao salvar:', error);
                     } finally {
                         this.isStoring = false;
