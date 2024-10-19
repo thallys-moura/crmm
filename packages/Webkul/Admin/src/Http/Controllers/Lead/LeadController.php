@@ -549,8 +549,22 @@ class LeadController extends Controller
         $lead->billing_status_id = $validated['status_id'];
         $lead->payment_date = $validated['payment_date'];
 
+        // Atualiza o pipeline se o status de faturamento for 1
+        if ($validated['status_id'] == 1) {
+            $pipeline_stage_pago = 4;
+            // Configura o `lead_pipeline_id` para 4 quando o `billing_status_id` for 1
+            $lead->lead_pipeline_stage_id = $pipeline_stage_pago;
+        }
+
+        // Dispara o evento antes da atualização
+        Event::dispatch('lead.update.before', $lead->id);
+
+        // Salva as alterações no lead
         $lead->save();
 
+        // Dispara o evento após a atualização
+        Event::dispatch('lead.update.after', $lead);
+        
         // Retorna uma resposta ou redireciona
         return redirect()->route('admin.leads.view', $lead->id)
                             ->with('success', 'Observação salva com sucesso!');
