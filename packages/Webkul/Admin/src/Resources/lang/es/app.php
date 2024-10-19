@@ -454,6 +454,13 @@ return [
                 'sales-person'     => 'Vendedor',
                 'date'             => 'Fecha',
                 'quote-id'         => 'ID de Cotización',
+                'coupons-generated' => 'Cupones Generados',
+                'coupon' => 'Cupón',
+                'coupons-disclaimer' => [
+                    'not-valid-for-1-month' => 'Los cupones no son válidos para tratamiento de 1 mes.',
+                    'valid-for-60-days' => 'Los cupones son válidos por 60 días a partir de la fecha de emisión.',
+                    'discount-info' => 'Cada cupón concede un descuento del 4%. Si los indicados utilizan el cupón, el indicador principal recibe un incremento del 2% en el descuento, totalizando un descuento máximo del 6%.',
+                ],
             ],
         ],
 

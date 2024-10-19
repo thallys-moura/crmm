@@ -12,7 +12,6 @@
         @if (bouncer()->hasPermission('quotes'))
             <div class="p-3">
                 {!! view_render_event('admin.leads.view.quotes.table.before', ['lead' => $lead]) !!}
-
                 <x-admin::table v-if="quotes.length">
                     {!! view_render_event('admin.leads.view.quotes.table.table_head.before', ['lead' => $lead]) !!}
 

@@ -151,6 +151,15 @@
                                         @{{ element.title }}
                                     </p>
 
+                                    <div v-if="element.billing_status_id === STATUS_PAGO" class="flex flex-wrap gap-1">
+                                        <a @click.stop :href="`{{ route('admin.leads.print', '') }}/${element.id}`" target="_blank">
+                                            <div class="flex items-center gap-2">
+                                                <span class="cursor-pointer rounded-md p-1.5 text-2xl transition-all hover:bg-gray-200 dark:hover:bg-gray-800 max-sm:place-self-center icon-print"></span>
+                                                Recibo
+                                            </div>
+                                        </a>
+                                    </div>
+
                                     {!! view_render_event('admin.leads.index.kanban.content.stage.body.card.title.after') !!}
 
                                     <div class="flex flex-wrap gap-1">
@@ -260,7 +269,10 @@
                     }
 
                     return totalAmount;
-                }
+                },
+                STATUS_PAGO() {
+                    return 1;
+                },
             },
 
             mounted: function () {

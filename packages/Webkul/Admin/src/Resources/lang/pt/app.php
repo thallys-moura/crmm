@@ -427,14 +427,16 @@ return [
                 'expired-quotes' => 'Venda Expirada',
                 'person'         => 'Cliente',
                 'subtotal'       => 'Subtotal',
-                'discount'       => 'Forma de Pagamento',
-                'tax'            => 'Telefone',
+                'discount'       => 'Disconto',
+                'tax'            => 'Imposto',
                 'adjustment'     => 'Ajuste',
                 'grand-total'    => 'Total Geral',
                 'edit'           => 'Editar',
                 'delete'         => 'Excluir',
                 'print'          => 'Imprimir',
-                'status'         => 'Status do Pagamento'
+                'status'         => 'Status do Pagamento',
+                'payment_method' => 'Forma de Pagamento',
+                'email'          => 'Email'
             ],
 
             'pdf' => [
@@ -456,6 +458,13 @@ return [
                 'sales-person'     => 'Vendedor',
                 'date'             => 'Data',
                 'quote-id'         => 'ID da Venda',
+                'coupons-generated' => 'Cupons Gerados',
+                'coupon' => 'Cupom',
+                'coupons-disclaimer' => [
+                    'not-valid-for-1-month' => 'Os cupons não são válidos para tratamento de 1 mês.',
+                    'valid-for-60-days' => 'Os cupons são válidos por 60 dias a partir da data de emissão.',
+                    'discount-info' => 'Cada cupom concede um desconto de 4%. Se os indicados utilizarem o cupom, o indicador principal recebe um acréscimo de 2% no desconto, totalizando um desconto máximo de 6%.',
+                ],
             ],
         ],
 

@@ -5,6 +5,7 @@ namespace Webkul\Admin\DataGrids\Quote;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use Webkul\DataGrid\DataGrid;
+use Illuminate\Support\Facades\Log;
 
 class QuoteDataGrid extends DataGrid
 {
@@ -32,16 +33,20 @@ class QuoteDataGrid extends DataGrid
                 'users.name as sales_person',
                 'persons.id as person_id',
                 'persons.name as person_name',
+                'persons.emails as person_email',
                 'quotes.expired_at as expired_quotes',
                 'products.name as product',
+                'payment_methods.name as payment_method'
             )
             ->leftJoin('users', 'quotes.user_id', '=', 'users.id')
             ->leftJoin('persons', 'quotes.person_id', '=', 'persons.id')
             ->leftJoin('lead_quotes', 'quotes.id', '=', 'lead_quotes.quote_id')
             ->leftJoin('leads', 'lead_quotes.lead_id', '=', 'leads.id')
             ->leftJoin('lead_products', 'lead_products.lead_id', '=', 'leads.id')
-            ->leftJoin('products', 'products.id', '=', 'lead_products.product_id')
-            ->leftJoin('billing_status', 'leads.billing_status_id', '=', 'billing_status.id');
+            ->leftJoin('quote_items', 'quote_items.quote_id', '=', 'quotes.id')
+            ->leftJoin('products', 'products.id', '=', 'quote_items.product_id')
+            ->leftJoin('billing_status', 'leads.billing_status_id', '=', 'billing_status.id')
+            ->leftJoin('payment_methods', 'quotes.payment_method_id', '=', 'payment_methods.id');
     
         if ($userIds = bouncer()->getAuthorizedUserIds()) {
             $queryBuilder->whereIn('quotes.user_id', $userIds);
@@ -71,104 +76,6 @@ class QuoteDataGrid extends DataGrid
     public function prepareColumns(): void
     {
         $this->addColumn([
-            'index'      => 'product',
-            'label'      => trans('admin::app.quotes.index.datagrid.product'),
-            'type'       => 'string',
-            'filterable' => true,
-            'sortable'   => true,
-        ]);
-
-        $this->addColumn([
-            'index'              => 'sales_person',
-            'label'              => trans('admin::app.quotes.index.datagrid.sales-person'),
-            'type'               => 'string',
-            'sortable'           => true,
-            'filterable'         => true,
-            'filterable_type'    => 'searchable_dropdown',
-            'filterable_options' => [
-                'repository' => \Webkul\User\Repositories\UserRepository::class,
-                'column'     => [
-                    'label' => 'name',
-                    'value' => 'name',
-                ],
-            ],
-        ]);
-
-        $this->addColumn([
-            'index'      => 'expired_quotes',
-            'label'      => trans('admin::app.quotes.index.datagrid.expired-quotes'),
-            'type'       => 'date',
-            'searchable' => false,
-            'filterable' => true,
-        ]);
-
-        $this->addColumn([
-            'index'              => 'person_name',
-            'label'              => trans('admin::app.quotes.index.datagrid.person'),
-            'type'               => 'string',
-            'sortable'           => true,
-            'filterable'         => true,
-            'filterable_type'    => 'searchable_dropdown',
-            'filterable_options' => [
-                'repository' => \Webkul\Contact\Repositories\PersonRepository::class,
-                'column'     => [
-                    'label' => 'name',
-                    'value' => 'name',
-                ],
-            ],
-            'closure'    => function ($row) {
-                $route = route('admin.contacts.persons.view', $row->person_id);
-
-                return "<a class=\"text-brandColor transition-all hover:underline\" href='".$route."'>".$row->person_name.'</a>';
-            },
-        ]);
-
-        $this->addColumn([
-            'index'      => 'sub_total',
-            'label'      => trans('admin::app.quotes.index.datagrid.subtotal'),
-            'type'       => 'string',
-            'sortable'   => true,
-            'filterable' => true,
-            'closure'    => fn ($row) => core()->formatBasePrice($row->sub_total, 2),
-        ]);
-
-        $this->addColumn([
-            'index'      => 'discount_amount',
-            'label'      => trans('admin::app.quotes.index.datagrid.discount'),
-            'type'       => 'string',
-            'sortable'   => true,
-            'filterable' => true,
-            'closure'    => fn ($row) => core()->formatBasePrice($row->discount_amount, 2),
-        ]);
-
-        $this->addColumn([
-            'index'      => 'tax_amount',
-            'label'      => trans('admin::app.quotes.index.datagrid.tax'),
-            'type'       => 'string',
-            'filterable' => true,
-            'sortable'   => true,
-            'closure'    => fn ($row) => core()->formatBasePrice($row->tax_amount, 2),
-        ]);
-
-        $this->addColumn([
-            'index'      => 'adjustment_amount',
-            'label'      => trans('admin::app.quotes.index.datagrid.adjustment'),
-            'type'       => 'string',
-            'sortable'   => true,
-            'filterable' => false,
-            'closure'    => fn ($row) => core()->formatBasePrice($row->adjustment_amount, 2),
-        ]);
-
-        $this->addColumn([
-            'index'      => 'grand_total',
-            'label'      => trans('admin::app.quotes.index.datagrid.grand-total'),
-            'type'       => 'string',
-            'sortable'   => true,
-            'filterable' => true,
-            'closure'    => fn ($row) => core()->formatBasePrice($row->grand_total, 2),
-        ]);
-
-        $this->addColumn([
             'index'      => 'status',
             'label'      => trans('admin::app.quotes.index.datagrid.status'),
             'type'       => 'string',
@@ -193,13 +100,102 @@ class QuoteDataGrid extends DataGrid
         ]);
 
         $this->addColumn([
-            'index'      => 'expired_at',
-            'label'      => trans('admin::app.quotes.index.datagrid.expired-at'),
-            'type'       => 'date',
-            'searchable' => false,
+            'index'      => 'product',
+            'label'      => trans('admin::app.quotes.index.datagrid.product'),
+            'type'       => 'string',
+            'filterable' => true,
+            'sortable'   => true,
+        ]);
+
+        $this->addColumn([
+            'index'              => 'sales_person',
+            'label'              => trans('admin::app.quotes.index.datagrid.sales-person'),
+            'type'               => 'string',
+            'sortable'           => true,
+            'filterable'         => true,
+            'filterable_type'    => 'searchable_dropdown',
+            'filterable_options' => [
+                'repository' => \Webkul\User\Repositories\UserRepository::class,
+                'column'     => [
+                    'label' => 'name',
+                    'value' => 'name',
+                ],
+            ],
+        ]);
+
+        $this->addColumn([
+            'index'              => 'person_name',
+            'label'              => trans('admin::app.quotes.index.datagrid.person'),
+            'type'               => 'string',
+            'sortable'           => true,
+            'filterable'         => true,
+            'filterable_type'    => 'searchable_dropdown',
+            'filterable_options' => [
+                'repository' => \Webkul\Contact\Repositories\PersonRepository::class,
+                'column'     => [
+                    'label' => 'name',
+                    'value' => 'name',
+                ],
+            ],
+            'closure'    => function ($row) {
+                $route = route('admin.contacts.persons.view', $row->person_id);
+
+                return "<a class=\"text-brandColor transition-all hover:underline\" href='".$route."'>".$row->person_name.'</a>';
+            },
+        ]);
+
+        $this->addColumn([
+            'index'      => 'email',
+            'label'      => trans('admin::app.quotes.index.datagrid.email'),
+            'type'       => 'string',
+            'filterable' => true,
+            'sortable'   => true,
+            'closure'    => fn ($row) => $row->person_email, 
+        ]);
+
+        $this->addColumn([
+            'index'      => 'sub_total',
+            'label'      => trans('admin::app.quotes.index.datagrid.subtotal'),
+            'type'       => 'string',
             'sortable'   => true,
             'filterable' => true,
-            'closure'    => fn ($row) => core()->formatDate($row->expired_at, 'd M Y'),
+            'closure'    => fn ($row) => core()->formatBasePrice($row->sub_total, 2),
+        ]);
+
+        $this->addColumn([
+            'index'      => 'payment_method',
+            'label'      => trans('admin::app.quotes.index.datagrid.payment_method'),
+            'type'       => 'string',
+            'filterable' => true,
+            'sortable'   => true,
+            'closure'    => fn ($row) => $row->payment_method, 
+        ]);
+
+        $this->addColumn([
+            'index'      => 'discount_amount',
+            'label'      => trans('admin::app.quotes.index.datagrid.discount'),
+            'type'       => 'string',
+            'sortable'   => true,
+            'filterable' => true,
+            'closure'    => fn ($row) => core()->formatBasePrice($row->discount_amount, 2),
+        ]);
+
+        $this->addColumn([
+            'index'      => 'adjustment_amount',
+            'label'      => trans('admin::app.quotes.index.datagrid.adjustment'),
+            'type'       => 'string',
+            'sortable'   => true,
+            'filterable' => false,
+            'closure'    => fn ($row) => core()->formatBasePrice($row->adjustment_amount, 2),
+        ]);
+
+        $this->addColumn([
+            'index'      => 'grand_total',
+            'label'      => trans('admin::app.quotes.index.datagrid.grand-total'),
+            'type'       => 'string',
+            'sortable'   => true,
+            'filterable' => true,
+            'closure'    => fn ($row) => core()->formatBasePrice($row->grand_total, 2),
         ]);
 
         $this->addColumn([

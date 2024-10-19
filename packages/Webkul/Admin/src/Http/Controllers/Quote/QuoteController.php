@@ -91,7 +91,7 @@ class QuoteController extends Controller
         $data_lead['raca'] = request('raca');
         $data_lead['description'] = request('description');
         $data_lead['person'] = array(
-            'name' => request('name'),
+            'name' => $person_request['name'],
             'email' => [0 => ['value' => $person_request['emails'][0]['value']]],
             'contact_numbers' => [0 => ['value' => $person_request['contact_numbers'][0]['value']]],
         );

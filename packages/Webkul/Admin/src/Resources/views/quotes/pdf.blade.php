@@ -38,7 +38,6 @@
 
         <!-- lang supports inclusion -->
         <style type="text/css">
-            @endif
             
             * {
                 margin: 0;
@@ -163,27 +162,28 @@
 
     <body dir="{{ $locale }}">
         <div class="page">
+            @php
+                // Defina a imagem padrão
+                $defaultImage = public_path('images/products/firemax.png');
+
+                // Verifica se o produto tem uma imagem definida e se o arquivo existe no servidor
+                $productImage = (!empty($quote->items[0]->product->image) && file_exists(public_path('images/products/' . $quote->items[0]->product->image)))
+                                ? public_path('images/products/' . $quote->items[0]->product->image)
+                                : $defaultImage;
+            @endphp
+
+            <img src="{{ $productImage }}" 
+            alt="{{$quote->id}}" 
+            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; height: auto; opacity: 0.1; z-index: -1;">
+                        
             <!-- Header -->
             <div class="page-header">
                 <b>@lang('admin::app.quotes.index.pdf.title')</b>
             </div>
-
             <div class="page-content">
                 <!-- Invoice Information -->
                 <table class="{{ app()->getLocale   () }}">
                     <tbody>
-                        <tr>
-                            <td style="width: 50%; padding: 2px 18px;border:none;">
-                                <b>
-                                    @lang('admin::app.quotes.index.pdf.quote-id'): 
-                                </b>
-
-                                <span>
-                                    #{{ $quote->id }}
-                                </span>
-                            </td>
-                        </tr>
-
                         <tr>
                             <td style="width: 50%; padding: 2px 18px;border:none;">
                                 <b>
@@ -277,10 +277,6 @@
                         <thead>
                             <tr>
                                 <th>
-                                    @lang('admin::app.quotes.index.pdf.sku')
-                                </th>
-
-                                <th>
                                     @lang('admin::app.quotes.index.pdf.product-name')
                                 </th>
 
@@ -313,8 +309,6 @@
                         <tbody>
                             @foreach ($quote->items as $item)
                                 <tr>
-                                    <td>{{ $item->sku }}</td>
-
                                     <td>
                                         {{ $item->name }}
                                     </td>
@@ -371,6 +365,24 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+
+                <div class="coupons" style="margin-top: 40%; clear: both;">
+                    <h3>@lang('admin::app.quotes.index.pdf.coupons-generated')</h3>
+                    <table style="width: 100%;">
+                        <tbody>
+                            <tr>
+                                <td><strong>@lang('admin::app.quotes.index.pdf.coupon') 1:</strong> {{ strtoupper(Str::random(5)) }}</td>
+                                <td><strong>@lang('admin::app.quotes.index.pdf.coupon') 2:</strong> {{ strtoupper(Str::random(5)) }}</td>
+                                <td><strong>@lang('admin::app.quotes.index.pdf.coupon') 3:</strong> {{ strtoupper(Str::random(5)) }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="font-size: 12px; margin-top: 15px;">
+                        - @lang('admin::app.quotes.index.pdf.coupons-disclaimer.not-valid-for-1-month')<br>
+                        - @lang('admin::app.quotes.index.pdf.coupons-disclaimer.valid-for-60-days')<br>
+                        - @lang('admin::app.quotes.index.pdf.coupons-disclaimer.discount-info')
+                    </p>
                 </div>
             </div>
         </div>

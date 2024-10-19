@@ -60,4 +60,5 @@ Route::controller(LeadController::class)->prefix('leads')->group(function () {
 
     Route::put('{id}/saveTrackingLink', 'saveTrackingLink')->name('admin.leads.tracking.link');
 
+    Route::get('print/{id}', 'print')->name('admin.leads.print');
 });

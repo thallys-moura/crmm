@@ -3,6 +3,9 @@
 namespace Webkul\Admin\Http\Controllers\Lead;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\App;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -10,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Event;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Webkul\Core\Traits\PDFHandler;
 
 use Prettus\Repository\Criteria\RequestCriteria;
 use Webkul\Admin\DataGrids\Lead\LeadDataGrid;
@@ -33,6 +37,8 @@ use Webkul\User\Repositories\UserRepository;
 
 class LeadController extends Controller
 {
+    use PDFHandler;
+
     /**
      * Create a new controller instance.
      *
@@ -549,6 +555,39 @@ class LeadController extends Controller
         return redirect()->route('admin.leads.view', $lead->id)
                             ->with('success', 'Observação salva com sucesso!');
     }
+
+    /**
+     * Print and download the for the specified resource.
+     */
+    public function print($id): Response|StreamedResponse
+    {   
+        try{ 
+
+            $lead = $this->leadRepository->findOrFail($id);
+            $quote = null;
+            
+            if($lead->quotes()->first()){
+                $quote = $lead->quotes()->with(['items.product'])->first();
+            }   
+
+            // Definir o idioma com base na raça do cliente
+            if ($quote->raca == 1) {
+                App::setLocale('es');  // Espanhol
+            } else {
+                App::setLocale('pt');  // Português (ou o idioma padrão)
+            }
+
+            return $this->downloadPDF(
+                view('admin::quotes.pdf', compact('quote'))->render(),
+                'Quote_'.$quote->id.'_'.$quote->created_at->format('d-m-Y')
+            );
+
+        } catch (\Exception $th) {
+            return response()->make('Falha ao tentar imprimir recibo: ' . $th->getMessage(), 500);
+        }
+        
+    }
+
     /**
      * Get columns for the kanban view.
      */

@@ -46,4 +46,36 @@ return [
     'delete-success'            => 'Formulario Web eliminado con éxito.',
     'delete-failed'             => 'Formulario Web no pudo ser eliminado.',
     'submit_button_label'       => 'Etiqueta Botón Enviar',
+
+    'quotes' => [
+        'index' => [
+            'pdf' => [
+                'title'            => 'Venta',
+                'grand-total'      => 'Total General',
+                'adjustment'       => 'Ajuste',
+                'discount'         => 'Descuento',
+                'tax'              => 'Impuesto',
+                'sub-total'        => 'Subtotal',
+                'amount'           => 'Cantidad',
+                'quantity'         => 'Cantidad',
+                'price'            => 'Precio',
+                'product-name'     => 'Nombre del Producto',
+                'status'           => 'Estado del Pago',
+                'sku'              => 'SKU',
+                'shipping-address' => 'Dirección de Envío',
+                'billing-address'  => 'Dirección de Facturación',
+                'expired-at'       => 'Vencido en',
+                'sales-person'     => 'Vendedor',
+                'date'             => 'Fecha',
+                'quote-id'         => 'ID de la Venta',
+                'coupons-generated' => 'Cupones Generados',
+                'coupon' => 'Cupón',
+                'coupons-disclaimer' => [
+                    'not-valid-for-1-month' => 'Los cupones no son válidos para tratamiento de 1 mes.',
+                    'valid-for-60-days' => 'Los cupones son válidos por 60 días a partir de la fecha de emisión.',
+                    'discount-info' => 'Cada cupón concede un descuento del 4%. Si los indicados utilizan el cupón, el indicador principal recibe un incremento del 2% en el descuento, totalizando un descuento máximo del 6%.',
+                ],
+            ],
+        ]
+    ],
 ];
