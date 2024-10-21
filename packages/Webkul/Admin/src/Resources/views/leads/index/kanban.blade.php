@@ -411,6 +411,17 @@
 
                             this.updateKanbans();
 
+                             // Aplica ordenação pelos leads dentro de cada estágio
+                            for (let [stageId, data] of Object.entries(response.data)) {
+                                this.stageLeads[stageId] = data;
+
+                                // Ordena os leads pela coluna created_at (pode ajustar para desc ou asc)
+                                this.stageLeads[stageId].leads.data.sort((a, b) => {
+                                    return new Date(b.created_at) - new Date(a.created_at); // Para ordenar de forma descendente
+                                });
+                            }
+
+
                             return response;
                         })
                         .catch(error => {
