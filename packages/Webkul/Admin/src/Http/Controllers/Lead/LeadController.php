@@ -269,10 +269,17 @@ class LeadController extends Controller
     public function updateAttributes(int $id)
     {
         $data = request()->all();
+        $uspsBaseUrl = 'https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=';
+
+        // Verifica se o campo tracking_link está presente e ajusta o link com o valor base do USPS
+        if (isset($data['tracking_link'])) {
+            // Se for um número de rastreamento válido, constrói o link completo
+            $data['tracking_link'] = $uspsBaseUrl . $data['tracking_link'];
+        }
 
         $attributes = $this->attributeRepository->findWhere([
             'entity_type' => 'leads',
-            ['code', 'NOTIN', ['title', 'description']],
+            ['code', 'IN', ['lead_value', 'created_at', 'tracking_link']],
         ]);
 
         Event::dispatch('lead.update.before', $id);
@@ -507,7 +514,8 @@ class LeadController extends Controller
     {   
         $data = $request->all();
         $id = $data['lead_id'];
-
+        $default_path = 'https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=';
+        
         $lead = $this->leadRepository->findOrFail($id);
 
         Event::dispatch('lead.update.before', $lead->id);
@@ -516,8 +524,11 @@ class LeadController extends Controller
         $request->validate([
             'tracking_link' => 'required'
         ]);
+        
+        // Limpa espaços e caracteres especiais do código de rastreamento
+        $tracking_code = preg_replace('/\s+/', '', $data['tracking_link']);
+        $lead->tracking_link = $default_path . $tracking_code;
 
-        $lead->tracking_link = $data['tracking_link'];
         $lead->save();
 
         Event::dispatch('lead.update.after', $lead->id);

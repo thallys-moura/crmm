@@ -53,6 +53,7 @@ class Lead extends Model implements LeadContract
         'lead_pipeline_stage_id',
         'billing_observation',
         'payment_date',
+        'tracking_link',
     ];
 
     /**

@@ -281,11 +281,8 @@
 
             methods: {
                 openTrackingLink(element) {
-                    // Verifica se o link já contém 'http://' ou 'https://'
-                    if (!/^https?:\/\//i.test(element.tracking_link)) {
-                        // Se não, adiciona 'http://' ao link
-                        this.trackingLink = 'http://' + element.tracking_link;
-                    }
+                    this.trackingLink = element.tracking_link;
+
                     window.open(this.trackingLink, '_blank'); // Abre o link de rastreamento em uma nova aba
                 },
 

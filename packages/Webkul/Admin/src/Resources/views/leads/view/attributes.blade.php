@@ -4,13 +4,13 @@
     <h4 class="flex items-center justify-between font-semibold dark:text-white">
         @lang('admin::app.leads.view.attributes.title')
 
-        @if (bouncer()->hasPermission('leads.edit'))
+        {{-- @if (bouncer()->hasPermission('leads.edit'))
             <a
                 href="{{ route('admin.leads.edit', $lead->id) }}"
                 class="icon-edit rounded-md p-1 text-2xl transition-all hover:bg-gray-100 dark:hover:bg-gray-950"
                 target="_blank"
             ></a>
-        @endif
+        @endif --}}
     </h4>
 
     {!! view_render_event('admin.leads.view.attributes.form_controls.before', ['lead' => $lead]) !!}
