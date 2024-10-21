@@ -154,15 +154,6 @@ class QuoteDataGrid extends DataGrid
         ]);
 
         $this->addColumn([
-            'index'      => 'sub_total',
-            'label'      => trans('admin::app.quotes.index.datagrid.subtotal'),
-            'type'       => 'string',
-            'sortable'   => true,
-            'filterable' => true,
-            'closure'    => fn ($row) => core()->formatBasePrice($row->sub_total, 2),
-        ]);
-
-        $this->addColumn([
             'index'      => 'payment_method',
             'label'      => trans('admin::app.quotes.index.datagrid.payment_method'),
             'type'       => 'string',
@@ -178,15 +169,6 @@ class QuoteDataGrid extends DataGrid
             'sortable'   => true,
             'filterable' => true,
             'closure'    => fn ($row) => core()->formatBasePrice($row->discount_amount, 2),
-        ]);
-
-        $this->addColumn([
-            'index'      => 'adjustment_amount',
-            'label'      => trans('admin::app.quotes.index.datagrid.adjustment'),
-            'type'       => 'string',
-            'sortable'   => true,
-            'filterable' => false,
-            'closure'    => fn ($row) => core()->formatBasePrice($row->adjustment_amount, 2),
         ]);
 
         $this->addColumn([
