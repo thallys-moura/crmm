@@ -78,14 +78,14 @@
 
             <span class="icon-list rounded-md bg-gray-100 p-2 text-2xl dark:bg-gray-950"></span>
         @else
-            <span class="icon-kanban rounded-md bg-white p-2 text-2xl dark:bg-gray-900"></span>
+            {{-- <span class="icon-kanban rounded-md bg-white p-2 text-2xl dark:bg-gray-900"></span>
 
             <a
                 href="{{ route('admin.leads.index', ['view_type' => 'table']) }}"
                 class="flex"
             >
                 <span class="icon-list p-2 text-2xl"></span>
-            </a>
+            </a> --}}
         @endif
 
         {!! view_render_event('admin.leads.index.view_switcher.pipeline.view_type.after') !!}
