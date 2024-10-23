@@ -158,7 +158,7 @@
                                     </p>
 
                                     <div class="absolute top-1 right-8">
-                                        <a @click.stop="confirmDeleteOrder(`${element.id}`)" class="cursor-pointer absolute">
+                                        <a @click.stop="removeLead(`${element.id}`)" class="cursor-pointer absolute">
                                             <div class="flex items-center gap-2">
                                                 <span class="cursor-pointer rounded-md p-1.5 text-2xl transition-all hover:bg-red-200 dark:hover:bg-red-800 max-sm:place-self-center icon-delete"></span>
                                             </div>
@@ -293,39 +293,30 @@
             },
 
             methods: {
-                // Método para confirmar a exclusão de uma ordem
-                confirmDeleteOrder(element_id) {
-                    // Abrir o alerta de confirmação
-                    alertify.confirm(
-                        'Confirmação de Exclusão',
-                        'Você tem certeza que deseja excluir esta ordem?',
-                        () => {
-                            // Se confirmado, chamar o método de exclusão
-                            //console.log(order);
-                            this.deleteOrder(element_id);
+                removeLead(element_id) {
+                    this.$emitter.emit('open-confirm-modal', {
+                        title: 'Confirmação de Exclusão',
+                        message: 'Você tem certeza que deseja excluir este lead?',
+                        agree: () => {
+                            this.isLoading = true;
+
+                            this.$axios.delete(`{{ route('admin.leads.delete', '') }}/${element_id}`)
+                                .then(response => {
+                                    this.isLoading = false;
+                                    this.get();
+                                    this.$emitter.emit('add-flash', { type: 'success', message: response.data.message });
+                                })
+                                .catch(error => {
+                                    this.isLoading = false;
+
+                                    this.$emitter.emit('add-flash', { type: 'error', message: error.response.data.message });
+                                });
                         },
-                        () => {
-                            // Se cancelado, mostrar uma mensagem de cancelamento (opcional)
+                        cancel: () => {
                             this.$emitter.emit('add-flash', { type: 'info', message: 'Exclusão cancelada!' });
                         }
-                    );
+                    });
                 },
-
-                // Método para excluir a ordem
-                deleteOrder(element_id) {
-                    this.$axios
-                        .delete(`{{ route('admin.leads.delete', '') }}/${element_id}`)
-                        .then(response => {
-                            this.$emitter.emit('add-flash', { type: 'success', message: 'Ordem excluída com sucesso!' });
-
-                            // Atualizar a lista de leads/ordens após exclusão
-                            this.get();
-                        })
-                        .catch(error => {
-                            this.$emitter.emit('add-flash', { type: 'error', message: 'Erro ao excluir a ordem!' });
-                        });
-                },
-
 
                 openTrackingLink(element) {
                     this.trackingLink = element.tracking_link;

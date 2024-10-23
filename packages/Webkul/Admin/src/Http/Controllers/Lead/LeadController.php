@@ -360,11 +360,18 @@ class LeadController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $this->leadRepository->findOrFail($id);
+        $lead = $this->leadRepository->findOrFail($id);
 
         try {
             Event::dispatch('lead.delete.before', $id);
-
+            // Verifica se há uma relação com a `quote`
+            if ($lead->quotes()->exists()) {
+                // Itera sobre as quotes vinculadas e as exclui
+                foreach ($lead->quotes as $quote) {
+                    $quote->delete();
+                }
+            }
+            
             $this->leadRepository->delete($id);
 
             Event::dispatch('lead.delete.after', $id);
