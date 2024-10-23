@@ -42,7 +42,7 @@
                 
                 <!-- Person Email -->
                 <x-admin::form.control-group>
-                    <x-admin::form.control-group.label class="required">
+                    <x-admin::form.control-group.label>
                         @lang('admin::app.quotes.common.contact.email')
                     </x-admin::form.control-group.label>
                     <div class="flex gap-4">
@@ -60,7 +60,7 @@
         
                 <!-- Person Contact Numbers -->
                 <x-admin::form.control-group>
-                    <x-admin::form.control-group.label>
+                    <x-admin::form.control-group.label class="required">
                         @lang('admin::app.quotes.common.contact.contact-number')
                     </x-admin::form.control-group.label>
                     <div class="flex gap-1">
