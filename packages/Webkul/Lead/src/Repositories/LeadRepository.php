@@ -11,6 +11,7 @@ use Webkul\Attribute\Repositories\AttributeValueRepository;
 use Webkul\Contact\Repositories\PersonRepository;
 use Webkul\Core\Eloquent\Repository;
 use Webkul\Lead\Contracts\Lead;
+use Webkul\Quote\Repositories\QuoteRepository;
 
 class LeadRepository extends Repository
 {
@@ -32,6 +33,7 @@ class LeadRepository extends Repository
         'created_at',
         'closed_at',
         'expected_close_date',
+        'quotes'
     ];
 
     /**
@@ -42,6 +44,7 @@ class LeadRepository extends Repository
     public function __construct(
         protected StageRepository $stageRepository,
         protected PersonRepository $personRepository,
+        protected QuoteRepository $quoteRepository,
         protected ProductRepository $productRepository,
         protected AttributeRepository $attributeRepository,
         protected AttributeValueRepository $attributeValueRepository,

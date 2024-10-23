@@ -7,6 +7,7 @@ use Webkul\Attribute\Traits\CustomAttribute;
 use Webkul\Contact\Models\PersonProxy;
 use Webkul\Quote\Models\PaymentMethod;
 use Webkul\Lead\Models\LeadProxy;
+use Webkul\Lead\Models\Lead;
 use Webkul\Quote\Contracts\Quote as QuoteContract;
 use Webkul\User\Models\UserProxy;
 
@@ -43,6 +44,7 @@ class Quote extends Model implements QuoteContract
         'person_id',
         'raca',
         'payment_method_id',
+        'paymentMethod'
     ];
 
     /**
@@ -69,12 +71,10 @@ class Quote extends Model implements QuoteContract
         return $this->belongsTo(PersonProxy::modelClass());
     }
 
-    /**
-     * The leads that belong to the quote.
-     */
+    // Modelo Quote
     public function leads()
     {
-        return $this->belongsToMany(LeadProxy::modelClass(), 'lead_quotes');
+        return $this->belongsToMany(Lead::class, 'lead_quotes', 'quote_id', 'lead_id');
     }
 
     /**

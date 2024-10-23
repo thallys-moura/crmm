@@ -388,7 +388,6 @@ return [
                 'click-to-add'    => 'Clique para adicionar',
                 'search'          => 'Pesquisar',
                 'no-result-found' => 'Nenhum resultado encontrado',
-                'search'          => 'Pesquisar...',
             ],
         ],
 
@@ -1708,7 +1707,7 @@ return [
                 'empty-list'             => 'Sua lista de Ordens está vazia',
                 'empty-list-description' => 'Crie um ordem para organizar seus objetivos.',
                 'create-lead-btn'        => 'Criar Ordem',
-
+                'track-shipment'         => 'Rastrear Envio',
                 'columns' => [
                     'contact-person'      => 'Pessoa de Contato',
                     'id'                  => 'ID',

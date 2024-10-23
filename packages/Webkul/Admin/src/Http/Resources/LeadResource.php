@@ -32,6 +32,7 @@ class LeadResource extends JsonResource
             'type'                 => new TypeResource($this->type),
             'source'               => new SourceResource($this->source),
             'pipeline'             => new PipelineResource($this->pipeline),
+            'quotes'               =>  QuoteResource::collection($this->quotes),
             'stage'                => new StageResource($this->stage),
             'tags'                 => TagResource::collection($this->tags),
         ];

@@ -172,16 +172,15 @@
                                             @{{ element.user.name }}
                                         </div>
 
-                                        <div class="rounded-xl bg-gray-200 px-2 py-1 text-xs font-medium dark:bg-gray-800 dark:text-white">
+                                        <div class="rounded-xl bg-gray-200 px-2 py-1 text-xs font-medium dark:bg-gray-800 dark:text-white" @click.stop style="user-select: text;">
                                             @{{ element.formatted_lead_value }}
                                         </div>
-
-                                        <div class="rounded-xl bg-gray-200 px-2 py-1 text-xs font-medium dark:bg-gray-800 dark:text-white">
-                                            @{{ element.source.name }}
+                                        <div class="rounded-xl bg-gray-200 px-2 py-1 text-xs font-medium dark:bg-gray-800 dark:text-white" @click.stop style="user-select: text;">
+                                            @{{element.quotes[0].paymentMethod.name}}
                                         </div>
 
-                                        <div class="rounded-xl bg-gray-200 px-2 py-1 text-xs font-medium dark:bg-gray-800 dark:text-white">
-                                            @{{ element.type.name }}
+                                        <div class="rounded-xl bg-gray-200 px-2 py-1 text-xs font-medium dark:bg-gray-800 dark:text-white" @click.stop style="user-select: text;">
+                                            @{{element.person.contact_numbers[0].value}}
                                         </div>
 
                                         <div v-if="element.tracking_link" class="rounded-xl bg-green-200 px-2 py-1 text-xs font-medium dark:bg-gray-800 dark:text-white">
@@ -189,7 +188,7 @@
                                             <button v-if="element.tracking_link"
                                                     @click.stop="openTrackingLink(element)" 
                                                     class="tracking-button">
-                                                Rastrear Envio
+                                                @lang('admin::app.leads.index.kanban.track-shipment')
                                             </button>
                                         </div>
                                         <!-- Tags -->

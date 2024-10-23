@@ -11,8 +11,10 @@ use Webkul\Contact\Models\PersonProxy;
 use Webkul\Email\Models\EmailProxy;
 use Webkul\Lead\Contracts\Lead as LeadContract;
 use Webkul\Quote\Models\QuoteProxy;
+//use Webkul\Quote\Models\Quote;
 use Webkul\Tag\Models\TagProxy;
 use Webkul\User\Models\UserProxy;
+use Webkul\Quote\Models\PaymentMethod;
 
 class Lead extends Model implements LeadContract
 {
@@ -54,6 +56,7 @@ class Lead extends Model implements LeadContract
         'billing_observation',
         'payment_date',
         'tracking_link',
+        'quotes'
     ];
 
     /**
@@ -129,19 +132,24 @@ class Lead extends Model implements LeadContract
     }
 
     /**
-     * The quotes that belong to the lead.
-     */
-    public function quotes()
-    {
-        return $this->belongsToMany(QuoteProxy::modelClass(), 'lead_quotes');
-    }
-
-    /**
      * The tags that belong to the lead.
      */
     public function tags()
     {
         return $this->belongsToMany(TagProxy::modelClass(), 'lead_tags');
+    }
+
+    public function paymentMethod()
+    {
+        return $this->belongsTo(PaymentMethod::class, 'payment_method_id');
+    }
+
+    /**
+     * The quotes that belong to the lead.
+     */
+    public function quotes()
+    {
+        return $this->belongsToMany(QuoteProxy::modelClass(), 'lead_quotes',  'lead_id', 'quote_id');
     }
 
     /**

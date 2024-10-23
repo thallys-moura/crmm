@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Webkul\Core\Traits\PDFHandler;
+use Illuminate\Support\Facades\DB;
 
 use Prettus\Repository\Criteria\RequestCriteria;
 use Webkul\Admin\DataGrids\Lead\LeadDataGrid;
@@ -32,6 +33,7 @@ use Webkul\Lead\Repositories\ProductRepository;
 use Webkul\Lead\Repositories\SourceRepository;
 use Webkul\Lead\Repositories\StageRepository;
 use Webkul\Lead\Repositories\TypeRepository;
+use Webkul\Lead\Models\Lead;
 use Webkul\Tag\Repositories\TagRepository;
 use Webkul\User\Repositories\UserRepository;
 
@@ -115,27 +117,36 @@ class LeadController extends Controller
 
             $data[$stage->id] = (new StageResource($stage))->jsonSerialize();
 
-            $data[$stage->id]['leads'] = [
-                'data' => LeadResource::collection($paginator = $query->with([
-                    'tags',
-                    'type',
-                    'source',
-                    'user',
-                    'person',
-                    'person.organization',
-                    'pipeline',
-                    'pipeline.stages',
-                    'stage',
-                    'attribute_values',
-                ])->paginate(10)),
+            // Executamos o `with` e paginamos os resultados
+            $leads = $query->with([
+                'tags',
+                'type',
+                'source',
+                'user',
+                'person',
+                'person.organization',
+                'pipeline',
+                'pipeline.stages',
+                'stage',
+                'attribute_values',
+            ])->paginate(10);
+            
+            // Processando os leads manualmente e coletando os quotes, sem converter para array
+            foreach ($leads as $lead) {
+                $leadQuotes = Lead::find($lead->id)->quotes; // Buscando os quotes do lead
+                $lead->quotes = $leadQuotes; // Adicionando os quotes diretamente ao objeto do lead
+            }
 
+            // Adicionando o resultado do `with` nos dados
+            $data[$stage->id]['leads'] = [
+                'data' => LeadResource::collection($leads),
                 'meta' => [
-                    'current_page' => $paginator->currentPage(),
-                    'from'         => $paginator->firstItem(),
-                    'last_page'    => $paginator->lastPage(),
-                    'per_page'     => $paginator->perPage(),
-                    'to'           => $paginator->lastItem(),
-                    'total'        => $paginator->total(),
+                    'current_page' => $leads->currentPage(),
+                    'from'         => $leads->firstItem(),
+                    'last_page'    => $leads->lastPage(),
+                    'per_page'     => $leads->perPage(),
+                    'to'           => $leads->lastItem(),
+                    'total'        => $leads->total(),
                 ],
             ];
         }
