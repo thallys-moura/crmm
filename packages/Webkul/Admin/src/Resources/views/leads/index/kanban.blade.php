@@ -1,4 +1,10 @@
 {!! view_render_event('admin.leads.index.kanban.before') !!}
+<!-- Alertify CSS -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css"/>
+
+<!-- Alertify JS -->
+<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 
 <!-- Kanabn Vue Component -->
 <v-leads-kanban>
@@ -105,7 +111,7 @@
                                 {!! view_render_event('admin.leads.index.kanban.content.stage.body.card.before') !!}
 
                                 <div
-                                    class="lead-item flex cursor-pointer flex-col gap-5 rounded-md border border-gray-100 bg-gray-50 p-2 dark:border-gray-400 dark:bg-gray-400"
+                                    class="lead-item flex cursor-pointer flex-col gap-5 rounded-md border border-gray-100 bg-gray-50 p-2 dark:border-gray-400 dark:bg-gray-400 relative"
                                     @click="openLeadDetails('{{ route('admin.leads.view', 'replaceId') }}'.replace('replaceId', element.id))"
                                 >
                                     {!! view_render_event('admin.leads.index.kanban.content.stage.body.card.header.before') !!}
@@ -150,6 +156,14 @@
                                     <p class="text-xs font-medium">
                                         @{{ element.title }}
                                     </p>
+
+                                    <div class="absolute top-1 right-8">
+                                        <a @click.stop="confirmDeleteOrder(`${element.id}`)" class="cursor-pointer absolute">
+                                            <div class="flex items-center gap-2">
+                                                <span class="cursor-pointer rounded-md p-1.5 text-2xl transition-all hover:bg-red-200 dark:hover:bg-red-800 max-sm:place-self-center icon-delete"></span>
+                                            </div>
+                                        </a>
+                                    </div>
 
                                     <div v-if="element.billing_status_id === STATUS_PAGO" class="flex flex-wrap gap-1">
                                         <a @click.stop :href="`{{ route('admin.leads.print', '') }}/${element.id}`" target="_blank">
@@ -279,6 +293,40 @@
             },
 
             methods: {
+                // Método para confirmar a exclusão de uma ordem
+                confirmDeleteOrder(element_id) {
+                    // Abrir o alerta de confirmação
+                    alertify.confirm(
+                        'Confirmação de Exclusão',
+                        'Você tem certeza que deseja excluir esta ordem?',
+                        () => {
+                            // Se confirmado, chamar o método de exclusão
+                            //console.log(order);
+                            this.deleteOrder(element_id);
+                        },
+                        () => {
+                            // Se cancelado, mostrar uma mensagem de cancelamento (opcional)
+                            this.$emitter.emit('add-flash', { type: 'info', message: 'Exclusão cancelada!' });
+                        }
+                    );
+                },
+
+                // Método para excluir a ordem
+                deleteOrder(element_id) {
+                    this.$axios
+                        .delete(`{{ route('admin.leads.delete', '') }}/${element_id}`)
+                        .then(response => {
+                            this.$emitter.emit('add-flash', { type: 'success', message: 'Ordem excluída com sucesso!' });
+
+                            // Atualizar a lista de leads/ordens após exclusão
+                            this.get();
+                        })
+                        .catch(error => {
+                            this.$emitter.emit('add-flash', { type: 'error', message: 'Erro ao excluir a ordem!' });
+                        });
+                },
+
+
                 openTrackingLink(element) {
                     this.trackingLink = element.tracking_link;
 
