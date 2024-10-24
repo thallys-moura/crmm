@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\DB;
 use Webkul\Lead\Repositories\LeadRepository;
 use Webkul\Lead\Repositories\StageRepository;
 use Webkul\Admin\Constants\BillingStatus;
+use Illuminate\Support\Facades\Log;
+
 
 class Lead extends AbstractReporting
 {
@@ -266,17 +268,22 @@ class Lead extends AbstractReporting
      */
     public function getTotalWonLeadValueByTypes()
     {
-        return $this->leadRepository
-            ->resetModel()
-            ->select(
-                'lead_types.name',
-                DB::raw('SUM(lead_value) as total')
-            )
-            ->leftJoin('lead_types', 'leads.lead_type_id', '=', 'lead_types.id')
-            ->whereIn('lead_pipeline_stage_id', $this->wonStageIds)
-            ->whereBetween('leads.created_at', [$this->startDate, $this->endDate])
-            ->groupBy('lead_type_id')
-            ->get();
+        $query = $this->leadRepository
+        ->resetModel()
+        ->select(
+            'payment_methods.name as payment_method_name',
+            DB::raw('SUM(lead_value) as total')
+        )
+        ->leftJoin('lead_quotes', 'leads.id', '=', 'lead_quotes.lead_id')
+        ->leftJoin('quotes', 'lead_quotes.quote_id', '=', 'quotes.id')
+        ->leftJoin('payment_methods', 'quotes.payment_method_id', '=', 'payment_methods.id')
+        ->whereIn('lead_pipeline_stage_id', $this->wonStageIds)
+        ->where('leads.billing_status_id', BillingStatus::STATUS_PAGO) // Filtra pelo billing_status_id = STATUS_PAGO
+        ->whereBetween('leads.created_at', [$this->startDate, $this->endDate])
+        ->groupBy('quotes.payment_method_id');
+
+        // Execute the query
+        return $query->get();
     }
 
     /**

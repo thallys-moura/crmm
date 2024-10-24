@@ -48,7 +48,7 @@
                             ></span>
 
                             <p class="text-xs dark:text-gray-300">
-                                @{{ stat.name }}
+                                @{{ stat.payment_method_name }}
                             </p>
                         </div>
                     </div>
@@ -133,7 +133,6 @@
                         })
                         .then(response => {
                             this.report = response.data;
-
                             this.isLoading = false;
                         })
                         .catch(error => {});
