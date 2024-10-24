@@ -5,6 +5,7 @@ namespace Webkul\Admin\Helpers\Reporting;
 use Illuminate\Support\Facades\DB;
 use Webkul\Lead\Repositories\LeadRepository;
 use Webkul\Lead\Repositories\StageRepository;
+use Webkul\Admin\Constants\BillingStatus;
 
 class Lead extends AbstractReporting
 {
@@ -208,7 +209,7 @@ class Lead extends AbstractReporting
     {
         return $this->leadRepository
             ->resetModel()
-            ->whereIn('lead_pipeline_stage_id', $this->wonStageIds)
+            ->where('billing_status_id', BillingStatus::STATUS_PAGO) // Filtra pelo billing_status_id = 1
             ->whereBetween('created_at', [$startDate, $endDate])
             ->avg('lead_value');
     }
