@@ -344,13 +344,13 @@
 
                             <!-- Group -->
                             <x-admin::form.control-group>
-                                <x-admin::form.control-group.label class="required">
+                                <x-admin::form.control-group.label class="">
                                     @lang('admin::app.settings.users.index.create.group')
                                 </x-admin::form.control-group.label>
 
                                 <v-field
                                     name="groups[]"
-                                    rules="required"
+                                    rules=""
                                     label="@lang('admin::app.settings.users.index.create.group')"
                                     multiple
                                     v-model="user.groups"

@@ -419,8 +419,8 @@
                                 return;
                             }
 
-                            params['search'] += `title:${column.value.join(',')};`;
-                            params['searchFields'] += `title:like;`;
+                            params['search'] += `title:${column.value.join(',')};person.name:${column.value.join(',')};user.name:${column.value.join(',')};quotes.paymentMethod.name:${column.value.join(',')};`;
+                            params['searchFields'] += `title:like;person.name:like;user.name:like;quotes.paymentMethod.name:like`;
 
                             return;
                         }
@@ -445,6 +445,7 @@
                             }
                         })
                         .then(response => {
+                            console.log(response);
                             this.isLoading = false;
 
                             this.updateKanbans();

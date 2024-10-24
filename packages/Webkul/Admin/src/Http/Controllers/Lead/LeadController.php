@@ -84,7 +84,7 @@ class LeadController extends Controller
      * Returns a listing of the resource.
      */
     public function get(): JsonResponse
-    {
+    {   
         if (request()->query('pipeline_id')) {
             $pipeline = $this->pipelineRepository->find(request()->query('pipeline_id'));
         } else {
