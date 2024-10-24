@@ -1888,15 +1888,15 @@ return [
             'title' => 'Painel',
 
             'revenue' => [
-                'lost-revenue' => 'Receita Perdida',
-                'won-revenue'  => 'Receita Ganha',
+                'lost-revenue' => 'Despesa',
+                'won-revenue'  => 'Receita',
             ],
 
             'over-all' => [
                 'average-lead-value'    => 'Valor Médio do Ordem',
                 'total-leads'           => 'Total de Ordens',
                 'average-leads-per-day' => 'Média de Ordens por Dia',
-                'total-quotations'      => 'Total de Cotações',
+                'total-quotations'      => 'Total de Vendas',
                 'total-persons'         => 'Total de Pessoas',
                 'total-organizations'   => 'Total de Organizações',
             ],
