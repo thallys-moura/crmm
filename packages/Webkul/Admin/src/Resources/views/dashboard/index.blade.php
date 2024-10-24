@@ -54,8 +54,7 @@
                 <!-- Total Products -->
                 @include('admin::dashboard.index.top-selling-products')
 
-                <!-- Total Persons -->
-                @include('admin::dashboard.index.top-persons')
+
             </div>
         </div>
 
