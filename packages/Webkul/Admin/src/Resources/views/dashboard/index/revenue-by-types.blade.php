@@ -69,11 +69,11 @@
                         <!-- Add Variants Information -->
                         <div class="flex flex-col items-center">
                             <p class="text-base font-semibold text-gray-400">
-                                @lang('admin::app.dashboard.index.revenue-by-sources.empty-title')
+                                @lang('admin::app.dashboard.index.revenue-by-payment-days.empty-title')
                             </p>
 
                             <p class="text-gray-400">
-                                @lang('admin::app.dashboard.index.revenue-by-sources.empty-info')
+                                @lang('admin::app.dashboard.index.revenue-by-payment-days.empty-info')
                             </p>
                         </div>
                     </div>

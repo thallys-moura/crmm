@@ -18,12 +18,11 @@
             <x-admin::shimmer.dashboard.index.revenue-by-sources />
         </template>
 
-        <!-- Total Sales Section -->
         <template v-else>
             <div class="grid gap-4 rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
                 <div class="flex flex-col justify-between gap-1">
                     <p class="text-base font-semibold dark:text-gray-300">
-                        @lang('admin::app.dashboard.index.revenue-by-sources.title')
+                        @lang('admin::app.dashboard.index.revenue-by-payment-days.title')
                     </p>
                 </div>
 
@@ -48,7 +47,7 @@
                             ></span>
 
                             <p class="text-xs dark:text-gray-300">
-                                @{{ stat.name }}
+                                @{{ stat.payment_day_name }}
                             </p>
                         </div>
                     </div>

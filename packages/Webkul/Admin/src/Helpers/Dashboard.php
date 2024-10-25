@@ -75,9 +75,9 @@ class Dashboard
     /**
      * Returns leads revenue statistics by sources.
      */
-    public function getLeadsStatsBySources(): mixed
+    public function getTotalWonLeadValueByPaymentDays(): mixed
     {
-        return $this->leadReporting->getTotalWonLeadValueBySources();
+        return $this->leadReporting->getTotalWonLeadValueByPaymentDays();
     }
 
     /**

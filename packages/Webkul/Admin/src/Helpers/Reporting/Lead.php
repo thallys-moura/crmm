@@ -248,19 +248,20 @@ class Lead extends AbstractReporting
     /**
      * Retrieves total lead value by sources.
      */
-    public function getTotalWonLeadValueBySources()
+    public function getTotalWonLeadValueByPaymentDays()
     {
-        return $this->leadRepository
+        $query = $this->leadRepository
             ->resetModel()
             ->select(
-                'lead_sources.name',
-                DB::raw('SUM(lead_value) as total')
+                DB::raw('DAYNAME(leads.payment_date) as payment_day_name'), // Retorna o nome do dia da semana
+                DB::raw('SUM(lead_value) as total') // Somar o valor total dos leads
             )
-            ->leftJoin('lead_sources', 'leads.lead_source_id', '=', 'lead_sources.id')
-            ->whereIn('lead_pipeline_stage_id', $this->wonStageIds)
-            ->whereBetween('leads.created_at', [$this->startDate, $this->endDate])
-            ->groupBy('lead_source_id')
-            ->get();
+            ->where('leads.billing_status_id', BillingStatus::STATUS_PAGO) // Apenas leads pagos
+            ->whereBetween('leads.created_at', [$this->startDate, $this->endDate]) // Filtro de datas
+            ->groupBy(DB::raw('DAYNAME(leads.payment_date)')) // Agrupar por dia da semana
+            ->orderBy(DB::raw('DAYOFWEEK(leads.payment_date)'), 'asc'); // Ordenar por índice do dia da semana (1 = Domingo, 7 = Sábado)
+    
+        return $query->get();
     }
 
     /**

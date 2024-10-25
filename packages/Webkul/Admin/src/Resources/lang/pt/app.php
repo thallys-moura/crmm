@@ -1914,8 +1914,14 @@ return [
                 'empty-info'  => 'Nenhum dado disponível para o intervalo selecionado',
             ],
 
+            'revenue-by-payment-days' => [
+                'title'       => 'Receita por Dias de Pagamento',
+                'empty-title' => 'Nenhum Dado Disponível',
+                'empty-info'  => 'Nenhum dado disponível para os dias de pagamento no intervalo selecionado',
+            ],
+
             'revenue-by-types' => [
-                'title'       => 'Receita por Tipos',
+                'title'       => 'Receita por Forma de Pagamento',
                 'empty-title' => 'Nenhum Dado Disponível',
                 'empty-info'  => 'Nenhum dado disponível para o intervalo selecionado',
             ],
