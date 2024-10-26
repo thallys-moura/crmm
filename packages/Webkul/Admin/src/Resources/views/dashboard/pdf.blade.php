@@ -56,9 +56,13 @@
         <div class="logo-container" style="text-align: center; padding: 10px 0;">
             <img src="{{ $logoImage }}" alt="Logomarca" style="width: 150px; height: auto;">
         </div>
+
         <!-- Header -->
         <div class="page-header">
             <h1>@lang('admin::app.dashboard.index.pdf.sales.title')</h1>
+            @if($product)
+                <h2>@lang('admin::app.dashboard.index.pdf.sales.product-specific', ['product' => $product->name])</h2>
+            @endif
         </div>
 
         <div class="page-content">

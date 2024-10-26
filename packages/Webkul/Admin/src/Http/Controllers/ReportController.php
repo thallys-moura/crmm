@@ -52,7 +52,7 @@ class ReportController extends Controller
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
         $seller = $request->input('seller');
-        $product = $request->input('product');
+        $productId = $request->input('product');
         $allSellers = $request->input('allSellers', false);  // Filtro de todos os vendedores
         $allProducts = $request->input('allProducts', false);  // Filtro de todos os produtos
 
@@ -65,14 +65,15 @@ class ReportController extends Controller
 
         // Filtro de vendedor (seller)
         if ($allSellers != 'true' && $seller) {
-            Log::info('aqui');
             $query->where('leads.user_id', $seller);
         }
 
         // Filtro de produtos (product)
-        if ($allProducts != 'true' && $product) {
-            // Apenas filtra se o produto foi especificado
-            $query->where('quote_items.product_id', $product);
+        if ($allProducts != 'true' && $productId) {
+            $query->where('quote_items.product_id', $productId);
+            $product = DB::table('products')->find($productId); // Obtém o produto
+        } else {
+            $product = null; // Nenhum produto específico selecionado
         }
 
         // Obter leads e fazer o join com as quotes e payment_methods
@@ -113,7 +114,7 @@ class ReportController extends Controller
     
                 // Renderiza a view do PDF e faz o download
             return $this->downloadPDF(
-                view('admin::dashboard.pdf', compact('summary', 'details'))->render(),
+                view('admin::dashboard.pdf', compact('summary', 'details', 'product'))->render(),
                 'Relatorio_Vendas_' . now()->format('d-m-Y') . '.pdf'
             );
 

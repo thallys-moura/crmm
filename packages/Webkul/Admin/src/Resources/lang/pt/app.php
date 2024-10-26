@@ -1908,6 +1908,7 @@ return [
                     'seller' => 'Vendedor',
                     'value' => 'Valor',
                     'status' => 'Status',
+                    'product-specific' => 'Relatório de vendas para o produto: :product',
                 ],
             ],
             'revenue-by-report-filters' => [
