@@ -72,6 +72,10 @@
 
             <!-- Revenue by Types -->
             @include('admin::dashboard.index.revenue-by-types')
+
+            <!-- Formulário de Filtros de Relatórios -->
+            @include('admin::dashboard.index.revenue-by-report-filters')
+
         </div>
 
         {!! view_render_event('admin.dashboard.index.content.left.after') !!}

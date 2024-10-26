@@ -1,0 +1,18 @@
+{
+    "name": "webkul/report",
+    "description": "Reports module for Krayin CRM",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Webkul\\Reports\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Webkul\\Report\\Providers\\ReportsServiceProvider"
+            ]
+        }
+    }
+}
