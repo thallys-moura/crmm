@@ -1671,7 +1671,56 @@ return [
     ],
 
 
+    'expenses' => [
+        'index' => [
+            'title'       => 'Despesas',
+            'create-btn'  => 'Criar Nova Despesa',
+            'datagrid'    => [
+                'id'          => 'ID',
+                'type'        => 'Tipo',
+                'description' => 'Descrição',
+                'date'        => 'Data',
+                'value'       => 'Valor',
+                'sales-person'=> 'Responsável',
+                'created-at'  => 'Criado em',
+                'edit'        => 'Editar',
+                'delete'      => 'Excluir',
+                'mass-delete' => 'Excluir em Massa',
+                'grand-total' => 'Total Geral',
+            ],
+            'create-success' => 'Despesa criada com sucesso.',
+            'update-success' => 'Despesa atualizada com sucesso.',
+            'delete-success' => 'Despesa excluída com sucesso.',
+            'delete-failed'  => 'Despesas excluídas com sucesso.',
+        ],
 
+        'create' => [
+            'title'        => 'Criar Nova Despesa',
+            'save-btn'     => 'Salvar Despesa',
+            'general-info' => 'Informações Gerais',
+            'type'         => 'Tipo de Despesa',
+            'description'  => 'Descrição',
+            'date'         => 'Data da Despesa',
+            'value'        => 'Valor',
+            'observation'  => 'Observações',
+            'user'         => 'Responsável',
+            'cancel'       => 'Cancelar',
+        ],
+
+        'edit' => [
+            'title'          => 'Editar Despesa',
+            'save-btn'       => 'Salvar',
+            'details'        => 'Detalhes da Despesa',
+            'details-info'   => 'Insira as informações básicas da despesa',
+            'type'           => 'Tipo de Despesa',
+            'user'           => 'Responsável',
+            'value'          => 'Valor da Despesa',
+            'date'           => 'Data da Despesa',
+            'description'    => 'Descrição da Despesa',
+            'observation'    => 'Observação (Opcional)',
+        ],
+    ],
+    
     'leads' => [
         'create-success'    => 'Ordem criado com sucesso.',
         'update-success'    => 'Ordem atualizado com sucesso.',
@@ -1992,6 +2041,7 @@ return [
         'leads'                => 'Ordens',
         'quotes'               => 'Vendas',
         'quote'                => 'Venda',
+        'expenses'             => 'Despesas',  
         'mail'                 => [
             'title'   => 'Email',
             'compose' => 'Compor',

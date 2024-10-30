@@ -134,13 +134,23 @@ return [
     ],
 
     /**
+     * Expenses.
+     */
+    [
+        'key'        => 'expenses',
+        'name'       => 'admin::app.layouts.expenses',
+        'route'      => 'admin.expenses.index',
+        'sort'       => 8,
+        'icon-class' => 'icon-dollar',
+    ],
+    /**
      * Settings.
      */
     [
         'key'        => 'settings',
         'name'       => 'admin::app.layouts.settings',
         'route'      => 'admin.settings.index',
-        'sort'       => 8,
+        'sort'       => 9,
         'icon-class' => 'icon-setting',
     ], [
         'key'        => 'settings.user',
@@ -270,7 +280,7 @@ return [
         'key'        => 'configuration',
         'name'       => 'admin::app.layouts.configuration',
         'route'      => 'admin.configuration.index',
-        'sort'       => 9,
+        'sort'       => 10,
         'icon-class' => 'icon-configuration',
     ],
 ];

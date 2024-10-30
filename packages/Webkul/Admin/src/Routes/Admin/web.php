@@ -54,3 +54,8 @@ require 'rest-routes.php';
  * Reports routes.
  */
 require 'report-routes.php';
+
+/**
+ * Expenses routes.
+*/
+require 'expenses-routes.php';

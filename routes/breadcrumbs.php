@@ -421,3 +421,27 @@ Breadcrumbs::for('dashboard.account.edit', function (BreadcrumbTrail $trail, $us
     $trail->parent('dashboard');
     $trail->push(trans('admin::app.account.edit.title'), route('admin.user.account.edit', $user->id));
 });
+
+// Dashboard > Despesas (Listagem)
+Breadcrumbs::for('expenses', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');  // O breadcrumb "dashboard" já está definido
+    $trail->push(trans('admin::app.layouts.expenses'), route('admin.expenses.index'));
+});
+
+// Dashboard > Despesas > Criar
+Breadcrumbs::for('expenses.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('expenses');
+    $trail->push(trans('admin::app.expenses.create.title'), route('admin.expenses.create'));
+});
+
+// Dashboard > Despesas > Editar
+Breadcrumbs::for('expenses.edit', function (BreadcrumbTrail $trail, $expense) {
+    $trail->parent('expenses');
+    $trail->push(trans('admin::app.expenses.edit.title'), route('admin.expenses.edit', $expense->id));
+});
+
+// Dashboard > Despesas > Visualizar
+Breadcrumbs::for('expenses.view', function (BreadcrumbTrail $trail, $expense) {
+    $trail->parent('expenses');
+    $trail->push('#'.$expense->id, route('admin.expenses.view', $expense->id));
+});
