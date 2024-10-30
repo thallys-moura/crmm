@@ -5,6 +5,7 @@ namespace Webkul\Admin\Helpers\Reporting;
 use Illuminate\Support\Facades\DB;
 use Webkul\Lead\Repositories\LeadRepository;
 use Webkul\Lead\Repositories\StageRepository;
+use Webkul\Expenses\Repositories\ExpenseRepository;
 use Webkul\Admin\Constants\BillingStatus;
 use Illuminate\Support\Facades\Log;
 
@@ -33,7 +34,9 @@ class Lead extends AbstractReporting
      */
     public function __construct(
         protected LeadRepository $leadRepository,
-        protected StageRepository $stageRepository
+        protected StageRepository $stageRepository,
+        protected ExpenseRepository $expenseRepository,
+
     ) {
         $this->wonStageIds = $this->stageRepository->where('code', 'won')->pluck('id')->toArray();
 
@@ -238,11 +241,10 @@ class Lead extends AbstractReporting
      */
     public function getTotalLostLeadValue($startDate, $endDate): ?float
     {
-        return $this->leadRepository
-            ->resetModel()
-            ->whereIn('lead_pipeline_stage_id', $this->lostStageIds)
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->avg('lead_value');
+        return $this->expenseRepository
+        ->resetModel() // Reseta o estado do model se necessário
+        ->whereBetween('date', [$startDate, $endDate]) // Filtra as despesas pelo campo 'date'
+        ->sum('value'); // Soma os valores das despesas
     }
 
     /**
