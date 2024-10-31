@@ -185,12 +185,16 @@
                                             
                                             @{{ element.user.name }}
                                         </div>
-
+                                        
                                         <div class="rounded-xl bg-gray-200 px-2 py-1 text-xs font-medium dark:bg-gray-800 dark:text-white" @click.stop style="user-select: text;">
                                             @{{ element.formatted_lead_value }}
                                         </div>
                                         <div class="rounded-xl bg-gray-200 px-2 py-1 text-xs font-medium dark:bg-gray-800 dark:text-white" @click.stop style="user-select: text;">
                                             @{{element.quotes[0].paymentMethod.name}}
+                                        </div>
+
+                                        <div class="rounded-xl bg-gray-200 px-2 py-1 text-xs font-medium dark:bg-gray-800 dark:text-white" @click.stop style="user-select: text;">
+                                            @{{element.quotes[0].items[0].name}}
                                         </div>
 
                                         <div class="rounded-xl bg-gray-200 px-2 py-1 text-xs font-medium dark:bg-gray-800 dark:text-white" @click.stop style="user-select: text;">

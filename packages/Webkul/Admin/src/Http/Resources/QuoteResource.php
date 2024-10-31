@@ -28,6 +28,8 @@ class QuoteResource extends JsonResource
             'user'              => new UserResource($this->user),
             'person'            => new PersonResource($this->person),
             'paymentMethod'     => $this->paymentMethod,
+            'items'             => $this->items,
+            'quote_items'       => $this->quote_items,
         ];
     }
 }

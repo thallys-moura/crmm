@@ -36,6 +36,7 @@ use Webkul\Lead\Repositories\TypeRepository;
 use Webkul\Lead\Models\Lead;
 use Webkul\Tag\Repositories\TagRepository;
 use Webkul\User\Repositories\UserRepository;
+use Webkul\Quote\Models\QuoteProxy;
 
 class LeadController extends Controller
 {
@@ -133,7 +134,11 @@ class LeadController extends Controller
             
             // Processando os leads manualmente e coletando os quotes, sem converter para array
             foreach ($leads as $lead) {
-                $leadQuotes = Lead::find($lead->id)->quotes; // Buscando os quotes do lead
+                // Carrega os quotes com os produtos associados aos quote_items
+                $leadQuotes = QuoteProxy::with('items.product')->whereHas('leads', function ($query) use ($lead) {
+                    $query->where('lead_id', $lead->id);
+                })->get();
+                
                 $lead->quotes = $leadQuotes; // Adicionando os quotes diretamente ao objeto do lead
             }
 
