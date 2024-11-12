@@ -4,6 +4,7 @@ namespace Webkul\Automation\Providers;
 
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Log;
 
 class WorkflowServiceProvider extends ServiceProvider
 {
@@ -17,6 +18,7 @@ class WorkflowServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__.'/../Database/Migrations');
 
         Event::listen('*', function ($eventName, array $data) {
+
             if (! in_array($eventName, data_get(config('workflows.trigger_entities'), '*.events.*.event'))) {
                 return;
             }

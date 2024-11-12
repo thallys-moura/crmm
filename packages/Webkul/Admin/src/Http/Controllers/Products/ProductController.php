@@ -13,6 +13,8 @@ use Webkul\Admin\Http\Requests\AttributeForm;
 use Webkul\Admin\Http\Requests\MassDestroyRequest;
 use Webkul\Admin\Http\Resources\ProductResource;
 use Webkul\Product\Repositories\ProductRepository;
+use Webkul\EmailTemplate\Models\EmailTemplateProxy;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -43,7 +45,9 @@ class ProductController extends Controller
      */
     public function create(): View
     {
-        return view('admin::products.create');
+        $emailTemplates = EmailTemplateProxy::all();
+
+        return view('admin::products.create', compact('emailTemplates'));
     }
 
     /**
@@ -80,6 +84,7 @@ class ProductController extends Controller
     public function edit(int $id): View|JsonResponse
     {
         $product = $this->productRepository->findOrFail($id);
+        $emailTemplates = EmailTemplateProxy::all();
 
         $inventories = $product->inventories()
             ->with('location')
@@ -95,7 +100,7 @@ class ProductController extends Controller
                 ];
             });
 
-        return view('admin::products.edit', compact('product', 'inventories'));
+        return view('admin::products.edit', compact('product', 'inventories', 'emailTemplates'));
     }
 
     /**

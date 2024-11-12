@@ -6,6 +6,7 @@ use Illuminate\Container\Container;
 use Webkul\Core\Eloquent\Repository;
 use Webkul\Email\Helpers\Htmlfilter;
 use Webkul\Email\Helpers\Parser;
+use Illuminate\Support\Facades\Log;
 
 class EmailRepository extends Repository
 {
@@ -77,7 +78,6 @@ class EmailRepository extends Repository
     public function update(array $data, $id, $attribute = 'id')
     {
         $email = parent::findOrFail($id);
-
         parent::update($this->sanitizeEmails($data), $id);
 
         $this->attachmentRepository

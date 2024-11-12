@@ -27,5 +27,13 @@ class EventServiceProvider extends ServiceProvider
         'activity.update.after' => [
             'Webkul\Admin\Listeners\Activity@afterUpdateOrCreate',
         ],
+
+        'quote.post_create.actions' => [
+            'Webkul\Admin\Listeners\Lead@handleQuoteCreated',
+        ],
+
+        'lead.stage.transition.actions' => [
+            'Webkul\Admin\Listeners\Lead@handleQuoteCreated',
+        ],
     ];
 }

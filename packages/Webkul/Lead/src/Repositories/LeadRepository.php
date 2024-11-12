@@ -33,7 +33,8 @@ class LeadRepository extends Repository
         'created_at',
         'closed_at',
         'expected_close_date',
-        'quotes'
+        'quotes',
+        'tracking_link'
     ];
 
     /**
@@ -84,6 +85,7 @@ class LeadRepository extends Repository
                 'leads.created_at as created_at',
                 'title',
                 'lead_value',
+                'leads.tracking_link',
                 'persons.name as person_name',
                 'leads.person_id as person_id',
                 'lead_pipelines.id as lead_pipeline_id',

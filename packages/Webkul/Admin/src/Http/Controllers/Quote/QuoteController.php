@@ -17,10 +17,9 @@ use Webkul\Admin\Http\Requests\MassDestroyRequest;
 use Webkul\Admin\Http\Resources\QuoteResource;
 use Webkul\Core\Traits\PDFHandler;
 use Webkul\Lead\Repositories\LeadRepository;
-use Webkul\Admin\Http\Controllers\Lead\LeadController;
+use Webkul\Contact\Repositories\PersonRepository;
 use Webkul\Lead\Models\Lead;
-use Webkul\Contact\Models\Person;
-
+use Illuminate\Support\Facades\Log;
 use Webkul\Quote\Repositories\QuoteRepository;
 use Webkul\Quote\Models\PaymentMethod;
 
@@ -35,7 +34,8 @@ class QuoteController extends Controller
      */
     public function __construct(
         protected QuoteRepository $quoteRepository,
-        protected LeadRepository $leadRepository
+        protected LeadRepository $leadRepository,
+        protected PersonRepository $personRepository,
     ) {
         request()->request->add(['entity_type' => 'quotes']);
     }
@@ -78,7 +78,7 @@ class QuoteController extends Controller
 
         //Pessoa da Requisição
         $person_request = request('person');
-
+        
         //Objeto Lead(Ordem)
         $data_lead = array();
         $data_lead['entity_type'] = 'leads';
@@ -91,22 +91,21 @@ class QuoteController extends Controller
         $data_lead['raca'] = request('raca');
         $data_lead['description'] = request('description');
         $data_lead['person'] = array(
+            'entity_type' => '',
             'name' => $person_request['name'],
-            'email' => [0 => ['value' => $person_request['emails'][0]['value']]],
+            'emails' => [0 => ['value' => $person_request['emails'][0]['value']]],
             'contact_numbers' => [0 => ['value' => $person_request['contact_numbers'][0]['value']]],
         );
 
-        //Salvando Pessoa da Venda e Ordem
-        $person = Person::create($data_lead['person']);
+        //Salvando Pessoa
+        $person = $this->personRepository->create($data_lead['person']);
+
         $data_lead['person']['id'] = $person->id;
         $data_lead['person_id'] = $person->id;
         $data_lead['lead_value'] = request('grand_total');
 
         //Salvando Ordem
         $lead = Lead::create($data_lead);
-
-        Event::dispatch('quote.create.before');
-
         $data_quote = $request->all();
         $data_quote['person']['id'] = $person->id;
         $data_quote['person_id'] = $person->id;
@@ -118,6 +117,14 @@ class QuoteController extends Controller
             $lead->quotes()->attach($quote->id);
         }
 
+        $stage = $lead->pipeline->stages()
+        ->where('id',$data_lead['lead_pipeline_stage_id'])
+        ->firstOrFail();
+        
+        if($stage->email_template_id){
+            Event::dispatch('quote.post_create.actions', ['lead' => $lead, 'email_id' => $stage->email_template_id]);
+        }
+        
         Event::dispatch('quote.create.after', $quote);
 
         session()->flash('success', trans('admin::app.quotes.index.create-success'));

@@ -189,6 +189,7 @@
                                         <div class="rounded-xl bg-gray-200 px-2 py-1 text-xs font-medium dark:bg-gray-800 dark:text-white" @click.stop style="user-select: text;">
                                             @{{ element.formatted_lead_value }}
                                         </div>
+                                        
                                         <div class="rounded-xl bg-gray-200 px-2 py-1 text-xs font-medium dark:bg-gray-800 dark:text-white" @click.stop style="user-select: text;">
                                             @{{element.quotes[0].paymentMethod.name}}
                                         </div>
@@ -256,7 +257,8 @@
                             columns: [],
                         }
                     },
-
+                    
+                    stagesConstants: @json($stages),
                     stages: @json($pipeline->stages->toArray()),
 
                     stageLeads: {},
@@ -324,12 +326,10 @@
 
                 openTrackingLink(element) {
                     this.trackingLink = element.tracking_link;
-
                     window.open(this.trackingLink, '_blank'); // Abre o link de rastreamento em uma nova aba
                 },
 
                 logElementData(element) {
-                    console.log(element);
                 },
 
                 openLeadDetails(url) {
@@ -449,7 +449,6 @@
                             }
                         })
                         .then(response => {
-                            console.log(response);
                             this.isLoading = false;
 
                             this.updateKanbans();
@@ -540,19 +539,40 @@
                  * @param {object} event - The event object.
                  * @returns {void}
                  */
-                updateStage: function (stage, event) {
+                 updateStage: function (stage, event) {
                     if (event.removed) {
                         stage.lead_value = parseFloat(stage.lead_value) - parseFloat(event.removed.element.lead_value);
-
-                        this.stageLeads[stage.id].leads.meta.total = this.stageLeads[stage.id].leads.meta.total - 1;
-
+                        this.stageLeads[stage.id].leads.meta.total -= 1;
                         return;
                     }
 
+                    // Verifica se o stage exige confirmação via dialog
+                    if (stage.id === this.stagesConstants.STAGE_FOLLOWUP_ID) {
+                        this.selectedLead = event.added.element;
+
+                        if (!this.selectedLead.tracking_link) {
+
+                            // Abra o dialog e aguarde a confirmação
+                            this.$refs.dialog.openDialog(this.selectedLead, (e) => {
+                                this.performStageUpdate(stage, event);
+                            });
+
+                        } else {
+                            // Se não precisar de confirmação, continua normalmente
+                            this.performStageUpdate(stage, event);
+                        }
+                    } else {
+                        // Caso não seja o stage que exige confirmação, segue normalmente
+                        this.performStageUpdate(stage, event);
+                    }
+                },
+
+                performStageUpdate: function (stage, event) {
+                    // Atualiza o valor do lead localmente
                     stage.lead_value = parseFloat(stage.lead_value) + parseFloat(event.added.element.lead_value);
+                    this.stageLeads[stage.id].leads.meta.total += 1;
 
-                    this.stageLeads[stage.id].leads.meta.total = this.stageLeads[stage.id].leads.meta.total + 1;
-
+                    // Realiza a requisição de atualização para o backend
                     this.$axios
                         .put("{{ route('admin.leads.stage.update', 'replace') }}".replace('replace', event.added.element.id), {
                             'lead_pipeline_stage_id': stage.id
@@ -563,16 +583,6 @@
                         .catch(error => {
                             this.$emitter.emit('add-flash', { type: 'error', message: error.response.data.message });
                         });
-
-                    // Verifica se o quadro de destino é o de ID 2
-                    if (stage.id === 2) {
-                        // Abre o modal para atualização do status apenas se o quadro for de ID 2
-                        this.selectedLead = event.added.element; // Armazena o lead selecionado
-                        if(!this.selectedLead.tracking_link){
-                            this.$refs.dialog.openDialog(this.selectedLead); // Abre o diálogo
-                        }
-                    }
-
                 },
 
                 /**
@@ -713,7 +723,7 @@
 
                                         <!-- Botões de ação -->
                                         <div class="button-group">
-                                            <button @click="save" class="primary-button">Salvar</button>
+                                            <button @click="saveTrackingLink" class="primary-button">Salvar</button>
                                             <button @click="closeDialog" class='secondary-button'>Cancelar</button>
                                         </div>
                                     </div>
@@ -731,20 +741,22 @@
             },
 
             methods: {
-                openDialog(lead) {
+                openDialog(lead, onConfirm) {
                     this.isOpen = true;
                     this.lead = lead;
+                    this.onConfirm = onConfirm;
                 },
 
                 closeDialog() {
                     this.isOpen = false;
                     this.lead = null;
+                    this.onConfirm = null;
                 },
 
                 /***
                  * Faz chamada Ajax para salvar o link de rastreamento
                 */
-                save() {
+                saveTrackingLink() {
                     if(!this.trackingLink){
                         this.$emitter.emit('add-flash', { type: 'error', message: 'Link de Rastreamento é obrigatório' });
                         return;
@@ -762,6 +774,11 @@
                             this.lead.tracking_link = this.trackingLink;
                             
                             this.$emitter.emit('add-flash', {type: 'success', message: response.data.message });
+                            
+                            // Chama o callback de confirmação passado (se definido)
+                            if (typeof this.onConfirm === 'function') {
+                                this.onConfirm(this.lead); // Passa o lead ou outros dados necessários
+                            }
 
                             this.closeDialog();
                         }).catch(error => {

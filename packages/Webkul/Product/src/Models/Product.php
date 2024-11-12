@@ -12,6 +12,7 @@ use Webkul\Product\Contracts\Product as ProductContract;
 use Webkul\Tag\Models\TagProxy;
 use Webkul\Warehouse\Models\LocationProxy;
 use Webkul\Warehouse\Models\WarehouseProxy;
+use Webkul\EmailTemplate\Models\EmailTemplateProxy;
 
 class Product extends Model implements ProductContract
 {
@@ -28,6 +29,7 @@ class Product extends Model implements ProductContract
         'description',
         'quantity',
         'price',
+        'email_template_id',
     ];
 
     /**
@@ -69,4 +71,13 @@ class Product extends Model implements ProductContract
     {
         return $this->belongsToMany(ActivityProxy::modelClass(), 'product_activities');
     }
+
+    /**
+     * Get the email template associated with the product.
+     */
+    public function emailTemplate()
+    {
+        return $this->belongsTo(EmailTemplateProxy::modelClass(), 'email_template_id');
+    }
+
 }

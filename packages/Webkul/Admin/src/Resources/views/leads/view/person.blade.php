@@ -65,9 +65,6 @@
                                 {{ $email['value'] }}
                             </a>
 
-                            <span class="text-gray-500 dark:text-gray-300">
-                                ({{ $email['label'] }})
-                            </span>
                         </div>
                     @endforeach
                 @else

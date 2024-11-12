@@ -14,7 +14,10 @@
     "autoload": {
         "psr-4": {
             "Webkul\\Email\\": "src/"
-        }
+        },
+        "files": [
+            "src/Helpers/MailTranslation.php"
+        ]
     },
     "extra": {
         "laravel": {

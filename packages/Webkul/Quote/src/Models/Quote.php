@@ -45,7 +45,6 @@ class Quote extends Model implements QuoteContract
         'raca',
         'payment_method_id',
         'paymentMethod',
-        'items'
     ];
 
     /**

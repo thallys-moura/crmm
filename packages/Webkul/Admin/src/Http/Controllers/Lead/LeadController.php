@@ -37,6 +37,7 @@ use Webkul\Lead\Models\Lead;
 use Webkul\Tag\Repositories\TagRepository;
 use Webkul\User\Repositories\UserRepository;
 use Webkul\Quote\Models\QuoteProxy;
+use Webkul\Lead\Enums\LeadStages;
 
 class LeadController extends Controller
 {
@@ -74,10 +75,11 @@ class LeadController extends Controller
         } else {
             $pipeline = $this->pipelineRepository->getDefaultPipeline();
         }
-
+        $stagesConstants = ['STAGE_FOLLOWUP_ID' => LeadStages::STAGE_FOLLOWUP_ID, 'STAGE_NEW_ID' => LeadStages::STAGE_NEW_ID, 'STAGE_WOW_ID' => LeadStages::STAGE_WOW_ID];
         return view('admin::leads.index', [
             'pipeline' => $pipeline,
             'columns'  => $this->getKanbanColumns(),
+            'stages'   => $stagesConstants,
         ]);
     }
 
@@ -135,10 +137,10 @@ class LeadController extends Controller
             // Processando os leads manualmente e coletando os quotes, sem converter para array
             foreach ($leads as $lead) {
                 // Carrega os quotes com os produtos associados aos quote_items
-                $leadQuotes = QuoteProxy::with('items.product')->whereHas('leads', function ($query) use ($lead) {
+                $leadQuotes = QuoteProxy::with('items.product', 'paymentMethod')->whereHas('leads', function ($query) use ($lead) {
                     $query->where('lead_id', $lead->id);
                 })->get();
-                
+
                 $lead->quotes = $leadQuotes; // Adicionando os quotes diretamente ao objeto do lead
             }
 
@@ -314,6 +316,7 @@ class LeadController extends Controller
      */
     public function updateStage(int $id)
     {
+
         $this->validate(request(), [
             'lead_pipeline_stage_id' => 'required',
         ]);
@@ -334,6 +337,23 @@ class LeadController extends Controller
             $id,
             ['lead_pipeline_stage_id']
         );
+
+
+        try {
+            //Email Template do Estágio (quadro kanban)
+            $emailTemplateId = $stage->email_template_id;
+
+            //Se O stage de destino estiver contido no array
+            if(in_array($stage->id, [LeadStages::STAGE_FOLLOWUP_ID])  ){
+                //Aciona Evento para enviar email do estágio ao interessado da compra
+                Event::dispatch('lead.stage.transition.actions', ['lead' => $lead, 'email_id' => $emailTemplateId]);
+            }
+
+        } catch (\Exception $exception) {
+            return response()->json([
+                'message' => trans('admin::app.quotes.index.sendmail-failed'),
+            ], 400);
+        }
 
         Event::dispatch('lead.update.after', $lead);
 

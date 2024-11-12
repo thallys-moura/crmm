@@ -416,6 +416,7 @@ return [
             'update-success' => 'Venda atualizada com sucesso.',
             'delete-success' => 'Venda excluída com sucesso.',
             'delete-failed'  => 'A Venda não pode ser excluída.',
+            'sendmail-failed'  => 'Houve um erro ao enviar o e-mail de registro da venda.',
 
             'datagrid' => [
                 'subject'        => 'Assunto',
@@ -714,6 +715,9 @@ return [
             'title'     => 'Criar Produto',
             'general'   => 'Geral',
             'price'     => 'Preço',
+            'email-template' => 'Template de E-mail',
+            'select-email-template' => 'Selecione...',
+            'email-template-help' => 'O modelo de email pré-definido que sera enviado no cumprimento de algumas etapas.'
         ],
 
         'edit' => [

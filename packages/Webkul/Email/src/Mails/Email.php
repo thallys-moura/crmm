@@ -10,13 +10,13 @@ use Symfony\Component\Mime\Email as MimeEmail;
 class Email extends Mailable
 {
     use Queueable, SerializesModels;
-
     /**
      * Create a new email instance.
      *
      * @return void
      */
-    public function __construct(public $email) {}
+    public function __construct(public $email) {
+    }
 
     /**
      * Build the message.
@@ -31,7 +31,7 @@ class Email extends Mailable
             ->cc($this->email->cc ?? [])
             ->bcc($this->email->bcc ?? [])
             ->subject($this->email->parent_id ? $this->email->parent->subject : $this->email->subject)
-            ->html($this->email->reply);
+            ->html(html_entity_decode($this->email->reply));
 
         $this->withSymfonyMessage(function (MimeEmail $message) {
             $message->getHeaders()->addIdHeader('Message-ID', $this->email->message_id);
