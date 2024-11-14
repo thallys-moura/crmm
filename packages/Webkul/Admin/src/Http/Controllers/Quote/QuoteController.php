@@ -22,10 +22,13 @@ use Webkul\Lead\Models\Lead;
 use Illuminate\Support\Facades\Log;
 use Webkul\Quote\Repositories\QuoteRepository;
 use Webkul\Quote\Models\PaymentMethod;
+use Webkul\Quote\Services\ZarponService;
 
 class QuoteController extends Controller
 {
     use PDFHandler;
+
+    protected $zarponService;
 
     /**
      * Create a new controller instance.
@@ -36,8 +39,11 @@ class QuoteController extends Controller
         protected QuoteRepository $quoteRepository,
         protected LeadRepository $leadRepository,
         protected PersonRepository $personRepository,
+        ZarponService $zarponService
     ) {
         request()->request->add(['entity_type' => 'quotes']);
+
+        $this->zarponService = $zarponService;
     }
 
     /**
@@ -124,7 +130,16 @@ class QuoteController extends Controller
         if($stage->email_template_id){
             Event::dispatch('quote.post_create.actions', ['lead' => $lead, 'email_id' => $stage->email_template_id]);
         }
-        
+
+        if($person->contact_numbers){
+            $nome = $person->name;
+            $numero = $person->contact_numbers[0]['value'];
+            $id = $lead->id; 
+
+            // Envio dos dados ao Zárpon
+            $this->zarponService->sendSaudacoes($nome, $numero, $id);
+        }
+
         Event::dispatch('quote.create.after', $quote);
 
         session()->flash('success', trans('admin::app.quotes.index.create-success'));

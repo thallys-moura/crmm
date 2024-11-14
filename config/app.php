@@ -233,7 +233,13 @@ return [
     | pois os aliases são "lazy" carregados, portanto, eles não afetam o desempenho.
     |
     */
+    
+    'user_admin' => 1,
 
     'aliases' => Facade::defaultAliases()->merge([])->toArray(),
 
+    'zarpon' => [
+        'rastreio_webhook_url' => env('ZARPON_WEBHOOK_URL'),
+        'saudacoes_webhook_url' => env('ZARPON_WEBHOOK_URL'),
+    ],
 ];

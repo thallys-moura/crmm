@@ -340,7 +340,6 @@ class LeadController extends Controller
 
 
         try {
-            //Email Template do Estágio (quadro kanban)
             $emailTemplateId = $stage->email_template_id;
 
             //Se O stage de destino estiver contido no array

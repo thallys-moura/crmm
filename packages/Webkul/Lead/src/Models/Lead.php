@@ -56,6 +56,7 @@ class Lead extends Model implements LeadContract
         'billing_observation',
         'payment_date',
         'tracking_link',
+        'is_sent_rastreio_to_zarpon',
         'quotes'
     ];
 
