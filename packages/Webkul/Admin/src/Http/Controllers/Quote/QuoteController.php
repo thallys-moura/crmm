@@ -135,9 +135,10 @@ class QuoteController extends Controller
             $nome = $person->name;
             $numero = $person->contact_numbers[0]['value'];
             $id = $lead->id; 
+            $isEspano = request('raca');
 
             // Envio dos dados ao Zárpon
-            $this->zarponService->sendSaudacoes($nome, $numero, $id);
+            $this->zarponService->sendSaudacoes($nome, $numero, $id, $isEspano);
         }
 
         Event::dispatch('quote.create.after', $quote);

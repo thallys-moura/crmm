@@ -13,10 +13,13 @@ class ZarponService
         $this->webhookUrl = config('app.zarpon.saudacoes_webhook_url');
     }
 
-    public function sendRastreio($nome, $numero, $id, $codRastreio, $link, $startAt)
-    {
-        $this->webhookUrl = env('ZARPON_WEBHOOK_URL_RASTREIO');
-        \Log::info('entrando aqui, atravez do comando agendado');
+    public function sendRastreio($nome, $numero, $id, $codRastreio, $link, $startAt, $isEspano)
+    {   
+        if($isEspano == true){
+            $this->webhookUrl = env('ZARPON_WEBHOOK_URL_RASTREIO_SPANO');
+        }else{
+            $this->webhookUrl = env('ZARPON_WEBHOOK_URL_RASTREIO');
+        }
 
         try{
             $response = Http::withHeaders([
@@ -53,9 +56,13 @@ class ZarponService
        
     }
 
-    public function sendSaudacoes($nome, $numero, $id)
+    public function sendSaudacoes($nome, $numero, $id, $isEspano)
     {
-        $this->webhookUrl = config('app.zarpon.saudacoes_webhook_url');
+        if($isEspano == true){
+            $this->webhookUrl = env('ZARPON_WEBHOOK_URL_SAUDACOES_SPANO');
+        }else{
+            $this->webhookUrl = env('ZARPON_WEBHOOK_URL_SAUDACOES');
+        }
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
