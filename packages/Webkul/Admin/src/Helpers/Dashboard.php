@@ -97,6 +97,14 @@ class Dashboard
     }
 
     /**
+     * Returns open leads statistics by states.
+     */
+    public function getQuantitativeQuotes(): mixed
+    {
+        return $this->quoteReporting->getQuantitativeQuotes();
+    }
+
+    /**
      * Returns top selling products statistics.
      */
     public function getTopSellingProducts(): Collection

@@ -20,6 +20,7 @@ class DashboardController extends Controller
         'top-selling-products' => 'getTopSellingProducts',
         'top-persons'          => 'getTopPersons',
         'open-leads-by-states' => 'getOpenLeadsByStates',
+        'quantitative-quotes-day' => 'getQuantitativeQuotes'
     ];
 
     /**
@@ -48,7 +49,7 @@ class DashboardController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function stats()
-    {
+    {   
         $stats = $this->dashboardHelper->{$this->typeFunctions[request()->query('type')]}();
 
         return response()->json([

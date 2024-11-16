@@ -1980,6 +1980,22 @@ return [
                 'no-data' => 'Nenhum dado disponível',
             ],
 
+            'revenue-by-report-quantitative-filters' => [
+                'title' => 'Quantitativo de Vendas do Dia',
+                'start-date' => 'De',
+                'end-date' => 'Até',
+                'seller' => 'Vendedor',
+                'select-seller' => 'Selecione o Vendedor',
+                'product' => 'Produto',
+                'select-product' => 'Selecione o Produto',
+                'all-sellers' => 'Todos Vendedores',
+                'all-products' => 'Todos Produtos',
+                'clear-fields' => 'Limpar Campos',
+                'print' => 'Imprimir',
+                'sales-report' => 'Relatório de Vendas',
+                'no-data' => 'Nenhum dado disponível',
+            ],
+
             'revenue' => [
                 'lost-revenue' => 'Despesa',
                 'won-revenue'  => 'Receita',

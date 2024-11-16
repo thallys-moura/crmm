@@ -51,9 +51,11 @@
             @include('admin::dashboard.index.total-leads')
 
             <div class="flex gap-4 [&>*]:flex-1">
-                <!-- Total Products -->
-                @include('admin::dashboard.index.top-selling-products')
+            <!-- Total Products -->
+            @include('admin::dashboard.index.top-selling-products')
 
+            <!-- Formulário de Filtros de Relatórios Quantitativos por Vendedor -->
+            @include('admin::dashboard.index.revenue-by-report-quantitative-filters')
 
             </div>
         </div>
