@@ -1674,7 +1674,54 @@ return [
         ],
     ],
 
+    'bank' => [
+        'index' => [
+            'title'       => 'Banco',
+            'create-btn'  => 'Criar Novo Registro de Banco',
+            'datagrid'    => [
+                'id'          => 'ID',
+                'name'        => 'Nome',
+                'account'     => 'Conta',
+                'branch'      => 'Agência',
+                'balance'     => 'Saldo',
+                'created-at'  => 'Criado em',
+                'edit'        => 'Editar',
+                'delete'      => 'Excluir',
+                'mass-delete' => 'Excluir em Massa',
+                'grand-total' => 'Total Geral',
+            ],
+            'create-success' => 'Registro de banco criado com sucesso.',
+            'update-success' => 'Registro de banco atualizado com sucesso.',
+            'delete-success' => 'Registro de banco excluído com sucesso.',
+            'delete-failed'  => 'Falha ao excluir o registro de banco.',
+        ],
 
+        'create' => [
+            'title'        => 'Criar Novo Registro de Banco',
+            'save-btn'     => 'Salvar Registro de Banco',
+            'general-info' => 'Informações Gerais',
+            'name'         => 'Nome do Banco',
+            'account'      => 'Conta',
+            'branch'       => 'Agência',
+            'balance'      => 'Saldo Inicial',
+            'observation'  => 'Observações',
+            'user'         => 'Responsável',
+            'cancel'       => 'Cancelar',
+        ],
+
+        'edit' => [
+            'title'          => 'Editar Registro de Banco',
+            'save-btn'       => 'Salvar',
+            'details'        => 'Detalhes do Registro de Banco',
+            'details-info'   => 'Insira as informações básicas do registro de banco',
+            'name'           => 'Nome do Banco',
+            'account'        => 'Conta',
+            'branch'         => 'Agência',
+            'balance'        => 'Saldo Atual',
+            'user'           => 'Responsável',
+            'observation'    => 'Observação (Opcional)',
+        ],
+    ],
     'expenses' => [
         'index' => [
             'title'       => 'Despesas',
@@ -2062,6 +2109,7 @@ return [
         'quotes'               => 'Vendas',
         'quote'                => 'Venda',
         'expenses'             => 'Despesas',  
+        'bank'                 => 'Banco', 
         'mail'                 => [
             'title'   => 'Email',
             'compose' => 'Compor',

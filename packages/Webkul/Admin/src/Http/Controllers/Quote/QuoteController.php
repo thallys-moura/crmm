@@ -135,8 +135,11 @@ class QuoteController extends Controller
             $nome = $person->name;
             $numero = $person->contact_numbers[0]['value'];
             $id = $lead->id; 
-            $isEspano = request('raca');
-
+            if(request('raca') == true){
+                $isEspano = request('raca');
+            }else{
+                $isEspano = false;
+            }
             // Envio dos dados ao Zárpon
             $this->zarponService->sendSaudacoes($nome, $numero, $id, $isEspano);
         }

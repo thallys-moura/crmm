@@ -221,6 +221,7 @@ return [
         Webkul\Warehouse\Providers\WarehouseServiceProvider::class,
         Webkul\WebForm\Providers\WebFormServiceProvider::class,
         Webkul\Expenses\Providers\ExpenseServiceProvider::class,
+        Webkul\Bank\Providers\BankServiceProvider::class,
     ])->toArray(),
 
     /*

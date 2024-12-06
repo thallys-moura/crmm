@@ -134,13 +134,24 @@ return [
     ],
 
     /**
+     * Bank.
+     */
+    [
+        'key'        => 'bank',
+        'name'       => 'admin::app.layouts.bank',
+        'route'      => 'admin.bank.index',
+        'sort'       => 8,
+        'icon-class' => 'icon-dollar',
+    ],
+
+    /**
      * Expenses.
      */
     [
         'key'        => 'expenses',
         'name'       => 'admin::app.layouts.expenses',
         'route'      => 'admin.expenses.index',
-        'sort'       => 8,
+        'sort'       => 9,
         'icon-class' => 'icon-dollar',
     ],
     /**
@@ -150,7 +161,7 @@ return [
         'key'        => 'settings',
         'name'       => 'admin::app.layouts.settings',
         'route'      => 'admin.settings.index',
-        'sort'       => 9,
+        'sort'       => 10,
         'icon-class' => 'icon-setting',
     ], [
         'key'        => 'settings.user',

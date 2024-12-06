@@ -47,6 +47,7 @@ class ExpenseController extends Controller
             return datagrid(ExpenseDataGrid::class)->process();
         }
 
+        
         return view('admin::expenses.index');
     }
 
@@ -56,8 +57,8 @@ class ExpenseController extends Controller
     public function create(): View
     {
         $expense = $this->expenseRepository->find(request('id'));
-        $users = $this->userRepository->all();  // Carregar todos os usuários
-        $expenseTypes = $this->expenseTypeRepository->all(); // Carregar tipos de despesa
+        $users = $this->userRepository->all(); 
+        $expenseTypes = $this->expenseTypeRepository->all();
 
         return view('admin::expenses.create', compact('expense', 'users', 'expenseTypes'));
     }

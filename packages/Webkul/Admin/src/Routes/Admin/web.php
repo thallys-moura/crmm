@@ -59,3 +59,8 @@ require 'report-routes.php';
  * Expenses routes.
 */
 require 'expenses-routes.php';
+
+/**
+ * Expenses bank.
+*/
+require 'bank-routes.php';

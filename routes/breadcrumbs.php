@@ -445,3 +445,17 @@ Breadcrumbs::for('expenses.view', function (BreadcrumbTrail $trail, $expense) {
     $trail->parent('expenses');
     $trail->push('#'.$expense->id, route('admin.expenses.view', $expense->id));
 });
+
+// Dashboard > Despesas (Listagem)
+Breadcrumbs::for('bank', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');  // O breadcrumb "dashboard" já está definido
+    $trail->push(trans('admin::app.layouts.bank'), route('admin.bank.index'));
+});
+
+
+// Dashboard > Despesas > Visualizar
+Breadcrumbs::for('bank.view', function (BreadcrumbTrail $trail, $bank) {
+    $trail->parent('bank');
+    $trail->push('#'.$bank->id, route('admin.bank.view', $bank->id));
+});
+
