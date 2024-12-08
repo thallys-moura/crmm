@@ -459,3 +459,17 @@ Breadcrumbs::for('bank.view', function (BreadcrumbTrail $trail, $bank) {
     $trail->push('#'.$bank->id, route('admin.bank.view', $bank->id));
 });
 
+// Dashboard > Despesas (Listagem)
+Breadcrumbs::for('blacklist', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');  // O breadcrumb "dashboard" já está definido
+    $trail->push(trans('admin::app.layouts.blacklist'), route('admin.blacklist.index'));
+});
+
+
+// Dashboard > Despesas > Visualizar
+Breadcrumbs::for('blacklist.view', function (BreadcrumbTrail $trail, $blacklist) {
+    $trail->parent('blacklist');
+    $trail->push('#'.$blacklist->id, route('admin.blacklist.view', $blacklist->id));
+});
+
+

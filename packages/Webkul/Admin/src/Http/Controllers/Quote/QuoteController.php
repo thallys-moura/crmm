@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Log;
 use Webkul\Quote\Repositories\QuoteRepository;
 use Webkul\Quote\Models\PaymentMethod;
 use Webkul\Quote\Services\ZarponService;
+use Illuminate\Support\Facades\DB;
 
 class QuoteController extends Controller
 {
@@ -85,70 +86,108 @@ class QuoteController extends Controller
         //Pessoa da Requisição
         $person_request = request('person');
         
-        //Objeto Lead(Ordem)
-        $data_lead = array();
-        $data_lead['entity_type'] = 'leads';
-        $data_lead['lead_type_id'] = '1';
-        $data_lead['lead_pipeline_id'] = '1';
-        $data_lead['lead_pipeline_stage_id'] = '1';
-        $data_lead['lead_source_id'] = '1';
-        $data_lead['user_id'] = request('user_id');
-        $data_lead['status'] = '1';
-        $data_lead['raca'] = request('raca');
-        $data_lead['description'] = request('description');
-        $data_lead['person'] = array(
-            'entity_type' => '',
-            'name' => $person_request['name'],
-            'emails' => [0 => ['value' => $person_request['emails'][0]['value']]],
-            'contact_numbers' => [0 => ['value' => $person_request['contact_numbers'][0]['value']]],
-        );
+        try{
+            // Verificação na Blacklist pelo Nome da Pessoa
+            $isBlacklistedByName = DB::table('black_list')
+            ->join('persons', 'black_list.person_id', '=', 'persons.id')
+            ->where('persons.name', $person_request['name'])
+            ->exists();
+            
+            // Verificação na Blacklist pelo Endereço
+            $shippingAddress = $request->get('shipping_address');
+            // Combine os campos do array em uma string
+            $addressString = implode(' ', array_filter([
+                $shippingAddress['address'] ?? '',
+                $shippingAddress['city'] ?? '',
+                $shippingAddress['state'] ?? '',
+                $shippingAddress['postcode'] ?? '',
+                $shippingAddress['country'] ?? '',
+            ]));
 
-        //Salvando Pessoa
-        $person = $this->personRepository->create($data_lead['person']);
+            // Verificar se o endereço está na blacklist
+            $isBlacklistedByAddress = DB::table('black_list')
+                ->join('leads', 'black_list.lead_id', '=', 'leads.id')
+                ->join('lead_quotes', 'leads.id', '=', 'lead_quotes.lead_id')
+                ->join('quotes', 'lead_quotes.quote_id', '=', 'quotes.id')
+                ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(quotes.shipping_address, '$.address')) LIKE ?", ['%' . $shippingAddress['address'] . '%'])
+                ->exists();
 
-        $data_lead['person']['id'] = $person->id;
-        $data_lead['person_id'] = $person->id;
-        $data_lead['lead_value'] = request('grand_total');
+            // Se encontrado na blacklist, retorna erro
+            if ($isBlacklistedByName || $isBlacklistedByAddress) {
+                session()->flash('error', trans('admin::app.blacklist.blacklist-warning'));
 
-        //Salvando Ordem
-        $lead = Lead::create($data_lead);
-        $data_quote = $request->all();
-        $data_quote['person']['id'] = $person->id;
-        $data_quote['person_id'] = $person->id;
-
-        $quote = $this->quoteRepository->create($data_quote);
-        if ($lead->id) {
-            $lead = $this->leadRepository->find($lead->id);
-
-            $lead->quotes()->attach($quote->id);
-        }
-
-        $stage = $lead->pipeline->stages()
-        ->where('id',$data_lead['lead_pipeline_stage_id'])
-        ->firstOrFail();
-        
-        if($stage->email_template_id){
-            Event::dispatch('quote.post_create.actions', ['lead' => $lead, 'email_id' => $stage->email_template_id]);
-        }
-
-        if($person->contact_numbers){
-            $nome = $person->name;
-            $numero = $person->contact_numbers[0]['value'];
-            $id = $lead->id; 
-            if(request('raca') == true){
-                $isEspano = request('raca');
-            }else{
-                $isEspano = false;
+                return redirect()->back()->withInput();
             }
-            // Envio dos dados ao Zárpon
-            $this->zarponService->sendSaudacoes($nome, $numero, $id, $isEspano);
+
+                //Objeto Lead(Ordem)
+            $data_lead = array();
+            $data_lead['entity_type'] = 'leads';
+            $data_lead['lead_type_id'] = '1';
+            $data_lead['lead_pipeline_id'] = '1';
+            $data_lead['lead_pipeline_stage_id'] = '1';
+            $data_lead['lead_source_id'] = '1';
+            $data_lead['user_id'] = request('user_id');
+            $data_lead['status'] = '1';
+            $data_lead['raca'] = request('raca');
+            $data_lead['description'] = request('description');
+            $data_lead['person'] = array(
+                'entity_type' => '',
+                'name' => $person_request['name'],
+                'emails' => [0 => ['value' => $person_request['emails'][0]['value']]],
+                'contact_numbers' => [0 => ['value' => $person_request['contact_numbers'][0]['value']]],
+            );
+            
+            //Salvando Pessoa
+            $person = $this->personRepository->create($data_lead['person']);
+
+            $data_lead['person']['id'] = $person->id;
+            $data_lead['person_id'] = $person->id;
+            $data_lead['lead_value'] = request('grand_total');
+
+            //Salvando Ordem
+            $lead = Lead::create($data_lead);
+            $data_quote = $request->all();
+            $data_quote['person']['id'] = $person->id;
+            $data_quote['person_id'] = $person->id;
+
+            $quote = $this->quoteRepository->create($data_quote);
+            if ($lead->id) {
+                $lead = $this->leadRepository->find($lead->id);
+
+                $lead->quotes()->attach($quote->id);
+            }
+
+            $stage = $lead->pipeline->stages()
+            ->where('id',$data_lead['lead_pipeline_stage_id'])
+            ->firstOrFail();
+            
+            if($stage->email_template_id){
+                Event::dispatch('quote.post_create.actions', ['lead' => $lead, 'email_id' => $stage->email_template_id]);
+            }
+
+            if($person->contact_numbers){
+                $nome = $person->name;
+                $numero = $person->contact_numbers[0]['value'];
+                $id = $lead->id; 
+                if(request('raca') == true){
+                    $isEspano = request('raca');
+                }else{
+                    $isEspano = false;
+                }
+                // Envio dos dados ao Zárpon
+                $this->zarponService->sendSaudacoes($nome, $numero, $id, $isEspano);
+            }
+
+            Event::dispatch('quote.create.after', $quote);
+
+            session()->flash('success', trans('admin::app.quotes.index.create-success'));
+
+            return redirect()->route('admin.quotes.index');
+        } catch (\Exception $exception) {
+            return response()->json([
+                'message' => trans('admin::app.quotes.index.delete-failed'),
+            ], 400);
         }
-
-        Event::dispatch('quote.create.after', $quote);
-
-        session()->flash('success', trans('admin::app.quotes.index.create-success'));
-
-        return redirect()->route('admin.quotes.index');
     }
 
     /**

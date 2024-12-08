@@ -38,6 +38,8 @@ use Webkul\Tag\Repositories\TagRepository;
 use Webkul\User\Repositories\UserRepository;
 use Webkul\Quote\Models\QuoteProxy;
 use Webkul\Lead\Enums\LeadStages;
+use Webkul\User\Models\User;
+use Webkul\Blacklist\Models\Blacklist;
 
 class LeadController extends Controller
 {
@@ -75,7 +77,14 @@ class LeadController extends Controller
         } else {
             $pipeline = $this->pipelineRepository->getDefaultPipeline();
         }
-        $stagesConstants = ['STAGE_FOLLOWUP_ID' => LeadStages::STAGE_FOLLOWUP_ID, 'STAGE_NEW_ID' => LeadStages::STAGE_NEW_ID, 'STAGE_WOW_ID' => LeadStages::STAGE_WOW_ID];
+        
+        $stagesConstants = [
+            'STAGE_FOLLOWUP_ID' => LeadStages::STAGE_FOLLOWUP_ID, 
+            'STAGE_NEW_ID' => LeadStages::STAGE_NEW_ID, 
+            'STAGE_WOW_ID' => LeadStages::STAGE_WOW_ID, 
+            'STAGE_LOST_ID'=> LeadStages::STAGE_LOST_ID,
+        ];
+
         return view('admin::leads.index', [
             'pipeline' => $pipeline,
             'columns'  => $this->getKanbanColumns(),

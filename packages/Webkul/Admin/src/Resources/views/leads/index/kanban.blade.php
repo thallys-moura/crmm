@@ -27,6 +27,8 @@
         <template v-else>
             <!-- Modal Component -->
             <v-dialog ref="dialog"></v-dialog>
+            <v-dialog-blacklist ref="dialog_blacklist"></v-dialog-blacklist>
+
             <div class="flex flex-col gap-4">
                 @include('admin::leads.index.kanban.toolbar')
 
@@ -299,6 +301,32 @@
             },
 
             methods: {
+                openBlacklistModal() {
+                    this.$emit('open-modal', {
+                        id: 'blacklist-modal',
+                        data: {
+                            lead: this.selectedLead,
+                        },
+                    });
+                },
+                addToBlacklist(observation) {
+                    this.$axios.post(`{{ route('admin.blacklist.store') }}`, {
+                        lead_id: this.selectedLead.id,
+                        person_id: this.selectedLead.person_id,
+                        user_id: this.user.id,
+                        seller_id: this.selectedLead.seller_id,
+                        observations: observation,
+                    })
+                    .then(response => {
+                        this.$emitter.emit('add-flash', { type: 'success', message: 'Lead adicionado à blacklist com sucesso!' });
+
+                        // Atualize o quadro Kanban ou execute outras ações necessárias
+                        this.performStageUpdate(this.selectedStage, { added: { element: this.selectedLead } });
+                    })
+                    .catch(error => {
+                        this.$emitter.emit('add-flash', { type: 'error', message: 'Erro ao adicionar à blacklist.' });
+                    });
+                },
                 removeLead(element_id) {
                     this.$emitter.emit('open-confirm-modal', {
                         title: 'Confirmação de Exclusão',
@@ -546,7 +574,7 @@
                         return;
                     }
 
-                    // Verifica se o stage exige confirmação via dialog
+                    // Verifica se o stage a follow_up
                     if (stage.id === this.stagesConstants.STAGE_FOLLOWUP_ID) {
                         this.selectedLead = event.added.element;
 
@@ -561,6 +589,18 @@
                             // Se não precisar de confirmação, continua normalmente
                             this.performStageUpdate(stage, event);
                         }
+                    } else if (stage.id === this.stagesConstants.STAGE_LOST_ID){
+                        console.log('caiu aqui?');
+                        //Adicionado a blacklist
+                        //Se o card for transferido para o quadro de Não pago
+                        //o cliente é adicionado a blacklist do Herbalux
+                        this.selectedLead = event.added.element;
+
+                        // Abra o dialog e aguarde a confirmação
+                        this.$refs.dialog_blacklist.openDialog(this.selectedLead, (e) => {
+                            console.log('teste');
+                            this.performStageUpdate(stage, event);
+                        });
                     } else {
                         // Caso não seja o stage que exige confirmação, segue normalmente
                         this.performStageUpdate(stage, event);
@@ -571,7 +611,7 @@
                     // Atualiza o valor do lead localmente
                     stage.lead_value = parseFloat(stage.lead_value) + parseFloat(event.added.element.lead_value);
                     this.stageLeads[stage.id].leads.meta.total += 1;
-
+                    console.log('preciso passar aqui');
                     // Realiza a requisição de atualização para o backend
                     this.$axios
                         .put("{{ route('admin.leads.stage.update', 'replace') }}".replace('replace', event.added.element.id), {
@@ -701,6 +741,87 @@
         });
 
         // Modal (Dialog) Component
+        app.component('v-dialog-blacklist', {
+            template: `   
+                        <template>
+                            <Teleport to="body">
+                                <div v-if="isOpen" class="dialog-overlay">
+                                    <div class="dialog-content">
+                                        <!-- Cabeçalho do Modal -->
+                                        <h3 class="dialog-title">Deseja Adicionar à Blacklist?</h3>
+                                        <br/>
+                                        <!-- Texto de Observação -->
+                                        <span class="text-xs font-medium dark:text-white">
+                                            Observação:
+                                        </span>
+
+                                        <!-- Campo de Observação -->
+                                        <textarea 
+                                            v-model="observacao_blacklist" 
+                                            placeholder="Adicione uma observação..."
+                                            class="input-field"
+                                            rows="4"
+                                        ></textarea>
+
+                                        <!-- Botões de Ação -->
+                                        <div class="button-group">
+                                            <button @click="save" class="primary-button">Salvar</button>
+                                            <button @click="closeDialog" class="secondary-button">Cancelar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Teleport>
+                        </template>  
+            `,
+
+            data() {
+                return {
+                    isOpen: false,
+                    status: 'open',
+                    lead: null,
+                };
+            },
+
+            methods: {
+                openDialog(lead, onConfirm) {
+                    console.log('teste 123');
+                    this.isOpen = true;
+                    this.lead = lead;
+                    this.onConfirm = onConfirm;
+                    this.observacao_blacklist = '';
+                },
+
+                closeDialog() {
+                    this.isOpen = false;
+                    this.lead = null;
+                    this.onConfirm = null;
+                },
+
+                /***
+                 * Faz chamada Ajax para salvar o link de rastreamento
+                */
+                save() {
+                    // Lógica para salvar no servidor
+                    this.$axios.put(`/admin/leads/${this.lead.id}/addToBlacklist`, {
+                        observacao: this.observacao_blacklist,
+                        leads: this.lead,
+                    }).then(response => {
+                        this.$emitter.emit('add-flash', { type: 'success', message: 'Adicionado a Blacklist com sucesso!' });
+
+                        // Chama o callback de confirmação passado (se definido)
+                        if (typeof this.onConfirm === 'function') {
+                            this.onConfirm(this.lead); // Passa o lead ou outros dados necessários
+                        }
+
+                        this.closeDialog();
+                    }).catch(error => {
+                        this.$emitter.emit('add-flash', { type: 'error', message: 'Erro ao adicionar na Blacklist.' });
+                    });
+                }
+            }
+        });
+
+        // Modal (Dialog) Component
         app.component('v-dialog', {
             template: `   
                         <template>
@@ -809,7 +930,49 @@
             width: 300px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-        
+
+        .dialog-title {
+            font-weight: bold;
+            font-size: 1.25rem; /* Tamanho do título (opcional) */
+        }
+
+        .primary-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .primary-button:hover {
+            background: #0056b3;
+        }
+
+        .secondary-button {
+            background: #f8f9fa;
+            color: #343a40;
+            border: 1px solid #dee2e6;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .secondary-button:hover {
+            background: #e9ecef;
+        }
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+
+        .input-field:focus {
+            border-color: #007bff;
+            outline: none;
+        }
         .close-button-dialog {
             position: absolute;
             top: 10px;

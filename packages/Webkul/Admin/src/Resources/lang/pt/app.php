@@ -1771,7 +1771,93 @@ return [
             'observation'    => 'Observação (Opcional)',
         ],
     ],
-    
+    'blacklist' => [
+        'create-success'    => 'Entrada adicionada à Lista Negra com sucesso.',
+        'update-success'    => 'Entrada da Lista Negra atualizada com sucesso.',
+        'destroy-success'   => 'Entrada da Lista Negra excluída com sucesso.',
+        'destroy-failed'    => 'Não foi possível excluir a entrada da Lista Negra.',
+        'blacklist-warning' => 'Pessoa ou Endereço se encontra na Blacklist',
+        'index' => [
+            'title'      => 'Lista Negra',
+            'create-btn' => 'Adicionar à Lista Negra',
+
+            'datagrid' => [
+                'id'                  => 'ID',
+                'sale-date'           => 'Data da Venda',
+                'lead'                => 'Lead',
+                'person'              => 'Pessoa',
+                'user'                => 'Criado Por',
+                'seller'              => 'Vendedor',
+                'observations'        => 'Observações',
+                'client-observations' => 'Observações do Cliente',
+                'shipping-address'    => 'Endereço',
+                'billed'              => 'Faturado',
+                'created-at'          => 'Criado Em',
+                'actions'             => 'Ações',
+                'no'                  => 'Não',
+                'yes'                 => 'Sim',
+            ],
+        ],
+
+        'create' => [
+            'title'       => 'Adicionar à Lista Negra',
+            'save-btn'    => 'Salvar',
+            'details'     => 'Detalhes',
+            'details-info'=> 'Insira os detalhes para adicionar à Lista Negra.',
+            'fields' => [
+                'sale-date'           => 'Data da Venda',
+                'lead'                => 'Lead',
+                'person'              => 'Pessoa',
+                'user'                => 'Criado Por',
+                'seller'              => 'Vendedor',
+                'observations'        => 'Observações',
+                'client-observations' => 'Observações do Cliente',
+                'billed'              => 'Faturado',
+            ],
+        ],
+
+        'edit' => [
+            'title'       => 'Editar Entrada da Lista Negra',
+            'save-btn'    => 'Salvar',
+            'details'     => 'Detalhes',
+            'details-info'=> 'Atualize os detalhes da entrada na Lista Negra.',
+        ],
+
+        'view' => [
+            'title'       => 'Detalhes da Entrada na Lista Negra',
+            'tabs'        => [
+                'details'   => 'Detalhes',
+            ],
+            'attributes' => [
+                'sale-date'           => 'Data da Venda',
+                'lead'                => 'Lead',
+                'person'              => 'Pessoa',
+                'user'                => 'Criado Por',
+                'seller'              => 'Vendedor',
+                'observations'        => 'Observações',
+                'client-observations' => 'Observações do Cliente',
+                'billed'              => 'Faturado',
+            ],
+        ],
+
+        'mass-actions' => [
+            'delete-success' => 'Entradas selecionadas excluídas com sucesso.',
+            'delete-failed'  => 'Não foi possível excluir as entradas selecionadas.',
+        ],
+
+        'filters' => [
+            'apply-filters' => 'Aplicar Filtros',
+            'clear-all'     => 'Limpar Tudo',
+            'filter'        => 'Filtrar',
+            'filters'       => 'Filtros',
+        ],
+
+        'common' => [
+            'yes' => 'Sim',
+            'no'  => 'Não',
+        ],
+    ],
+
     'leads' => [
         'create-success'    => 'Ordem criado com sucesso.',
         'update-success'    => 'Ordem atualizado com sucesso.',
@@ -2110,6 +2196,7 @@ return [
         'quote'                => 'Venda',
         'expenses'             => 'Despesas',  
         'bank'                 => 'Banco', 
+        'blacklist'            => 'Blacklist',
         'mail'                 => [
             'title'   => 'Email',
             'compose' => 'Compor',

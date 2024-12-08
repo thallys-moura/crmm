@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Webkul\Admin\Http\Controllers\Blacklist\BlacklistController;
 use Webkul\Admin\Http\Controllers\Lead\ActivityController;
 use Webkul\Admin\Http\Controllers\Lead\EmailController;
 use Webkul\Admin\Http\Controllers\Lead\LeadController;
@@ -56,9 +57,15 @@ Route::controller(LeadController::class)->prefix('leads')->group(function () {
         Route::delete('{quote_id?}', 'delete')->name('admin.leads.quotes.delete');
     });
 
+    Route::controller(BlacklistController::class)->prefix('{id}/addToBlacklist')->group(function () {
+        Route::put('', 'store')->name('admin.leads.add.blaclist.link');
+    });
+
     Route::post('observacao/salvar','saveObservacao')->name('admin.leads.observacao.salvar');
 
     Route::put('{id}/saveTrackingLink', 'saveTrackingLink')->name('admin.leads.tracking.link');
+
+   // Route::put('{id}/addToBlacklist', 'addToBlacklist')->name('admin.leads.add.blaclist.link');
 
     Route::get('print/{id}', 'print')->name('admin.leads.print');
 });

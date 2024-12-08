@@ -61,6 +61,12 @@ require 'report-routes.php';
 require 'expenses-routes.php';
 
 /**
- * Expenses bank.
+ * Expenses routes.
 */
 require 'bank-routes.php';
+
+
+/**
+ * Blacklist routes.
+*/
+require 'blacklist-routes.php';

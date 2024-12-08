@@ -1,0 +1,24 @@
+{
+    "name": "krayin/laravel-expenses",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Thallys Moura",
+            "email": "thallys.moura@outlook.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Webkul\\Expenses\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Webkul\\Blacklist\\Providers\\BlacklistServiceProvider"
+            ],
+            "aliases": {}
+        }
+    },
+    "minimum-stability": "dev"
+}

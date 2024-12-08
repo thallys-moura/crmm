@@ -74,7 +74,8 @@
             "Webkul\\Automation\\": "packages/Webkul/Automation/src",
             "Webkul\\DataGrid\\": "packages/Webkul/DataGrid/src",
             "Webkul\\Expenses\\": "packages/Webkul/Expenses/src",
-            "Webkul\\Bank\\": "packages/Webkul/Bank/src"
+            "Webkul\\Bank\\": "packages/Webkul/Bank/src",
+            "Webkul\\Blacklist\\": "packages/Webkul/Blacklist/src"
 
         }
     },

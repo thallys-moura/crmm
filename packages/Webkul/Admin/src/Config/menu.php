@@ -154,6 +154,20 @@ return [
         'sort'       => 9,
         'icon-class' => 'icon-dollar',
     ],
+
+    
+    /**
+     * Blacklist.
+     */
+    [
+        'key'        => 'blacklist',
+        'name'       => 'admin::app.layouts.blacklist',
+        'route'      => 'admin.blacklist.index',
+        'sort'       => 10,
+        'icon-class' => 'icon-contact',
+    ],
+
+
     /**
      * Settings.
      */
@@ -161,7 +175,7 @@ return [
         'key'        => 'settings',
         'name'       => 'admin::app.layouts.settings',
         'route'      => 'admin.settings.index',
-        'sort'       => 10,
+        'sort'       => 11,
         'icon-class' => 'icon-setting',
     ], [
         'key'        => 'settings.user',
