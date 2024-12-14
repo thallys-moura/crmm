@@ -1857,7 +1857,81 @@ return [
             'no'  => 'Não',
         ],
     ],
+    'remarketing' => [
+        'create-success'    => 'Remarketing criado com sucesso.',
+        'update-success'    => 'Remarketing atualizado com sucesso.',
+        'destroy-success'   => 'Remarketing excluído com sucesso.',
+        'destroy-failed'    => 'Não foi possível excluir o remarketing.',
+        'remarketing-warning' => 'Este lead já está associado a um remarketing.',
+        'index' => [
+            'title'      => 'Remarketing',
+            'create-btn' => 'Adicionar Remarketing',
 
+            'datagrid' => [
+                'id'                  => 'ID',
+                'lead'                => 'Lead',
+                'product'             => 'Produto',
+                'user'                => 'Criado Por',
+                'created-at'          => 'Criado Em',
+                'actions'             => 'Ações',
+                'no'                  => 'Não',
+                'yes'                 => 'Sim',
+                'shipping-address'    => 'Endereço de Envio',
+            ],
+        ],
+
+        'create' => [
+            'title'       => 'Adicionar Remarketing',
+            'save-btn'    => 'Salvar',
+            'details'     => 'Detalhes',
+            'details-info'=> 'Insira os detalhes para criar o remarketing.',
+            'fields' => [
+                'lead'                => 'Lead',
+                'product'             => 'Produto',
+                'observations'        => 'Observações',
+                'user'                => 'Criado Por',
+                'shipping-address'    => 'Endereço de Envio',
+            ],
+        ],
+
+        'edit' => [
+            'title'       => 'Editar Remarketing',
+            'save-btn'    => 'Salvar',
+            'details'     => 'Detalhes',
+            'details-info'=> 'Atualize os detalhes do remarketing.',
+        ],
+
+        'view' => [
+            'title'       => 'Detalhes do Remarketing',
+            'tabs'        => [
+                'details'   => 'Detalhes',
+            ],
+            'attributes' => [
+                'lead'                => 'Lead',
+                'product'             => 'Produto',
+                'observations'        => 'Observações',
+                'user'                => 'Criado Por',
+                'shipping-address'    => 'Endereço de Envio',
+            ],
+        ],
+
+        'mass-actions' => [
+            'delete-success' => 'Remarketing(s) selecionado(s) excluído(s) com sucesso.',
+            'delete-failed'  => 'Não foi possível excluir os remarketing(s) selecionado(s).',
+        ],
+
+        'filters' => [
+            'apply-filters' => 'Aplicar Filtros',
+            'clear-all'     => 'Limpar Tudo',
+            'filter'        => 'Filtrar',
+            'filters'       => 'Filtros',
+        ],
+
+        'common' => [
+            'yes' => 'Sim',
+            'no'  => 'Não',
+        ],
+    ],
     'leads' => [
         'create-success'    => 'Ordem criado com sucesso.',
         'update-success'    => 'Ordem atualizado com sucesso.',
@@ -2197,6 +2271,8 @@ return [
         'expenses'             => 'Despesas',  
         'bank'                 => 'Banco', 
         'blacklist'            => 'Blacklist',
+        'remarketing'          => 'Remarketing',
+
         'mail'                 => [
             'title'   => 'Email',
             'compose' => 'Compor',

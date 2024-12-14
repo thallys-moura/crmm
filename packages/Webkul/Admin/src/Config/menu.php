@@ -169,13 +169,24 @@ return [
 
 
     /**
+     * Remarketing.
+     */
+    [
+        'key'        => 'remarketing',
+        'name'       => 'admin::app.layouts.remarketing',
+        'route'      => 'admin.remarketing.index',
+        'sort'       => 11,
+        'icon-class' => 'icon-quote',
+    ],
+
+    /**
      * Settings.
      */
     [
         'key'        => 'settings',
         'name'       => 'admin::app.layouts.settings',
         'route'      => 'admin.settings.index',
-        'sort'       => 11,
+        'sort'       => 12,
         'icon-class' => 'icon-setting',
     ], [
         'key'        => 'settings.user',
@@ -305,7 +316,7 @@ return [
         'key'        => 'configuration',
         'name'       => 'admin::app.layouts.configuration',
         'route'      => 'admin.configuration.index',
-        'sort'       => 10,
+        'sort'       => 13,
         'icon-class' => 'icon-configuration',
     ],
 ];

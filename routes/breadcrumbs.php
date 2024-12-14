@@ -473,3 +473,24 @@ Breadcrumbs::for('blacklist.view', function (BreadcrumbTrail $trail, $blacklist)
 });
 
 
+// Dashboard > Despesas (Listagem)
+Breadcrumbs::for('remarketing', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');  // O breadcrumb "dashboard" já está definido
+    $trail->push(trans('admin::app.layouts.blacklist'), route('admin.remarketing.index'));
+});
+
+
+// Dashboard > Despesas > Visualizar
+Breadcrumbs::for('remarketing.view', function (BreadcrumbTrail $trail, $remarketing) {
+    $trail->parent('remarketing');
+    $trail->push('#'.$remarketing->id, route('admin.remarketing.view', $remarketing->id));
+});
+
+// Dashboard > Remarketing > Criar
+Breadcrumbs::for('remarketing.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('remarketing');
+    $trail->push(trans('admin::app.remarketing.create.title'), route('admin.remarketing.create'));
+});
+
+
+

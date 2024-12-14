@@ -1,5 +1,5 @@
 {
-    "name": "krayin/laravel-bank",
+    "name": "krayin/laravel-remarketing",
     "license": "MIT",
     "authors": [
         {
@@ -9,13 +9,13 @@
     ],
     "autoload": {
         "psr-4": {
-            "Webkul\\Bank\\": "src/"
+            "Webkul\\Remarketing\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Webkul\\Bank\\Providers\\BankServiceProvider"
+                "Webkul\\Remarketing\\Providers\\RemarketingServiceProvider"
             ],
             "aliases": {}
         }

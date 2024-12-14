@@ -223,6 +223,7 @@ return [
         Webkul\Expenses\Providers\ExpenseServiceProvider::class,
         Webkul\Bank\Providers\BankServiceProvider::class,
         Webkul\Blacklist\Providers\BlacklistServiceProvider::class,
+        Webkul\Remarketing\Providers\RemarketingServiceProvider::class,
 
     ])->toArray(),
 

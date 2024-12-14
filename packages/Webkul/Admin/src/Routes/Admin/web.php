@@ -70,3 +70,9 @@ require 'bank-routes.php';
  * Blacklist routes.
 */
 require 'blacklist-routes.php';
+
+/**
+ * Blacklist routes.
+*/
+require 'remarketing-routes.php';
+
