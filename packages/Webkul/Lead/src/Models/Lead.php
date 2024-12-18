@@ -32,6 +32,7 @@ class Lead extends Model implements LeadContract
      */
     protected $appends = [
         'rotten_days',
+        'contact_number',
     ];
 
     /**
@@ -174,4 +175,17 @@ class Lead extends Model implements LeadContract
 
         return $rottenDate->diffInDays(Carbon::now(), false);
     }
+
+    /**
+     * Get the contact phone number from the associated person.
+     *
+     * @return string|null
+     */
+    public function getContactNumberAttribute()
+    {
+        return $this->person ? $this->person->contact_numbers[0] : null;
+    }
+
 }
+
+

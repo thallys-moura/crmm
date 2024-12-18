@@ -581,8 +581,9 @@ class LeadController extends Controller
         $lead->tracking_link = $default_path . $tracking_code;
 
         $lead->save();
+        $lead = $this->leadRepository->findOrFail($id);
 
-        Event::dispatch('lead.update.after', $lead->id);
+        //Event::dispatch('lead.update.after', $lead);
 
         return response()->json([
             'message' => 'Link de rastreamento atualizado com sucesso!',

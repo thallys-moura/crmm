@@ -150,17 +150,29 @@ abstract class AbstractEntity
                     if (! is_array($entity->{$attribute['id']})) {
                         break;
                     }
-
+                    
                     $optionsLabels = [];
 
                     foreach ($entity->{$attribute['id']} as $item) {
-                        $optionsLabels[] = $item['value'].' ('.$item['label'].')';
-                    }
 
+                        if(is_array($item)){
+                            $optionsLabels[] = $item['value'].' ('.$item['label'].')';
+                        }else{
+                            $optionsLabels[] = $item;
+                        }
+
+                    }
                     $value = implode(', ', $optionsLabels);
 
                     break;
-
+                case 'text':
+                    $optionsLabels = [];
+                    if(!is_array($entity->{$attribute['id']})){
+                        $optionsLabels['value'] = $entity->{$attribute['id']};
+                        $value = implode(', ', $optionsLabels);
+                    }
+                    
+                    break;
                 case 'address':
                     if (! $entity->{$attribute['id']} || ! count(array_filter($entity->{$attribute['id']}))) {
                         break;
@@ -220,9 +232,9 @@ abstract class AbstractEntity
      * @return void
      */
     public function triggerWebhook(int $webhookId, mixed $entity)
-    {
+    {   
         $webhook = $this->webhookRepository->findOrFail($webhookId);
-
+        
         $payload = [
             'method'    => $webhook->method,
             'end_point' => $this->replacePlaceholders($entity, $webhook->end_point),

@@ -26,10 +26,10 @@ class WebhookService
      * Trigger the webhook.
      */
     public function triggerWebhook(mixed $data): array
-    {
+    {   
         $options = [
             'headers'     => $this->formatHeaders(json_decode($data['headers'], true)),
-            'form_params' => $this->formatPayload(json_decode($data['payload'], true)),
+            'json' => $this->formatPayload(json_decode($data['payload'], true)),
         ];
 
         try {
@@ -73,7 +73,7 @@ class WebhookService
         if (! is_array($payload)) {
             $payload = json_decode($payload, true);
         }
-
+        
         $formattedPayload = [];
 
         if (
@@ -82,8 +82,13 @@ class WebhookService
         ) {
             $formattedPayload[$payload['key']] = $payload['value'];
         } else {
+
             foreach ($payload as $item) {
-                $formattedPayload[$item['key']] = $item['value'];
+                if(array_key_exists('key', $item)){
+                    $formattedPayload[$item['key']] = $item['value'];
+                }else{
+                    $formattedPayload = $item;
+                }
             }
         }
 

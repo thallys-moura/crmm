@@ -23,13 +23,16 @@ class Entity
      * @return void
      */
     public function process($eventName, $entity)
-    {
+    {   
         $workflows = $this->workflowRepository->findByField('event', $eventName);
 
         foreach ($workflows as $workflow) {
             $workflowEntity = app(config('workflows.trigger_entities.'.$workflow->entity_type.'.class'));
 
-            $entity = $workflowEntity->getEntity($entity);
+            if (is_numeric($entity)) {
+                // Recarrega a entidade pelo ID se apenas o ID foi passado
+                $entity = $this->workflowRepository->find($entity);
+            }
 
             if (! $this->validator->validate($workflow, $entity)) {
                 continue;
