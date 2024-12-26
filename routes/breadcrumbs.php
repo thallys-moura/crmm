@@ -492,5 +492,26 @@ Breadcrumbs::for('remarketing.create', function (BreadcrumbTrail $trail) {
     $trail->push(trans('admin::app.remarketing.create.title'), route('admin.remarketing.create'));
 });
 
+Breadcrumbs::for('daily_controls', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard'); // Referência ao breadcrumb do dashboard, se existir
+    $trail->push(trans('admin::app.daily_controls.index.title'), route('admin.daily_controls.index'));
+});
+
+Breadcrumbs::for('daily_controls.view', function (BreadcrumbTrail $trail, $dailyControl) {
+    $trail->parent('daily_controls');
+    $trail->push('#'.$dailyControl->id, route('admin.daily_controls.view', $dailyControl->id));
+});
+
+Breadcrumbs::for('daily_controls.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('daily_controls');
+    $trail->push(trans('admin::app.daily_controls.create.title'), route('admin.daily_controls.create'));
+});
+
+Breadcrumbs::for('daily_controls.edit', function (BreadcrumbTrail $trail, $dailyControl) {
+    if ($dailyControl && $dailyControl->id) {
+        $trail->parent('daily_controls');
+        $trail->push(trans('admin::app.daily_controls.edit.title'), route('admin.daily_controls.edit', $dailyControl->id));
+    }
+});
 
 

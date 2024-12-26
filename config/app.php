@@ -224,6 +224,7 @@ return [
         Webkul\Bank\Providers\BankServiceProvider::class,
         Webkul\Blacklist\Providers\BlacklistServiceProvider::class,
         Webkul\Remarketing\Providers\RemarketingServiceProvider::class,
+        Webkul\DailyControls\Providers\DailyControlsServiceProvider::class
 
     ])->toArray(),
 
@@ -245,5 +246,6 @@ return [
     'zarpon' => [
         'rastreio_webhook_url' => env('ZARPON_WEBHOOK_URL'),
         'saudacoes_webhook_url' => env('ZARPON_WEBHOOK_URL'),
+        'stop_funnel' => env('ZARPON_WEBHOOK_URL_STOP_FUNNEL'),
     ],
 ];

@@ -590,7 +590,6 @@
                             this.performStageUpdate(stage, event);
                         }
                     } else if (stage.id === this.stagesConstants.STAGE_LOST_ID){
-                        console.log('caiu aqui?');
                         //Adicionado a blacklist
                         //Se o card for transferido para o quadro de Não pago
                         //o cliente é adicionado a blacklist do Herbalux
@@ -598,7 +597,6 @@
 
                         // Abra o dialog e aguarde a confirmação
                         this.$refs.dialog_blacklist.openDialog(this.selectedLead, (e) => {
-                            console.log('teste');
                             this.performStageUpdate(stage, event);
                         });
                     } else {
@@ -611,7 +609,6 @@
                     // Atualiza o valor do lead localmente
                     stage.lead_value = parseFloat(stage.lead_value) + parseFloat(event.added.element.lead_value);
                     this.stageLeads[stage.id].leads.meta.total += 1;
-                    console.log('preciso passar aqui');
                     // Realiza a requisição de atualização para o backend
                     this.$axios
                         .put("{{ route('admin.leads.stage.update', 'replace') }}".replace('replace', event.added.element.id), {
@@ -784,7 +781,6 @@
 
             methods: {
                 openDialog(lead, onConfirm) {
-                    console.log('teste 123');
                     this.isOpen = true;
                     this.lead = lead;
                     this.onConfirm = onConfirm;

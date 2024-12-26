@@ -76,7 +76,8 @@
             "Webkul\\Expenses\\": "packages/Webkul/Expenses/src",
             "Webkul\\Bank\\": "packages/Webkul/Bank/src",
             "Webkul\\Blacklist\\": "packages/Webkul/Blacklist/src",
-            "Webkul\\Remarketing\\": "packages/Webkul/Remarketing/src"
+            "Webkul\\Remarketing\\": "packages/Webkul/Remarketing/src",
+            "Webkul\\DailyControls\\": "packages/Webkul/DailyControls/src"
         }
     },
     "autoload-dev": {

@@ -33,6 +33,7 @@ class Lead extends Model implements LeadContract
     protected $appends = [
         'rotten_days',
         'contact_number',
+        'person_name',
     ];
 
     /**
@@ -184,6 +185,16 @@ class Lead extends Model implements LeadContract
     public function getContactNumberAttribute()
     {
         return $this->person ? $this->person->contact_numbers[0] : null;
+    }
+
+    /**
+     * Get the contact phone number from the associated person.
+     *
+     * @return string|null
+     */
+    public function getPersonNameAttribute()
+    {
+        return $this->person ? $this->person->name : null;
     }
 
 }

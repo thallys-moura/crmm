@@ -13,7 +13,7 @@ class BankRepository extends Repository
      */
     public function model()
     {
-        return 'Webkul\Bank\Models\Bank'; // Ajuste para o modelo associado ao banco
+        return 'Webkul\Bank\Models\Bank'; 
     }
 
     /**

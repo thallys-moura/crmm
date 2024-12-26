@@ -1315,13 +1315,6 @@
                         }
 
                         if (this.getActionType == 'reply-all') {
-                            console.log(this.action.email);
-                            
-                            console.log([
-                                this.action.email.from,
-                                ...(this.action.email?.cc || []),
-                                ...(this.action.email?.bcc || []),
-                            ]);
                             
                             return [
                                 this.action.email.from,

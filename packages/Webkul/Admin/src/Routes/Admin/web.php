@@ -76,3 +76,4 @@ require 'blacklist-routes.php';
 */
 require 'remarketing-routes.php';
 
+require 'dailycontrols-routes.php';

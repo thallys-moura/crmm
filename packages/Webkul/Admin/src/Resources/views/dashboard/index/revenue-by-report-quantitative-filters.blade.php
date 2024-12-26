@@ -212,7 +212,6 @@
                         params: filtets
                      })
                         .then(response => {
-                            console.log(response.data.statistics);
                             //Preenchendo os dados dos resultados
                             this.reportData.sellers = response.data.statistics.sellers;
                             this.reportData.totalRevenue = response.data.statistics.totalRevenue;

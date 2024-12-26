@@ -40,10 +40,12 @@ use Webkul\Quote\Models\QuoteProxy;
 use Webkul\Lead\Enums\LeadStages;
 use Webkul\User\Models\User;
 use Webkul\Blacklist\Models\Blacklist;
+use Webkul\Quote\Services\ZarponService;
 
 class LeadController extends Controller
 {
     use PDFHandler;
+    protected $zarponService;
 
     /**
      * Create a new controller instance.
@@ -59,8 +61,12 @@ class LeadController extends Controller
         protected StageRepository $stageRepository,
         protected LeadRepository $leadRepository,
         protected ProductRepository $productRepository,
+        protected PersonRepository $personRepository,
+        ZarponService $zarponService
     ) {
         request()->request->add(['entity_type' => 'leads']);
+
+        $this->zarponService = $zarponService;
     }
 
     /**
@@ -355,6 +361,17 @@ class LeadController extends Controller
             if(in_array($stage->id, [LeadStages::STAGE_FOLLOWUP_ID])  ){
                 //Aciona Evento para enviar email do estágio ao interessado da compra
                 Event::dispatch('lead.stage.transition.actions', ['lead' => $lead, 'email_id' => $emailTemplateId]);
+            }
+            
+            if(in_array($stage->id, [LeadStages::STAGE_PROSPECT_ID])){
+                $person = $this->personRepository->findOrFail($lead->person_id);
+
+                if($person->contact_numbers){
+                    $nome = $person->name;
+                    $numero = $person->contact_numbers[0]['value'];
+
+                    $this->zarponService->stopFunnelForLead($numero);
+                }
             }
 
         } catch (\Exception $exception) {

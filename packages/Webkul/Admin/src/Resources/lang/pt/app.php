@@ -1857,6 +1857,125 @@ return [
             'no'  => 'Não',
         ],
     ],
+
+    'daily_controls' => [
+        'create-success'    => 'Controle Diário criado com sucesso.',
+        'update-success'    => 'Controle Diário atualizado com sucesso.',
+        'destroy-success'   => 'Controle Diário excluído com sucesso.',
+        'destroy-failed'    => 'Não foi possível excluir o controle diário.',
+        'warning'           => 'Já existe um registro para este usuário nesta data.',
+    
+        'index' => [
+            'title'      => 'Controle Diário',
+            'create-btn' => 'Adicionar Controle Diário',
+    
+            'datagrid' => [
+                'id'                  => 'ID',
+                'user'                => 'Usuário',
+                'date'                => 'Data',
+                'sales'               => 'Vendas',
+                'calls-made'          => 'Ligações Feitas',
+                'leads-count'         => 'Quantidade de Leads',
+                'daily-ad-spending'   => 'Gasto Diário com Anúncios',
+                'source'              => 'Fonte',
+                'created-at'          => 'Criado Em',
+                'actions'             => 'Ações',
+                'no'                  => 'Não',
+                'yes'                 => 'Sim',
+            ],
+        ],
+    
+        'create' => [
+            'title'       => 'Adicionar Controle Diário',
+            'save-btn'    => 'Salvar',
+            'details'     => 'Detalhes',
+            'details-info'=> 'Insira os detalhes para registrar o controle diário.',
+            'user'                => 'Usuário',
+            'date'                => 'Data',
+            'sales'               => 'Vendas',
+            'calls-made'          => 'Ligações Feitas',
+            'leads-count'         => 'Quantidade de Leads',
+            'daily-ad-spending'   => 'Gasto Diário com Anúncios',
+            'product-group'       => 'Grupo de Produtos',
+            'source'              => 'Fonte',
+            'fields' => [
+         
+            ],
+        ],
+    
+        'edit' => [
+            'title' => 'Editar Controle Diário',
+            'save-btn' => 'Salvar Alterações',
+            'date' => 'Data',
+            'user' => 'Usuário',
+            'calls-made' => 'Chamadas Realizadas',
+            'leads-count' => 'Leads Capturados',
+            'sales' => 'Vendas',
+            'source' => 'Fonte',
+            'product-group' => 'Grupo de Produtos',
+            'daily-ad-spending' => 'Gasto Diário em Anúncios',
+        ],
+    
+        'view' => [
+            'title'       => 'Detalhes do Controle Diário',
+            'tabs'        => [
+                'details'   => 'Detalhes',
+            ],
+            'attributes' => [
+                'user'                => 'Usuário',
+                'date'                => 'Data',
+                'sales'               => 'Vendas',
+                'calls-made'          => 'Ligações Feitas',
+                'leads-count'         => 'Quantidade de Leads',
+                'daily-ad-spending'   => 'Gasto Diário com Anúncios',
+                'source'              => 'Fonte',
+            ],
+        ],
+    
+        'mass-actions' => [
+            'delete-success' => 'Registro(s) selecionado(s) excluído(s) com sucesso.',
+            'delete-failed'  => 'Não foi possível excluir os registro(s) selecionado(s).',
+        ],
+    
+        'filters' => [
+            'apply-filters' => 'Aplicar Filtros',
+            'clear-all'     => 'Limpar Tudo',
+            'filter'        => 'Filtrar',
+            'filters'       => 'Filtros',
+        ],
+
+        'revenue' => [
+            'lost-revenue' => 'Despesas',
+            'won-revenue' => 'Receita',
+        ],
+
+        'total-expenses' => [
+            'title' => 'Despesas Totais por dia',
+            'all'   => 'Todas as Despesas por dia',
+            'advertising' => 'Despesas com Publicidade',
+            'sales' => 'Despesas com Vendas',
+            'empty-title' => 'Nenhum dado de despesas disponível',
+            'empty-info'  => 'Certifique-se de ter adicionado despesas para o período selecionado.',
+        ],
+
+        'expenses-by-sources' => [
+            'title'       => 'Despesas por Fontes',
+            'empty-title' => 'Nenhuma fonte encontrada',
+            'empty-info'  => 'Não há dados disponíveis para despesas por fontes neste momento.',
+        ],
+
+        'expenses-by-product-group' => [
+            'title'       => 'Despesas por Grupo de Produto',
+            'empty-title' => 'Nenhum grupo de produto encontrado',
+            'empty-info'  => 'Não há dados disponíveis para despesas por grupo de produto neste momento.',
+        ],
+
+        'common' => [
+            'yes' => 'Sim',
+            'no'  => 'Não',
+            'currency' => 'R$'
+        ],
+    ],
     'remarketing' => [
         'create-success'    => 'Remarketing criado com sucesso.',
         'update-success'    => 'Remarketing atualizado com sucesso.',
@@ -2272,7 +2391,8 @@ return [
         'bank'                 => 'Banco', 
         'blacklist'            => 'Blacklist',
         'remarketing'          => 'Remarketing',
-
+        'daily-controls'       => 'Controle Diário',
+           
         'mail'                 => [
             'title'   => 'Email',
             'compose' => 'Compor',

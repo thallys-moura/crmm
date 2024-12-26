@@ -180,13 +180,24 @@ return [
     ],
 
     /**
+     * Remarketing.
+     */
+    [
+        'key'        => 'dailycontrol',
+        'name'       => 'admin::app.layouts.daily-controls',
+        'route'      => 'admin.daily_controls.index',
+        'sort'       => 12,
+        'icon-class' => 'icon-stats-up',
+    ],
+
+    /**
      * Settings.
      */
     [
         'key'        => 'settings',
         'name'       => 'admin::app.layouts.settings',
         'route'      => 'admin.settings.index',
-        'sort'       => 12,
+        'sort'       => 13,
         'icon-class' => 'icon-setting',
     ], [
         'key'        => 'settings.user',
@@ -316,7 +327,7 @@ return [
         'key'        => 'configuration',
         'name'       => 'admin::app.layouts.configuration',
         'route'      => 'admin.configuration.index',
-        'sort'       => 13,
+        'sort'       => 14,
         'icon-class' => 'icon-configuration',
     ],
 ];
