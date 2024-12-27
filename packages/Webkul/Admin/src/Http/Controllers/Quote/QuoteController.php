@@ -291,12 +291,18 @@ class QuoteController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $this->quoteRepository->findOrFail($id);
-
+        $quote = $this->quoteRepository->findOrFail($id);
+        
         try {
             Event::dispatch('quote.delete.before', $id);
 
+            $leads = $quote->leads;
+
             $this->quoteRepository->delete($id);
+
+            foreach ($leads as $lead) {
+                $lead->delete();
+            }
 
             Event::dispatch('quote.delete.after', $id);
 
@@ -321,7 +327,13 @@ class QuoteController extends Controller
             foreach ($quotes as $quotes) {
                 Event::dispatch('quote.delete.before', $quotes->id);
 
+                $leads = $quotes->leads;
+                
                 $this->quoteRepository->delete($quotes->id);
+
+                foreach ($leads as $lead) {
+                    $lead->delete();
+                }
 
                 Event::dispatch('quote.delete.after', $quotes->id);
             }
