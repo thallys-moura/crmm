@@ -32,7 +32,7 @@
 
             <!-- Form Fields -->
             <div class="grid w-full">
-                <div class="flex flex-col gap-1">
+                <div class="flex flex-col gap-1" style="padding: 25px;">
                     <div class="w-full" style="width: 50rem;">
                         <!-- Date -->
                         <div class="mb-4">

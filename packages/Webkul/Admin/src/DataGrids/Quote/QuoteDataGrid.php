@@ -84,17 +84,17 @@ class QuoteDataGrid extends DataGrid
             'closure'    => function ($row) {
                 // Adicione a lógica condicional para o status
                 if ($row->billing_status_id == 1) {
-                    return '<span style="background-color: green; color: white; border-radius: 10px; padding: 3px 8px;">Pago</span>';
+                    return '<span style="background-color: rgb(220, 252, 231); color: rgb(22, 163, 74); border-radius: 5px; padding: 4px 5px;;">Pago</span>';
                 } elseif ($row->billing_status_id == 2) {
-                    return '<span style="background-color: #23af91; color: white; border-radius: 10px; padding: 2px 5px;">Pagou Parc.</span>';
+                    return '<span style="background-color: #ccfff4; color: #23af91; border-radius: 5px; padding: 4px 5px;;">Pagou Parc.</span>';
                 } elseif ($row->billing_status_id == 3) {
-                    return '<span style="background-color: red; color: white; border-radius: 10px; padding: 2px 5px;">Não Pagou</span>';
+                    return '<span style="background-color: rgb(254, 226, 226); color: rgb(220, 38, 38); border-radius: 5px; padding: 4px 5px;;">Não Pagou</span>';
                 } elseif ($row->billing_status_id == 4) {
-                    return '<span style="background-color: red; color: white; border-radius: 10px; padding: 2px 5px;">Cancelado</span>';
+                    return '<span style="background-color: rgb(254, 226, 226); color: rgb(220, 38, 38); border-radius: 5px; padding: 4px 5px;;">Cancelado</span>';
                 } elseif ($row->billing_status_id == 5) {
-                    return '<span style="background-color: yellow; color: black; border-radius: 10px; padding: 2px 5px;">Pendente</span>';                    
+                    return '<span style="background-color: rgb(254, 249, 195); color: rgb(202, 138, 4); border-radius: 5px; padding: 4px 5px;;">Pendente</span>';                    
                 } else {
-                    return '<span style="background-color: gray; color: white; border-radius: 10px; padding: 2px 5px;">Valor inválido</span>';
+                    return '<span style="background-color: gray; color: white; border-radius: 5px; padding: 4px 5px;;">Valor inválido</span>';
                 }
             }
         ]);

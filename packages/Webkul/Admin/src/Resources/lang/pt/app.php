@@ -2231,7 +2231,7 @@ return [
                 'comment'   => 'Observação',
                 'save-btn'  => 'Salvar',
                 'status'    => 'Status do Pagamento',
-                'payment_date' => 'Data do Pagamento',
+                'payment_date' => 'Data do Pagamento ou Cancelamento',
             ]
             
         ],
