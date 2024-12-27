@@ -3,6 +3,7 @@
 namespace Webkul\Admin\Http\Middleware;
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
 
 class Bouncer
 {
@@ -43,32 +44,79 @@ class Bouncer
             return redirect()->route('admin.session.create');
         }
 
+        // Verifica permissões do usuário
+        $canAccess = $this->checkPermissions($request);
+
+        View::share('canAccess', $canAccess); // Compartilha a variável com as views
+
+                
         return $next($request);
     }
 
+    protected function checkPermissions($request)
+    {
+        $user = auth()->guard('user')->user();
+        $routeName = Route::currentRouteName(); 
+
+        $role = $user->role;
+
+        if ($role->permission_type === 'all') {
+            return true;
+        }
+
+        $permissions = $role->permissions ?? [];
+
+        if (in_array($routeName, $permissions)) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
-     * Check for user, if they have empty permissions or not except admin.
+     * Check if user permissions are empty except for admin.
      *
      * @return bool
      */
     public function isPermissionsEmpty()
     {
-        if (! $role = auth()->guard('user')->user()->role) {
-            abort(401, 'This action is unauthorized.');
+        $user = auth()->guard('user')->user();
+        $role = $user->role;
+
+        if (!$role) {
+            return true;
         }
 
         if ($role->permission_type === 'all') {
             return false;
         }
 
-        if ($role->permission_type !== 'all' && empty($role->permissions)) {
-            return true;
-        }
-
-        $this->checkIfAuthorized();
-
-        return false;
+        return empty($role->permissions);
     }
+    
+    // /**
+    //  * Check for user, if they have empty permissions or not except admin.
+    //  *
+    //  * @return bool
+    //  */
+    // public function isPermissionsEmpty()
+    // {
+    //     if (! $role = auth()->guard('user')->user()->role) {
+    //         abort(401, 'This action is unauthorized.');
+    //     }
+
+    //     if ($role->permission_type === 'all') {
+    //         return false;
+    //     }
+
+    //     if ($role->permission_type !== 'all' && empty($role->permissions)) {
+    //         return true;
+    //     }
+
+    //     $this->checkIfAuthorized();
+
+    //     return false;
+    // }
 
     /**
      * Check authorization.
