@@ -4072,3 +4072,32 @@ select {
   max-height: 500px;
   opacity: 1;
 }
+.custom-alert {
+  max-width: 400px;
+  width: 90%;
+  height: 20%; /* Altura de 20% */
+  background-color: #fadede; /* Cor de fundo suave */
+  border: 1px solid #ff0000; /* Borda laranja */
+  border-radius: 8px; /* Cantos arredondados */
+  padding: 15px; /* Espaçamento interno */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra leve */
+  font-family: Arial, sans-serif; /* Fonte personalizada */
+  color: #be1a1a; /* Cor do texto */
+  font-size: 17px;
+
+  /* Centralização do bloco */
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  /* Centralização do conteúdo */
+  display: flex;
+  flex-direction: column; /* Alinha os itens em coluna */
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.custom-alert img {
+ margin-top: -30px;
+}

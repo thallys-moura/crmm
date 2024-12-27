@@ -14,7 +14,7 @@ return [
         'activities'      => 'Atividades',
         'webhook'         => 'Webhook',
         'contacts'        => 'Contatos',
-        'persons'         => 'Pessoas',
+        'persons'         => 'Clientes',
         'organizations'   => 'Organizações',
         'products'        => 'Produtos',
         'settings'        => 'Configurações',
@@ -143,7 +143,7 @@ return [
                         'title'       => 'Participantes',
                         'placeholder' => 'Digite para buscar participantes',
                         'users'       => 'Usuários',
-                        'persons'     => 'Pessoas',
+                        'persons'     => 'Clientes',
                         'no-results'  => 'Nenhum resultado encontrado...',
                     ],
                 ],
@@ -367,7 +367,7 @@ return [
                     'tabs' => [
                         'leads'    => 'Ordens',
                         'quotes'   => 'Vendas',
-                        'persons'  => 'Pessoas',
+                        'persons'  => 'Clientes',
                         'products' => 'Produtos',
                     ],
 
@@ -557,12 +557,12 @@ return [
     'contacts' => [
         'persons' => [
             'index' => [
-                'title'          => 'Pessoa',
-                'create-btn'     => 'Criar Pessoa',
-                'create-success' => 'Pessoa criada com sucesso.',
-                'update-success' => 'Pessoa atualizada com sucesso.',
-                'delete-success' => 'Pessoa excluída com sucesso.',
-                'delete-failed'  => 'A pessoa não pode ser excluída.',
+                'title'          => 'Clientes',
+                'create-btn'     => 'Criar Cliente',
+                'create-success' => 'Cliente criada com sucesso.',
+                'update-success' => 'Cliente atualizada com sucesso.',
+                'delete-success' => 'Cliente excluída com sucesso.',
+                'delete-failed'  => 'O Cliente não pode ser excluída.',
 
                 'datagrid' => [
                     'contact-numbers'   => 'Números de Contato',
@@ -578,7 +578,7 @@ return [
 
             'view' => [
                 'title'        => ':name',
-                'about-person' => 'Sobre a Pessoa',
+                'about-person' => 'Sobre o Cliente',
 
                 'activities' => [
                     'index' => [
@@ -646,13 +646,13 @@ return [
             ],
 
             'create' => [
-                'title'    => 'Criar Pessoa',
-                'save-btn' => 'Salvar Pessoa',
+                'title'    => 'Criar Cliente',
+                'save-btn' => 'Salvar Cliente',
             ],
 
             'edit' => [
-                'title'    => 'Editar Pessoa',
-                'save-btn' => 'Salvar Pessoa',
+                'title'    => 'Editar Cliente',
+                'save-btn' => 'Salvar Cliente',
             ],
         ],
 
@@ -670,7 +670,7 @@ return [
                     'edit'          => 'Editar',
                     'id'            => 'ID',
                     'name'          => 'Nome',
-                    'persons-count' => 'Quantidade de Pessoas',
+                    'persons-count' => 'Quantidade de Cliente',
                 ],
             ],
 
@@ -921,8 +921,8 @@ return [
                 'send-email-to-participants' => 'Enviar e-mail aos participantes',
                 'add-webhook'                => 'Adicionar Webhook',
                 'update-lead'                => 'Atualizar Orden',
-                'update-person'              => 'Atualizar Pessoa',
-                'send-email-to-person'       => 'Enviar e-mail para a pessoa',
+                'update-person'              => 'Atualizar Cliente',
+                'send-email-to-person'       => 'Enviar e-mail para o cliente',
                 'add-tag'                    => 'Adicionar Tag',
                 'add-note-as-activity'       => 'Adicionar Nota como Atividade',
             ],
@@ -1032,7 +1032,7 @@ return [
                 'form-title-color'         => 'Cor do Título do Formulário',
                 'general'                  => 'Geral',
                 'leads'                    => 'Ordem',
-                'person'                   => 'Pessoa',
+                'person'                   => 'Clientes',
                 'save-btn'                 => 'Salvar Formulário da Web',
                 'submit-button-label'      => 'Rótulo do Botão de Enviar',
                 'submit-success-action'    => 'Ação após Sucesso no Envio',
@@ -1060,7 +1060,7 @@ return [
                 'form-title-color'          => 'Cor do Título do Formulário',
                 'general'                   => 'Geral',
                 'preview'                   => 'Pré-visualização',
-                'person'                    => 'Pessoa',
+                'person'                    => 'Cliente',
                 'public-url'                => 'URL Pública',
                 'redirect-to-url'           => 'Redirecionar para URL',
                 'save-btn'                  => 'Salvar Formulário da Web',
@@ -1558,7 +1558,7 @@ return [
             'lead'            => 'Ordem',
             'participants'    => 'Participantes',
             'general'         => 'Geral',
-            'persons'         => 'Pessoas',
+            'persons'         => 'Clientes',
             'no-result-found' => 'Nenhum registro encontrado.',
             'users'           => 'Usuários',
         ],
@@ -1648,7 +1648,7 @@ return [
             'link-to-lead'               => 'Vincular a Ordem',
             'linked-lead'                => 'Ordem Vinculado',
             'lead-details'               => 'Detalhes da Ordem',
-            'contact-person'             => 'Pessoa de Contato',
+            'contact-person'             => 'Cliente de Contato',
             'product'                    => 'Produto',
 
             'tags' => [
@@ -1776,7 +1776,7 @@ return [
         'update-success'    => 'Entrada da Lista Negra atualizada com sucesso.',
         'destroy-success'   => 'Entrada da Lista Negra excluída com sucesso.',
         'destroy-failed'    => 'Não foi possível excluir a entrada da Lista Negra.',
-        'blacklist-warning' => 'Pessoa ou Endereço se encontra na Blacklist',
+        'blacklist-warning' => 'Cliente ou Endereço se encontra na Blacklist',
         'index' => [
             'title'      => 'Lista Negra',
             'create-btn' => 'Adicionar à Lista Negra',
@@ -1785,7 +1785,7 @@ return [
                 'id'                  => 'ID',
                 'sale-date'           => 'Data da Venda',
                 'lead'                => 'Lead',
-                'person'              => 'Pessoa',
+                'person'              => 'Cliente',
                 'user'                => 'Criado Por',
                 'seller'              => 'Vendedor',
                 'observations'        => 'Observações',
@@ -1807,7 +1807,7 @@ return [
             'fields' => [
                 'sale-date'           => 'Data da Venda',
                 'lead'                => 'Lead',
-                'person'              => 'Pessoa',
+                'person'              => 'Cliente',
                 'user'                => 'Criado Por',
                 'seller'              => 'Vendedor',
                 'observations'        => 'Observações',
@@ -1831,7 +1831,7 @@ return [
             'attributes' => [
                 'sale-date'           => 'Data da Venda',
                 'lead'                => 'Lead',
-                'person'              => 'Pessoa',
+                'person'              => 'Cliente',
                 'user'                => 'Criado Por',
                 'seller'              => 'Vendedor',
                 'observations'        => 'Observações',
@@ -2069,7 +2069,7 @@ return [
                 'lead-value'          => 'Valor do Ordem',
                 'lead-type'           => 'Tipo de Ordem',
                 'tag-name'            => 'Nome da Tag',
-                'contact-person'      => 'Pessoa de Contato',
+                'contact-person'      => 'Cliente de Contato',
                 'stage'               => 'Estágio',
                 'rotten-lead'         => 'Ordem Apodrecido',
                 'expected-close-date' => 'Data Prevista para Fechamento',
@@ -2088,7 +2088,7 @@ return [
                 'create-lead-btn'        => 'Criar Ordem',
                 'track-shipment'         => 'Rastrear Envio',
                 'columns' => [
-                    'contact-person'      => 'Pessoa de Contato',
+                    'contact-person'      => 'Cliente de Contato',
                     'id'                  => 'ID',
                     'lead-type'           => 'Tipo de ordem',
                     'lead-value'          => 'Valor do ordem',
@@ -2126,8 +2126,8 @@ return [
             'save-btn'       => 'Salvar',
             'details'        => 'Detalhes',
             'details-info'   => 'Insira as informações básicas da ordem',
-            'contact-person' => 'Pessoa de Contato',
-            'contact-info'   => 'Informações sobre a Pessoa de Contato',
+            'contact-person' => 'Cliente de Contato',
+            'contact-info'   => 'Informações sobre a Cliente de Contato',
             'products'       => 'Produtos',
             'products-info'  => 'Informações sobre os Produtos',
         ],
@@ -2137,8 +2137,8 @@ return [
             'save-btn'       => 'Salvar',
             'details'        => 'Detalhes',
             'details-info'   => 'Insira as informações básicas do Ordem',
-            'contact-person' => 'Pessoa de Contato',
-            'contact-info'   => 'Informações sobre a Pessoa de Contato',
+            'contact-person' => 'Cliente de Contato',
+            'contact-info'   => 'Informações sobre a Cliente de Contato',
             'products'       => 'Produtos',
             'products-info'  => 'Informações sobre os Produtos',
         ],
@@ -2207,7 +2207,7 @@ return [
             ],
 
             'persons' => [
-                'title'     => 'Sobre as Pessoas',
+                'title'     => 'Sobre o Cliente',
                 'job-title' => ':job_title na :organization',
             ],
 
@@ -2332,15 +2332,15 @@ return [
                 'total-leads'           => 'Total de Ordens',
                 'average-leads-per-day' => 'Média de Ordens por Dia',
                 'total-quotations'      => 'Total de Vendas',
-                'total-persons'         => 'Total de Pessoas',
+                'total-persons'         => 'Total de Clientes',
                 'total-organizations'   => 'Total de Organizações',
             ],
 
             'total-leads' => [
                 'title' => 'Ordens',
                 'total' => 'Total de Ordens',
-                'won'   => 'Ordens Ganhos',
-                'lost'  => 'Ordens Perdidos',
+                'won'   => 'Vendas Ganhas',
+                'lost'  => 'Vendas Perdidas',
             ],
 
             'revenue-by-sources' => [
@@ -2368,9 +2368,9 @@ return [
             ],
 
             'top-persons' => [
-                'title'       => 'Principais Pessoas',
-                'empty-title' => 'Nenhuma Pessoa Encontrada',
-                'empty-info'  => 'Nenhuma pessoa disponível para o intervalo selecionado',
+                'title'       => 'Principais Clientes',
+                'empty-title' => 'Nenhum cliente Encontrada',
+                'empty-info'  => 'Nenhum cliente disponível para o intervalo selecionado',
             ],
 
             'open-leads-by-states' => [
@@ -2404,9 +2404,9 @@ return [
             'setting' => 'Configuração',
         ],
         'activities'           => 'Atividades',
-        'contacts'             => 'Contatos',
-        'persons'              => 'Pessoas',
-        'person'               => 'Pessoa',
+        'contacts'             => 'Clientes',
+        'persons'              => 'Todos Clientes',
+        'person'               => 'Cliente',
         'organizations'        => 'Organizações',
         'organization'         => 'Organização',
         'products'             => 'Produtos',
@@ -2466,7 +2466,7 @@ return [
             'confirm_password'      => 'Confirmar Senha',
             'password-match'        => 'A senha atual não coincide.',
             'account-save'          => 'Alterações na conta salvas com sucesso.',
-            'permission-denied'     => 'Permissão Negada',
+            'permission-denied'     => 'Acesso Negado',
             'remove-image'          => 'Remover Imagem',
             'upload_image_pix'      => 'Carregar uma Imagem de Perfil (100px x 100px)',
             'upload_image_format'   => 'em Formato PNG ou JPG',

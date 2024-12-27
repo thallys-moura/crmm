@@ -122,9 +122,12 @@
 
             <div class="max-w-full flex-1 bg-gray-100 px-4 pb-6 pt-3 transition-all duration-300 dark:bg-gray-950 max-lg:!px-4 ltr:pl-[85px] rtl:pr-[85px]">
                 @if (isset($canAccess) && !$canAccess)
-                    <div class="alert alert-warning">
-                        <h3>@lang('admin::app.user.account.permission-denied')</h3>
-                    </div>
+                <div class="custom-alert">
+                    <img src="{{ vite()->asset('images/alert.svg') }}" alt="Alert Icon" style="max-width: 50px; margin-bottom: 10px;">
+                    <h3>@lang('admin::app.user.account.permission-denied')</h3>
+                </div>
+
+
                 @else
                     {{ $slot }}
                 @endif

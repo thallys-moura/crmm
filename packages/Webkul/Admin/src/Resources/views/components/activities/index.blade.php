@@ -1,7 +1,7 @@
 @props([
     'endpoint',
     'emailDetachEndpoint' => null,
-    'activeType'          => 'all',
+    'activeType'          => 'note',
     'types'               => null,
     'extraTypes'          => null,
 ])
@@ -402,11 +402,11 @@
                     type: Array,
                     default: [
                         {
-                            name: 'all',
-                            label: "{{ trans('admin::app.components.activities.index.all') }}",
-                        }, {
                             name: 'note',
                             label: "{{ trans('admin::app.components.activities.index.notes') }}",
+                        }, {
+                            name: 'all',
+                            label: "{{ trans('admin::app.components.activities.index.all') }}",
                         }, {
                             name: 'call',
                             label: "{{ trans('admin::app.components.activities.index.calls') }}",

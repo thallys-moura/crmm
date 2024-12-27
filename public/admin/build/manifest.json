@@ -312,6 +312,10 @@
     "file": "assets/herb.png",
     "src": "src/Resources/assets/images/herb.png"
   },
+  "src/Resources/assets/images/alert.svg": {
+    "file": "assets/alert.svg",
+    "src": "src/Resources/assets/images/alert.svg"
+  },
   "src/Resources/assets/images/logo-login.png": {
     "file": "assets/logo-login.png",
     "src": "src/Resources/assets/images/logo-login.png"

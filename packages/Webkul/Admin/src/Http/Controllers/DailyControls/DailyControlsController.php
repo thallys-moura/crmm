@@ -133,7 +133,7 @@ class DailyControlsController extends Controller
             Event::dispatch('daily_control.delete.after', $id);
 
             return response()->json([
-                'message' => trans('admin::app.daily_controls.index.delete-success'),
+                'message' => trans('Excluido com sucesso'),
             ], 200);
         } catch (\Exception $exception) {
             return response()->json([
