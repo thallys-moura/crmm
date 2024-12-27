@@ -308,9 +308,17 @@
     "file": "assets/logo-0db24d41.svg",
     "src": "src/Resources/assets/images/logo.svg"
   },
-  "src/Resources/assets/images/products/firemaxf.png": {
-    "file": "assets/firemaxf-0db24d41.png",
-    "src": "src/Resources/assets/images/products/firemaxf.png"
+  "src/Resources/assets/images/herb.png": {
+    "file": "assets/herb.png",
+    "src": "src/Resources/assets/images/herb.png"
+  },
+  "src/Resources/assets/images/logo-login.png": {
+    "file": "assets/logo-login.png",
+    "src": "src/Resources/assets/images/logo-login.png"
+  },
+  "src/Resources/assets/images/logo-mapos.png": {
+    "file": "assets/logo-mapos.png",
+    "src": "src/Resources/assets/images/logo-mapos.png"
   },
   "src/Resources/assets/js/app.css": {
     "file": "assets/app-06ae2a33.css",

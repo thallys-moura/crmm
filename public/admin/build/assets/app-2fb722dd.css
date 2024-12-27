@@ -12,7 +12,7 @@
 }
 html,
 :host {
-  line-height: 1.5; 
+  line-height: 1.5;
   -webkit-text-size-adjust: 100%;
   -moz-tab-size: 4;
   -o-tab-size: 4;
@@ -2862,7 +2862,7 @@ select {
 }
 .text-rose-600 {
   --tw-text-opacity: 1;
-  color: transparent !important;
+  color: rgb(225 29 72 / var(--tw-text-opacity));
 }
 .text-sky-600 {
   --tw-text-opacity: 1;

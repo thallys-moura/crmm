@@ -52,11 +52,7 @@
         rel="stylesheet"
     />
 
-    <link
-        rel="preload"
-        as="image"
-        href="{{ url('cache/logo/bagisto.png') }}"
-    >
+
 
     @if ($favicon = core()->getConfigData('general.design.admin_logo.favicon'))
         <link
@@ -73,6 +69,22 @@
             sizes="16x16"
         />
     @endif
+
+ <!-- Incluir CSS do NProgress -->
+ <link
+        rel="stylesheet"
+        href="{{ asset('admin/build/assets/nprogress.css') }}"
+    >
+
+    <!-- Incluir JS do NProgress -->
+    <script src="{{ asset('admin/build/assets/nprogress.js') }}"></script>
+
+    <!-- Iniciar NProgress após o DOM estar pronto -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            NProgress.start();
+        });
+    </script>
 
     @stack('styles')
 
@@ -132,6 +144,7 @@
          */
         window.addEventListener("load", function(event) {
             app.mount("#app");
+            NProgress.done();
         });
     </script>
 
