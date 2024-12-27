@@ -138,7 +138,7 @@ class QuoteDataGrid extends DataGrid
                 ],
             ],
             'closure'    => function ($row) {
-                $route = route('admin.contacts.persons.view', $row->person_id);
+                $route = route('admin.leads.view', $row->person_id);
 
                 return "<a class=\"text-brandColor transition-all hover:underline\" href='".$route."'>".$row->person_name.'</a>';
             },
@@ -150,8 +150,14 @@ class QuoteDataGrid extends DataGrid
             'type'       => 'string',
             'filterable' => true,
             'sortable'   => true,
-            'closure'    => fn ($row) => $row->person_email, 
+            'closure'    => function ($row) {
+                $emails = json_decode($row->person_email, true);
+        
+                // Verifica se o JSON é válido e contém o campo 'value'
+                return isset($emails[0]['value']) ? $emails[0]['value'] : 'N/A';
+            },
         ]);
+        
 
         $this->addColumn([
             'index'      => 'payment_method',
