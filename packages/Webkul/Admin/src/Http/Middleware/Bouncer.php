@@ -44,7 +44,6 @@ class Bouncer
             return redirect()->route('admin.session.create');
         }
 
-        // Verifica permissões do usuário
         $canAccess = $this->checkPermissions($request);
 
         View::share('canAccess', $canAccess); // Compartilha a variável com as views
@@ -56,21 +55,46 @@ class Bouncer
     protected function checkPermissions($request)
     {
         $user = auth()->guard('user')->user();
-        $routeName = Route::currentRouteName(); 
+        $routeName = Route::currentRouteName(); // Nome completo da rota atual
+    
+        $cleanRouteName = $this->sanitizeRouteName($routeName);
 
         $role = $user->role;
-
+    
         if ($role->permission_type === 'all') {
             return true;
         }
-
+    
         $permissions = $role->permissions ?? [];
 
-        if (in_array($routeName, $permissions)) {
+        if (in_array($cleanRouteName, $permissions)) {
             return true;
         }
-
+    
+        $module = $this->extractModuleName($cleanRouteName);
+        if (in_array($module, $permissions)) {
+            return true; 
+        }
+    
         return false;
+    }
+
+    protected function sanitizeRouteName($routeName)
+    {
+        if (str_starts_with($routeName, 'admin.')) {
+            $routeName = substr($routeName, strlen('admin.'));
+        }
+    
+        if (str_ends_with($routeName, '.index')) {
+            $routeName = substr($routeName, 0, -strlen('.index'));
+        }
+    
+        return $routeName;
+    }
+    
+    protected function extractModuleName($cleanRouteName)
+    {
+        return explode('.', $cleanRouteName)[0];
     }
 
     /**
