@@ -42,15 +42,25 @@ class TagController extends Controller
     public function detach(int $personId): JsonResponse
     {
         Event::dispatch('persons.tag.delete.before', $personId);
-
-        $person = $this->personRepository->find($personId);
-
+    
+        // Encontrar o Person e carregar os leads associados
+        $person = $this->personRepository->find($personId)->load('leads');
+    
+        // Remover a tag de `person_tags`
         $person->tags()->detach(request()->input('tag_id'));
-
+    
+        // Verificar e remover a tag de todos os Leads associados ao Person
+        if ($person->leads) {
+            foreach ($person->leads as $lead) {
+                $lead->tags()->detach(request()->input('tag_id'));
+            }
+        }
+    
         Event::dispatch('persons.tag.delete.after', $person);
-
+    
         return response()->json([
-            'message' => trans('admin::app.contacts.persons.view.tags.destroy-success'),
+            'message' => trans('Tag excluida com sucesso'),
         ]);
     }
+    
 }

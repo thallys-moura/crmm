@@ -129,7 +129,7 @@
                                                         <button class="flex cursor-pointer items-center gap-1 rounded border border-gray-200 px-2 py-0.5 transition-all hover:border-gray-400 focus:border-gray-400 dark:border-gray-800 dark:hover:border-gray-400 dark:focus:border-gray-400">
                                                             <span
                                                                 class="h-4 w-4 rounded-full"
-                                                                :style="'background-color: ' + (tag.color ? tag.color : '#546E7A')"
+                                                                :style="'background-color: ' + (tag.color ? tag.color : '')"
                                                             >
                                                             </span>
 

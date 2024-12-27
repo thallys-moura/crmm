@@ -47,15 +47,30 @@ class TagController extends Controller
     public function detach($leadId)
     {
         Event::dispatch('leads.tag.delete.before', $leadId);
-
+    
+        // Encontrar o lead
         $lead = $this->leadRepository->find($leadId);
-
+    
+        // Obter o person_id associado ao lead
+        $personId = $lead->person_id;
+    
+        // Remover a tag da relação com o lead
         $lead->tags()->detach(request()->input('tag_id'));
-
+    
+        // Verificar se há um person associado e remover a tag de person_tags
+        if ($personId) {
+            $person = $lead->person; // Obter o objeto Person
+    
+            if ($person) {
+                $person->tags()->detach(request()->input('tag_id'));
+            }
+        }
+    
         Event::dispatch('leads.tag.delete.after', $lead);
-
+    
         return response()->json([
             'message' => trans('admin::app.leads.view.tags.destroy-success'),
         ]);
     }
+    
 }
