@@ -121,8 +121,13 @@
             <x-admin::layouts.sidebar />
 
             <div class="max-w-full flex-1 bg-gray-100 px-4 pb-6 pt-3 transition-all duration-300 dark:bg-gray-950 max-lg:!px-4 ltr:pl-[85px] rtl:pr-[85px]">
-                <!-- Page Content Blade Component -->
-                {{ $slot }}
+                @if (isset($canAccess) && !$canAccess)
+                    <div class="alert alert-warning">
+                        <h3>@lang('admin::app.user.account.permission-denied')</h3>
+                    </div>
+                @else
+                    {{ $slot }}
+                @endif
             </div>
         </div>
 
