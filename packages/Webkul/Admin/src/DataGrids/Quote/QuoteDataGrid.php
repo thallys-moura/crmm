@@ -33,7 +33,7 @@ class QuoteDataGrid extends DataGrid
                 'users.name as sales_person',
                 'persons.id as person_id',
                 'persons.name as person_name',
-                'persons.emails as person_email',
+                DB::raw("JSON_UNQUOTE(JSON_EXTRACT(persons.emails, '$[0].value')) as person_email"),
                 'quotes.expired_at as expired_quotes',
                 'products.name as product',
                 'payment_methods.name as payment_method'
