@@ -238,12 +238,10 @@ class QuoteController extends Controller
             'contact_numbers' => [0 => ['value' => $person_request['contact_numbers'][0]['value']]],
         ]);
 
-        // Atualizar o lead com os novos dados
         $data_lead = [
             'entity_type' => 'leads',
             'lead_type_id' => '1',
             'lead_pipeline_id' => '1',
-            'lead_pipeline_stage_id' => '1',
             'lead_source_id' => '1',
             'user_id' => $request->input('user_id'),
             'raca' => $request->input('raca'),
@@ -291,12 +289,18 @@ class QuoteController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $this->quoteRepository->findOrFail($id);
-
+        $quote = $this->quoteRepository->findOrFail($id);
+        
         try {
             Event::dispatch('quote.delete.before', $id);
 
+            $leads = $quote->leads;
+
             $this->quoteRepository->delete($id);
+
+            foreach ($leads as $lead) {
+                $lead->delete();
+            }
 
             Event::dispatch('quote.delete.after', $id);
 
@@ -321,7 +325,13 @@ class QuoteController extends Controller
             foreach ($quotes as $quotes) {
                 Event::dispatch('quote.delete.before', $quotes->id);
 
+                $leads = $quotes->leads;
+                
                 $this->quoteRepository->delete($quotes->id);
+
+                foreach ($leads as $lead) {
+                    $lead->delete();
+                }
 
                 Event::dispatch('quote.delete.after', $quotes->id);
             }

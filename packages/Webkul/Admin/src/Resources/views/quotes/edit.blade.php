@@ -162,7 +162,7 @@
                                             return $attribute->code == 'created_at' ? 2 : 1;
                                     })"
                                     :custom-validations="[
-                                        'expired_at' => [
+                                        'created_at' => [
                                             'required',
                                             'date_format:yyyy-MM-dd',
                                             'after:' .  \Carbon\Carbon::yesterday()->format('Y-m-d')
@@ -676,13 +676,12 @@
                         state: this.product['product_id'] ? 'old' : '',
 
                         products: [],
-                        paymentMethods: [], // Lista de métodos de pagamento
+                        paymentMethods: [], 
 
                     }
                 },
 
                 mounted() {
-                    // Carrega os métodos de pagamento ao montar o componente
                     this.loadPaymentMethods();
                 },
 

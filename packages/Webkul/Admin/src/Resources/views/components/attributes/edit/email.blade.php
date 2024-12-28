@@ -93,20 +93,20 @@
 
             props: {
                 validations: {
-                    type: String, // ou outro tipo adequado (ex: Object se houver mais validações)
+                    type: String,
                     default: ''
                 },
                 attribute: {
-                    type: Object, // Supondo que o atributo seja um objeto
+                    type: Object, 
                     required: true
                 },
                 value: {
-                    type: [String, Array, Object], // Depende de como os valores de email são estruturados
-                    default: () => [{'value': '', 'label': 'work'}] // Valor padrão adequado
+                    type: [String, Array, Object], 
+                    default: () => [{'value': '', 'label': 'work'}] 
                 },
                 hideFields: {
                     type: Boolean,
-                    default: false
+                    default: true
                 },
             },
             data() {
