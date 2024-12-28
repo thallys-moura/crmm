@@ -238,12 +238,10 @@ class QuoteController extends Controller
             'contact_numbers' => [0 => ['value' => $person_request['contact_numbers'][0]['value']]],
         ]);
 
-        // Atualizar o lead com os novos dados
         $data_lead = [
             'entity_type' => 'leads',
             'lead_type_id' => '1',
             'lead_pipeline_id' => '1',
-            'lead_pipeline_stage_id' => '1',
             'lead_source_id' => '1',
             'user_id' => $request->input('user_id'),
             'raca' => $request->input('raca'),

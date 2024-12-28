@@ -51,7 +51,7 @@
                         
                         <v-email-component
                             :attribute="{'code': 'person[emails]', 'name': 'Email'}"
-                            value="{{ old('person.email', $person->email ?? '') }}"
+                            :value='@json(old("person.emails", $person->emails ?? []))'
                             :hide-fields="true"
                         ></v-email-component>
                     </div>
@@ -87,7 +87,6 @@
                 return {
                     is_searching: false,
 
-                    // Preenche os dados da pessoa se estiver disponível
                     person: this.data && Object.keys(this.data).length > 0 ? this.data : {
                         'name': '',
                         'emails': [{ value: '' }],

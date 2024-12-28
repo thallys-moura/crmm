@@ -20,7 +20,6 @@ class Quote extends Model implements QuoteContract
     protected $casts = [
         'billing_address'  => 'array',
         'shipping_address' => 'array',
-        'expired_at'       => 'datetime',
     ];
 
     /**
