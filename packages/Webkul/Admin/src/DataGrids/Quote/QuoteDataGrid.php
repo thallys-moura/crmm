@@ -17,36 +17,38 @@ class QuoteDataGrid extends DataGrid
         $tablePrefix = DB::getTablePrefix();
 
         $queryBuilder = DB::table('quotes')
-            ->addSelect(
-                'quotes.id',
-                'quotes.subject',
-                'quotes.expired_at',
-                'quotes.sub_total',
-                'quotes.discount_amount',
-                'quotes.tax_amount',
-                'quotes.adjustment_amount',
-                'quotes.grand_total',
-                'billing_status.status',
-                'leads.billing_status_id',
-                'quotes.created_at',
-                'users.id as user_id',
-                'users.name as sales_person',
-                'persons.id as person_id',
-                'persons.name as person_name',
-                'persons.emails as person_email',
-                'quotes.expired_at as expired_quotes',
-                'products.name as product',
-                'payment_methods.name as payment_method'
-            )
-            ->leftJoin('users', 'quotes.user_id', '=', 'users.id')
-            ->leftJoin('persons', 'quotes.person_id', '=', 'persons.id')
-            ->leftJoin('lead_quotes', 'quotes.id', '=', 'lead_quotes.quote_id')
-            ->leftJoin('leads', 'lead_quotes.lead_id', '=', 'leads.id')
-            ->leftJoin('lead_products', 'lead_products.lead_id', '=', 'leads.id')
-            ->leftJoin('quote_items', 'quote_items.quote_id', '=', 'quotes.id')
-            ->leftJoin('products', 'products.id', '=', 'quote_items.product_id')
-            ->leftJoin('billing_status', 'leads.billing_status_id', '=', 'billing_status.id')
-            ->leftJoin('payment_methods', 'quotes.payment_method_id', '=', 'payment_methods.id');
+        ->addSelect(
+            'quotes.id',
+            'quotes.subject',
+            'quotes.expired_at',
+            'quotes.sub_total',
+            'quotes.discount_amount',
+            'quotes.tax_amount',
+            'quotes.adjustment_amount',
+            'quotes.grand_total',
+            'billing_status.status',
+            'leads.billing_status_id',
+            'quotes.created_at',
+            'users.id as user_id',
+            'users.name as sales_person',
+            'persons.id as person_id',
+            'persons.name as person_name',
+            'persons.emails as person_email',
+            'persons.contact_numbers as person_contact_numbers', // Adicionado aqui
+            'quotes.expired_at as expired_quotes',
+            'products.name as product',
+            'payment_methods.name as payment_method'
+        )
+        ->leftJoin('users', 'quotes.user_id', '=', 'users.id')
+        ->leftJoin('persons', 'quotes.person_id', '=', 'persons.id')
+        ->leftJoin('lead_quotes', 'quotes.id', '=', 'lead_quotes.quote_id')
+        ->leftJoin('leads', 'lead_quotes.lead_id', '=', 'leads.id')
+        ->leftJoin('lead_products', 'lead_products.lead_id', '=', 'leads.id')
+        ->leftJoin('quote_items', 'quote_items.quote_id', '=', 'quotes.id')
+        ->leftJoin('products', 'products.id', '=', 'quote_items.product_id')
+        ->leftJoin('billing_status', 'leads.billing_status_id', '=', 'billing_status.id')
+        ->leftJoin('payment_methods', 'quotes.payment_method_id', '=', 'payment_methods.id');
+    
     
         if ($userIds = bouncer()->getAuthorizedUserIds()) {
             $queryBuilder->whereIn('quotes.user_id', $userIds);
@@ -143,7 +145,22 @@ class QuoteDataGrid extends DataGrid
                 return "<a class=\"text-brandColor transition-all hover:underline\" href='".$route."'>".$row->person_name.'</a>';
             },
         ]);
-
+        
+        $this->addColumn([
+            'index'      => 'person_contact_numbers',
+            'label'      => trans('admin::app.quotes.index.datagrid.phone'),
+            'type'       => 'string',
+            'filterable' => false,
+            'sortable'   => false,
+            'closure'    => function ($row) {
+                // Decodifica o JSON armazenado no campo `contact_numbers`
+                $contactNumbers = json_decode($row->person_contact_numbers, true);
+        
+                // Retorna o primeiro número de contato, ou 'N/A' se não houver
+                return isset($contactNumbers[0]['value']) ? $contactNumbers[0]['value'] : 'N/A';
+            },
+        ]);
+        
         $this->addColumn([
             'index'      => 'email',
             'label'      => trans('admin::app.quotes.index.datagrid.email'),

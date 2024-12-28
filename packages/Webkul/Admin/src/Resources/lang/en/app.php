@@ -457,6 +457,7 @@ return [
                 'sales-person'     => 'Sales Person',
                 'date'             => 'Date',
                 'quote-id'         => 'Quote ID',
+                'phone'            => 'Phone',
             ],
         ],
 

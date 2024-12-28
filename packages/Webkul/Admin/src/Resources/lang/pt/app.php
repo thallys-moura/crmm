@@ -425,7 +425,7 @@ return [
                 'expired-at'     => 'Expirado em',
                 'created-at'     => 'Criado em',
                 'expired-quotes' => 'Venda Expirada',
-                'person'         => 'Cliente',
+                'person'         => 'Cliente',               
                 'subtotal'       => 'Subtotal',
                 'discount'       => 'Disconto',
                 'tax'            => 'Imposto',
@@ -436,7 +436,8 @@ return [
                 'print'          => 'Imprimir',
                 'status'         => 'Status do Pagamento',
                 'payment_method' => 'Forma de Pagamento',
-                'email'          => 'Email'
+                'email'          => 'Email',
+                'phone'          => 'Telefone',
             ],
 
             'pdf' => [
