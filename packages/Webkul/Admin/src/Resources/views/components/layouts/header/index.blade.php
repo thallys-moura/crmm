@@ -1,12 +1,18 @@
 <header class="sticky top-0 z-[10001] flex items-center justify-between border-b border-gray-200 bg-white px-4 py-2.5 transition-all dark:border-gray-800 dark:bg-gray-900">
-    <!-- logo -->
     <div class="flex items-center gap-1.5">
-        <i class="icon-menu hidden cursor-pointer rounded-md p-1.5 text-2xl hover:bg-gray-100 dark:hover:bg-gray-950 max-lg:block"></i>
+        <!-- Ícone de lista somente em telas pequenas -->
+        <i
+            id="menu-icon"
+            class="icon-list text-5xl cursor-pointer"
+            v-if="isSmallScreen"
+            @click.stop="toggleSidebar"
+        ></i>
 
-        <a href="{{ route('admin.dashboard.index') }}">
+        <!-- Logo somente em telas grandes -->
+        <a v-if="!isSmallScreen" href="{{ route('admin.dashboard.index') }}">
             <img
                 class="h-10"
-                src="{{ request()->cookie('dark_mode') ? vite()->asset('images/dark-logo.svg') : vite()->asset('images/logo.svg') }}"
+                src="{{ request()->cookie('dark_mode') ? vite()->asset('images/herb.png') : vite()->asset('images/herb.png') }}"
                 id="logo-image"
                 alt="{{ config('app.name') }}"
             />
@@ -18,7 +24,6 @@
         <v-mega-search>
             <div class="relative flex w-[525px] max-w-[525px] items-center max-lg:w-[400px] ltr:ml-2.5 rtl:mr-2.5">
                 <i class="icon-search absolute top-1.5 flex items-center text-2xl ltr:left-3 rtl:right-3"></i>
-
                 <input
                     type="text"
                     class="block w-full rounded-3xl border bg-white px-10 py-1.5 leading-6 text-gray-600 transition-all hover:border-gray-400 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300"
@@ -29,7 +34,7 @@
 
         <!-- Quick create section -->
         <div>
-            @if (bouncer()->hasPermission('leads.create')
+            @if (bouncer()->hasPermission('quotes.create')
                 || bouncer()->hasPermission('quotes.create')
                 || bouncer()->hasPermission('mail.create')
                 || bouncer()->hasPermission('contacts.persons.create')
@@ -51,6 +56,8 @@
                     <x-slot:content class="mt-2 !p-0">
                         <div class="relative px-2 py-4">
                             <div class="grid grid-cols-3 gap-2 text-center">
+                                <!-- Link to create new Lead -->
+                                
 
                                 <!-- Link to create new Quotes -->
                                 @if (bouncer()->hasPermission('quotes.create'))
@@ -193,10 +200,11 @@
             <!-- Admin Dropdown -->
             <x-slot:content class="!p-0">
                 <div class="flex items-center gap-1.5 border border-b-gray-300 px-5 py-2.5 dark:border-gray-800">
-                    <img
-                        src="{{ url('cache/logo.png') }}"
+                <img
+                       src="{{ request()->cookie('dark_mode') ? vite()->asset('images/herb.png') : vite()->asset('images/herb.png') }}"
                         width="24"
                         height="24"
+                        style="margin-left: -7px;"
                     />
 
                     <!-- Version -->
@@ -210,7 +218,7 @@
                         class="cursor-pointer px-5 py-2 text-base text-gray-800 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-950"
                         href="{{ route('admin.user.account.edit') }}"
                     >
-                        My Account
+                        Minha Conta
                     </a>
 
                     <!--Admin logout-->
@@ -226,7 +234,7 @@
                         href="{{ route('admin.session.destroy') }}"
                         onclick="event.preventDefault(); document.getElementById('adminLogout').submit();"
                     >
-                        Logout
+                        Sair
                     </a>
                 </div>
             </x-slot>
@@ -701,9 +709,9 @@
                 return {
                     isDarkMode: {{ request()->cookie('dark_mode') ?? 0 }},
 
-                    logo: "{{ vite()->asset('images/logo.svg') }}",
+                    logo: "{{ vite()->asset('images/herb.png') }}",
 
-                    dark_logo: "{{ vite()->asset('images/dark-logo.svg') }}",
+                    dark_logo: "{{ vite()->asset('images/herb.png') }}",
                 };
             },
 

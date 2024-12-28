@@ -25,7 +25,7 @@
                     <!-- Logo -->
                     <img
                         class="w-max"
-                        src="{{ vite()->asset('images/logo.svg') }}"
+                        src="{{ vite()->asset('images/herb.png') }}"
                         alt="{{ config('app.name') }}"
                     />
 

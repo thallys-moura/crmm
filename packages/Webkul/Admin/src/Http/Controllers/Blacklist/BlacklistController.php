@@ -67,7 +67,7 @@ class BlacklistController extends Controller
 
          // Verifica se o lead já está na blacklist
          if (Blacklist::where('lead_id', $person['id'])->exists()) {
-            return response()->json(['message' => 'Pessoa já está na blacklist.'], 400);
+            return response()->json(['message' => 'Cliente já está na blacklist.'], 400);
         }
 
         $blacklistData = [

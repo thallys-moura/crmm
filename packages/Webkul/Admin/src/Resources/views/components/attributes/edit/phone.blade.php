@@ -3,7 +3,8 @@
         :attribute="{{ json_encode($attribute) }}"
         :validations="'{{ $validations }}'"
         :value="{{ json_encode(old($attribute->code) ?? $value) }}"
-        :hide-fields= {{ json_encode(old(hide_fields) ?? false) }}"
+        :hide-fields="{{ json_encode(old('hide_fields') ?? false) }}"
+
     >
         <div class="mb-2 flex items-center">
             <input

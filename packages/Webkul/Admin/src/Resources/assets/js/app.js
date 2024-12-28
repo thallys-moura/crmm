@@ -7,7 +7,7 @@ import.meta.glob(["../images/**", "../fonts/**"]);
  * Main vue bundler.
  */
 import { createApp } from "vue/dist/vue.esm-bundler";
-
+import NProgress from 'nprogress';
 /**
  * Main root application registry.
  */
@@ -118,6 +118,28 @@ import VueCal from "./plugins/vue-cal";
     VueCal,
 ].forEach((plugin) => app.use(plugin));
 
+/**
+ * Configura interceptors do Axios para o NProgress.
+ */
+import axios from 'axios';
+
+// Interceptor de requisição
+axios.interceptors.request.use(config => {
+    NProgress.start();
+    return config;
+}, error => {
+    NProgress.done();
+    return Promise.reject(error);
+});
+
+// Interceptor de resposta
+axios.interceptors.response.use(response => {
+    NProgress.done();
+    return response;
+}, error => {
+    NProgress.done();
+    return Promise.reject(error);
+});
 
 /**
  * Global directives.

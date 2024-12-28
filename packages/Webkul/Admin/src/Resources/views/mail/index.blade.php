@@ -356,151 +356,152 @@
             {!! view_render_event('admin.mail.create.form.after') !!}
         </script>
 
-        <script type="module">
-            app.component('v-mail', {
-                template: '#v-mail-template',
+      <!-- Componente v-mail -->
+<script type="module">
+    app.component('v-mail', {
+        template: '#v-mail-template',
 
-                data() {
-                    return {
-                        selectedMail: false,
+        data() {
+            return {
+                selectedMail: false,
+                showCC: false,
+                showBCC: false,
+                isStoring: false,
+                saveAsDraft: 0,
 
-                        showCC: false,
+                draft: {
+                    id: null,
+                    reply_to: [],
+                    cc: [],
+                    bcc: [],
+                    subject: '',
+                    reply: '',
+                    attachments: [],
+                },
 
-                        showBCC: false,
+                backgroundColors: [
+                    // ...
+                ],
+            };
+        },
 
-                        isStoring: false,
+        methods: {
+            truncatedReply(reply) {
+                const maxLength = 100;
 
-                        saveAsDraft: 0,
+                if (!reply) {
+                    return '';
+                }
 
-                        draft: {
-                            id: null,
-                            reply_to: [],
-                            cc: [],
-                            bcc: [],
-                            subject: '',
-                            reply: '',
-                            attachments: [],
+                if (reply.length > maxLength) {
+                    return `${reply.substring(0, maxLength)}...`;
+                }
+                
+                return reply;
+            },
+
+            toggleModal() {
+                this.draft.reply_to = [];
+                this.$refs.toggleComposeModal.toggle();
+            },
+
+            save(params, { resetForm, setErrors  }) {
+                this.isStoring = true;
+
+                let formData = new FormData(this.$refs.mailForm);
+                formData.append('is_draft', this.saveAsDraft);
+
+                if (this.draft && this.draft.id) {
+                    formData.append('_method', 'PUT');
+                }
+
+                const url = this.draft && this.draft.id
+                    ? "{{ route('admin.mail.update', ':id') }}".replace(':id', this.draft.id)
+                    : '{{ route('admin.mail.store') }}';
+
+                this.$axios.post(url, formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
                         },
-
-                        backgroundColors: [
-                            {
-                                label: "@lang('admin::app.components.tags.index.aquarelle-red')",
-                                text: '#DC2626',
-                                background: '#FEE2E2',
-                            }, {
-                                label: "@lang('admin::app.components.tags.index.crushed-cashew')",
-                                text: '#EA580C',
-                                background: '#FFEDD5',
-                            }, {
-                                label: "@lang('admin::app.components.tags.index.beeswax')",
-                                text: '#D97706',
-                                background: '#FEF3C7',
-                            }, {
-                                label: "@lang('admin::app.components.tags.index.lemon-chiffon')",
-                                text: '#CA8A04',
-                                background: '#FEF9C3',
-                            }, {
-                                label: "@lang('admin::app.components.tags.index.snow-flurry')",
-                                text: '#65A30D',
-                                background: '#ECFCCB',
-                            }, {
-                                label: "@lang('admin::app.components.tags.index.honeydew')",
-                                text: '#16A34A',
-                                background: '#DCFCE7',
-                            },
-                        ],
-                    };
-                },
-
-                methods: {
-                    truncatedReply(reply) {
-                        const maxLength = 100;
-
-                        if (reply.length > maxLength) {
-                            return `${reply.substring(0, maxLength)}...`;
+                    })
+                    .then ((response) => {
+                        this.$refs.datagrid.get();
+                        this.$emitter.emit('add-flash', { type: 'success', message: response.data?.message });
+                        resetForm();
+                    })
+                    .catch ((error) => {
+                        if (error?.response?.status == 422) {
+                            setErrors(error.response.data.errors);
+                        } else {
+                            this.$emitter.emit('add-flash', { type: 'error', message: error.response.data.message });
                         }
-                        
-                        return reply;
-                    },
+                    }).finally(() => {
+                        this.$refs.toggleComposeModal.close();
+                        this.isStoring = false;
+                        this.resetForm();
+                    });
+            },
 
-                    toggleModal() {
-                        this.draft.reply_to = [];
+            handleRecordClick(record) {
+                const action = record.actions && record.actions.find(action => action.index === 'edit');
+                if (action) {
+                    this.selectedMail = true;
+                    this.editModal(action);
+                } else {
+                    console.error('Ação de edição não encontrada para o registro:', record);
+                }
+            },
 
-                        this.$refs.toggleComposeModal.toggle();
-                    },
+            editModal(row) {
+    if (!row) {
+        console.error('Row está indefinido');
+        return;
+    }
 
-                    save(params, { resetForm, setErrors  }) {
-                        this.isStoring = true;
+    console.log('Row:', row);
 
-                        let formData = new FormData(this.$refs.mailForm);
+    if (row.title == 'Visualizar') {
+        window.location.href = row.url;
+        return;
+    }
 
-                        formData.append('is_draft', this.saveAsDraft);
+    // Append ?route=draft to the URL
+    const url = `${row.url}?route=draft`;
 
-                        if (this.draft.id) {
-                            formData.append('_method', 'PUT');
-                        }
+    this.$axios.get(url)
+        .then(response => {
+            console.log('Resposta da API:', response);
 
-                        this.$axios.post(this.draft.id ? "{{ route('admin.mail.update', ':id') }}".replace(':id', this.draft.id) : '{{ route('admin.mail.store') }}', formData, {
-                                headers: {
-                                    'Content-Type': 'multipart/form-data',
-                                },
-                            })
-                            .then ((response) => {
-                                this.$refs.datagrid.get();
+            if (response.data && response.data.data) {
+                this.draft = response.data.data;
+                this.$refs.toggleComposeModal.toggle();
+                this.showCC = Array.isArray(this.draft.cc) && this.draft.cc.length > 0;
+                this.showBCC = Array.isArray(this.draft.bcc) && this.draft.bcc.length > 0;
+            } else {
+                console.error('Dados da resposta estão indefinidos');
+            }
+        })
+        .catch(error => {
+            console.error('Erro na requisição:', error);
+        });
+},
 
-                                this.$emitter.emit('add-flash', { type: 'success', message: response.data?.message });
 
-                                resetForm();
-                            })
-                            .catch ((error) => {
-                                if (error?.response?.status == 422) {
-                                    setErrors(error.response.data.errors);
-                                } else {
-                                    this.$emitter.emit('add-flash', { type: 'error', message: error.response.data.message });
-                                }
-                            }).finally(() => {
-                                this.$refs.toggleComposeModal.close();
 
-                                this.isStoring = false;
+            resetForm() {
+                this.draft = {
+                    id: null,
+                    reply_to: [],
+                    cc: [],
+                    bcc: [],
+                    subject: '',
+                    reply: '',
+                    attachments: [],
+                };
+            },
+        },
+    });
+</script>
 
-                                this.resetForm();
-                            });
-                    },
-
-                    editModal(row) {
-                        if(row.title == 'View') {
-                            window.location.href = row.url;
-
-                            return;
-                        }
-
-                        this.$axios.get(row.url)
-                            .then(response => {
-                                this.draft = response.data.data;
-
-                                this.$refs.toggleComposeModal.toggle();
-
-                                this.showCC = this.draft.cc.length > 0;
-
-                                this.showBCC = this.draft.bcc.length > 0;
-                                
-                            })
-                            .catch(error => {});
-                    },
-
-                    resetForm() {
-                        this.draft = {
-                            id: null,
-                            reply_to: [],
-                            cc: [],
-                            bcc: [],
-                            subject: '',
-                            reply: '',
-                            attachments: [],
-                        };
-                    },
-                },
-            });
-        </script>
     @endPushOnce
 </x-admin::layouts>

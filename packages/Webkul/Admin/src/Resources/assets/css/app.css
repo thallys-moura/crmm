@@ -43,7 +43,7 @@
     .icon-error:before {
         content: "\e951";
     }
-    
+
     .icon-info:before {
         content: "\e952";
     }
@@ -371,7 +371,10 @@
     .icon-add-2:before {
         content: "\e923";
     }
-
+    .icon-cart:before {
+        content: "\e94f";
+      }
+      
     .label-active {
         @apply max-w-max rounded-md bg-emerald-200 px-3 py-1.5 text-xs font-medium text-emerald-900;
     }

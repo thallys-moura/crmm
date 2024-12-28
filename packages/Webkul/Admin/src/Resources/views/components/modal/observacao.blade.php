@@ -194,7 +194,7 @@
                         if (response.status === 200) {
                             // Fechar modal ou notificar sucesso
                             this.$refs.observacaoModal.close();
-                            alert('Observação salva com sucesso!');
+                           
                         }
                     } catch (error) {
                         this.$refs.observacaoModal.close();

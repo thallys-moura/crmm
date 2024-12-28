@@ -84,7 +84,7 @@
                     {!! view_render_event('admin.contacts.quotes.create.tabs.after') !!}
                 </div>
 
-                <div class="flex flex-col gap-1">
+                <div class="flex flex-col gap-1" style="padding: 25px;">
                     {!! view_render_event('admin.contacts.quotes.create.quote_information.before') !!}
                     <!-- Contact Person -->
                     <div 
