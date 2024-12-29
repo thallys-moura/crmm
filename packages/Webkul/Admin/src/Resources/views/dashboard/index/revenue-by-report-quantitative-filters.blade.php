@@ -20,7 +20,7 @@
         <template v-else>
             <div class="grid gap-4 rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
                 <div class="flex flex-col justify-between gap-1">
-                    <p class="text-base font-semibold dark:text-gray-300">
+                    <p class="text-base font-semibold text-gray-600 dark:text-gray-300">
                         @lang('admin::app.dashboard.index.revenue-by-report-quantitative-filters.title')
                     </p>
                 </div>
@@ -158,27 +158,25 @@
                 </div>
 
 
-                  <!-- Resultados em Cards -->
-                <div class=" flex gap-4 mt-4">
-                   
+                 <!-- Resultados em Cards -->
+                <div class="flex gap-4 mt-4">
                     <!-- Card de Total de Vendas -->
-                    <div class="p-4 border border-gray-200 rounded-lg shadow-sm bg-white dark:bg-gray-800">
-                        <h3 class="text-lg font-semibold mb-2">Total de Vendas</h3>
+                    <div class="flex-1 p-4 border border-gray-200 rounded-lg shadow-sm bg-white dark:bg-gray-800">
+                        <h3 class="mb-2" style="font-weight: 500; font-size: 17px;">Total de Vendas</h3>
                         <p>Total de unidades vendidas: @{{ reportData.totalUnitsSold }}</p>
                     </div>
                     <!-- Card de Valor Total de Vendas -->
-                    <div class="p-4 border border-gray-200 rounded-lg shadow-sm bg-white dark:bg-gray-800">
-                        <h3 class="text-lg font-semibold mb-2">Valor Total de Vendas</h3>
+                    <div class="flex-1 p-4 border border-gray-200 rounded-lg shadow-sm bg-white dark:bg-gray-800">
+                        <h3 class="mb-2" style="font-weight: 500; font-size: 17px;">Valor Total de Vendas</h3>
                         <p>Valor total vendido: U$ @{{ reportData.totalRevenue }}</p>
                     </div>
-                  
                 </div>
-                 <!-- Resultados em Cards -->
-                 <div class=" flex gap-4 mt-4">
-                <div class=" flex gap-4 mt-4">
+
+                <!-- Resultados em Cards -->
+                <div class="flex gap-4">
                     <!-- Card de Vendas por Vendedor -->
-                    <div class="p-4 border border-gray-200 rounded-lg shadow-sm bg-white dark:bg-gray-800">
-                        <h3 class="text-lg font-semibold mb-2">Vendas por Vendedor</h3>
+                    <div class="flex-1 p-4 border border-gray-200 rounded-lg shadow-sm bg-white dark:bg-gray-800">
+                        <h3 class="mb-2" style="font-weight: 500; font-size: 17px;">Vendas por Vendedor</h3>
                         <ul>
                             <li v-for="seller in reportData.sellers" :key="seller.id">
                                 @{{ seller.name }}: @{{ seller.sales }} vendas
@@ -186,9 +184,9 @@
                         </ul>
                     </div>
 
-                      <!-- Card de Vendas por Produto -->
-                      <div class="p-4 border border-gray-200 rounded-lg shadow-sm bg-white dark:bg-gray-800">
-                        <h3 class="text-lg font-semibold mb-2">Vendas por Produto</h3>
+                    <!-- Card de Vendas por Produto -->
+                    <div class="flex-1 p-4 border border-gray-200 rounded-lg shadow-sm bg-white dark:bg-gray-800">
+                        <h3 class="mb-2" style="font-weight: 500; font-size: 17px;">Vendas por Produto</h3>
                         <ul>
                             <li v-for="product in reportData.products" :key="product.id">
                                 @{{ product.name }}: @{{ product.sales }} vendas
@@ -196,8 +194,6 @@
                         </ul>
                     </div>
                 </div>
-            </div>
-              
             </div>
         </template>
     </script>
