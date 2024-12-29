@@ -160,20 +160,31 @@
                                 <x-admin::attributes
                                     :custom-attributes="app('Webkul\Attribute\Repositories\AttributeRepository')->findWhere([
                                         'entity_type' => 'quotes',
-                                        ['code', 'IN', ['created_at', 'user_id']],
+                                        ['code', 'IN', ['user_id']],
                                     ])->sortBy(function ($attribute) {
                                             return $attribute->code == 'created_at' ? 2 : 1;
                                     })"
                                     :custom-validations="[
-                                        'created_at' => [
-                                            'required',
-                                            'date_format:yyyy-MM-dd',
-                                            'after:' .  \Carbon\Carbon::yesterday()->format('Y-m-d')
-                                        ],
                                     ]"
                                     :entity="$quote"
                                 />
+                                <div class="w-1/2">
+                                    <x-admin::form.control-group>
+                                        <x-admin::form.control-group.label for="created_at">
+                                            @lang('admin::app.quotes.create.created-at')
+                                        </x-admin::form.control-group.label>
+                                
+                                        <x-admin::form.control-group.control
+                                            type="date"
+                                            id="created_at"
+                                            name="created_at"
+                                            :value="old('created_at') ?? $quote->created_at"
+                                            rules="required|date_format:Y-m-d|:{{ \Carbon\Carbon::yesterday()->format('Y-m-d') }}"
+                                        />
+                                    </x-admin::form.control-group>
+                                </div>
                             </div>
+
 
                                 <x-admin::attributes
                                     :custom-attributes="app('Webkul\Attribute\Repositories\AttributeRepository')->findWhere([

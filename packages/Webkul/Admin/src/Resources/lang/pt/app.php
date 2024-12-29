@@ -499,8 +499,8 @@ return [
             'product-name'      => 'Nome do Produto',
             'action'            => 'Ação',
             'payment-methods'   => 'Forma de Pagamento',
-            'payment-methods-info' => 'Selecione...'
-
+            'payment-methods-info' => 'Selecione...',
+            'created-at'        => 'Data da venda',
         ],
 
         'edit' => [
@@ -532,6 +532,7 @@ return [
             'adjustment-amount' => 'Valor do Ajuste',
             'product-name'      => 'Nome do Produto',
             'action'            => 'Ação',
+            'created-at'        => 'Data da venda',
         ],
         
         'common' => [
