@@ -26,46 +26,138 @@
                 </div>
 
                 <!-- Filtros -->
-                <div class="flex gap-4 mt-4">
-                    <div>
-                        <label for="startDate" class="block text-sm font-medium text-gray-700">
+                <div class="flex gap-4 mt-4 items-start">
+                    <!-- Data Inicial -->
+                    <div class="flex flex-col w-full">
+                        <label for="startDate" class="block text-sm font-medium text-gray-700 mb-1">
                             @lang('admin::app.dashboard.index.revenue-by-report-quantitative-filters.start-date')
                         </label>
-                        <input type="date" v-model="filters.startDate" id="startDate" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+
+                        <x-admin::flat-picker.date class="!w-[40px]" ::allow-input="false">
+                            <input
+                                type="date"
+                                id="startDate"
+                                v-model="filters.startDate"
+                                class="flex min-h-[29px] w-full rounded-md border px-3 py-2 text-sm text-gray-600 
+                                    transition-all hover:border-gray-400 
+                                    dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-gray-400"
+                                placeholder="@lang('Data inicio')"
+                            />
+                        </x-admin::flat-picker.date>
                     </div>
 
-                    <div>
-                        <label for="endDate" class="block text-sm font-medium text-gray-700">
+                    <!-- Data Final -->
+                    <div class="flex flex-col w-full">
+                        <label for="endDate" class="block text-sm font-medium text-gray-700 mb-1">
                             @lang('admin::app.dashboard.index.revenue-by-report-quantitative-filters.end-date')
                         </label>
-                        <input type="date" v-model="filters.endDate" id="endDate" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+
+                        <x-admin::flat-picker.date class="!w-[40px]" ::allow-input="false">
+                            <input
+                                type="date"
+                                id="endDate"
+                                v-model="filters.endDate"
+                                class="flex min-h-[29px] w-full rounded-md border px-3 py-2 text-sm text-gray-600 
+                                    transition-all hover:border-gray-400 
+                                    dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-gray-400"
+                                placeholder="@lang('Data Final')"
+                            />
+                        </x-admin::flat-picker.date>
                     </div>
-                    
+
                     <!-- Seleção de Produto -->
-                    <div class="">
-                        <label for="product" class="block text-sm font-medium text-gray-700">
-                            @lang('admin::app.dashboard.index.revenue-by-report-quantitative-filters.product')
-                        </label>
-                        <select v-model="filters.product" id="product" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm">
-                            <option value="">
-                                @lang('admin::app.dashboard.index.revenue-by-report-quantitative-filters.select-product')
-                            </option>
-                            <option v-for="product in products" :key="product.id" :value="product.id">@{{ product.name }}</option>
-                        </select>
+                    <div class="flex flex-col w-full">
+                        <x-admin::form.control-group>
+                            <!-- Label -->
+                            <x-admin::form.control-group.label>
+                                @lang('admin::app.dashboard.index.revenue-by-report-quantitative-filters.product')
+                            </x-admin::form.control-group.label>
+
+                            <!-- Container para o select + ícone -->
+                            <div class="relative">
+                                <select
+                                    v-model="filters.product"
+                                    id="product"
+                                    name="product"
+                                    class="inline-flex w-full cursor-pointer appearance-none items-center justify-between gap-x-2 
+                                        rounded-md border bg-white px-2.5 py-1.5 pr-9 text-left leading-6 text-gray-600 
+                                        transition-all hover:border-gray-400 focus:border-gray-400 
+                                        dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 
+                                        dark:hover:border-gray-400 dark:focus:border-gray-400"
+                                >
+                                    <option value="">
+                                        @lang('admin::app.dashboard.index.revenue-by-report-quantitative-filters.select-product')
+                                    </option>
+                                    
+                                    <option
+                                        v-for="product in products"
+                                        :key="product.id"
+                                        :value="product.id"
+                                    >
+                                        @{{ product.name }}
+                                    </option>
+                                </select>
+
+                                <!-- Ícone de seta, mais à direita -->
+                                <span 
+                                    class="icon-down-arrow text-2xl absolute top-1/2 right-4 transform -translate-y-1/2 pointer-events-none"
+                                    style="right: 0.15rem;"
+                                ></span>
+
+                            </div>
+                            
+                            <!-- Exibe mensagem de erro (caso exista validação) -->
+                            <x-admin::form.control-group.error control-name="product" />
+                        </x-admin::form.control-group>
                     </div>
+
                     <!-- Seleção de Vendedor -->
-                    <div class="">
-                        <label for="seller" class="block text-sm font-medium text-gray-700">
-                            @lang('admin::app.dashboard.index.revenue-by-report-quantitative-filters.seller')
-                        </label>
-                        <select v-model="filters.seller" id="seller" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm">
-                            <option value="">
-                                @lang('admin::app.dashboard.index.revenue-by-report-quantitative-filters.select-seller')
-                            </option>
-                            <option v-for="seller in sellers" :key="seller.id" :value="seller.id">@{{ seller.name }}</option>
-                        </select>
+                    <div class="flex flex-col w-full">
+                        <x-admin::form.control-group>
+                            <!-- Label -->
+                            <x-admin::form.control-group.label>
+                                @lang('admin::app.dashboard.index.revenue-by-report-quantitative-filters.seller')
+                            </x-admin::form.control-group.label>
+
+                            <!-- Container para o select + ícone -->
+                            <div class="relative">
+                                <select
+                                    v-model="filters.seller"
+                                    id="seller"
+                                    name="seller"
+                                    class="inline-flex w-full cursor-pointer appearance-none items-center justify-between gap-x-2 
+                                        rounded-md border bg-white px-2.5 py-1.5 pr-9 text-left leading-6 text-gray-600 
+                                        transition-all hover:border-gray-400 focus:border-gray-400 
+                                        dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 
+                                        dark:hover:border-gray-400 dark:focus:border-gray-400"
+                                >
+                                    <option value="">
+                                        @lang('admin::app.dashboard.index.revenue-by-report-quantitative-filters.select-seller')
+                                    </option>
+                                    
+                                    <option
+                                        v-for="seller in sellers"
+                                        :key="seller.id"
+                                        :value="seller.id"
+                                    >
+                                        @{{ seller.name }}
+                                    </option>
+                                </select>
+
+                                <!-- Ícone de seta, mais à direita -->
+                                <span 
+                                    class="icon-down-arrow text-2xl absolute top-1/2 right-4 transform -translate-y-1/2 pointer-events-none"
+                                    style="right: 0.15rem;"
+                                    ></span>
+                            </div>
+                            
+                            <!-- Exibe mensagem de erro (caso exista validação) -->
+                            <x-admin::form.control-group.error control-name="seller" />
+                        </x-admin::form.control-group>
                     </div>
                 </div>
+
+
                   <!-- Resultados em Cards -->
                 <div class=" flex gap-4 mt-4">
                    
