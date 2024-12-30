@@ -13,6 +13,8 @@ Route::controller(LeadController::class)->prefix('leads')->group(function () {
 
     Route::get('view/{id}', 'view')->name('admin.leads.view');
 
+    Route::post('create', 'store')->name('admin.leads.store');
+    
     Route::get('edit/{id}', 'edit')->name('admin.leads.edit');
 
     Route::put('edit/{id}', 'update')->name('admin.leads.update');
