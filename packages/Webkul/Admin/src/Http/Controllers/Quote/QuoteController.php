@@ -95,7 +95,6 @@ class QuoteController extends Controller
             
             // Verificação na Blacklist pelo Endereço
             $shippingAddress = $request->get('shipping_address');
-            // Combine os campos do array em uma string
             $addressString = implode(' ', array_filter([
                 $shippingAddress['address'] ?? '',
                 $shippingAddress['city'] ?? '',
@@ -104,7 +103,6 @@ class QuoteController extends Controller
                 $shippingAddress['country'] ?? '',
             ]));
 
-            // Verificar se o endereço está na blacklist
             $isBlacklistedByAddress = DB::table('black_list')
                 ->join('leads', 'black_list.lead_id', '=', 'leads.id')
                 ->join('lead_quotes', 'leads.id', '=', 'lead_quotes.lead_id')
@@ -119,7 +117,7 @@ class QuoteController extends Controller
                 return redirect()->back()->withInput();
             }
 
-                //Objeto Lead(Ordem)
+            //Objeto Lead(Ordem)
             $data_lead = array();
             $data_lead['entity_type'] = 'leads';
             $data_lead['lead_type_id'] = '1';
@@ -128,24 +126,23 @@ class QuoteController extends Controller
             $data_lead['lead_source_id'] = '1';
             $data_lead['user_id'] = request('user_id');
             $data_lead['status'] = '1';
-            $data_lead['raca'] = request('raca');
+            $data_lead['raca'] = (request('raca') == true) ? true : false;
             $data_lead['description'] = request('description');
             $data_lead['person'] = array(
                 'entity_type' => '',
                 'name' => $person_request['name'],
-                'emails' => [0 => ['value' => $person_request['emails'][0]['value']]],
                 'contact_numbers' => [0 => ['value' => $person_request['contact_numbers'][0]['value']]],
+                'emails' => [0 => ['value' => $person_request['emails'][0]['value']]],
             );
-            
-            //Salvando Pessoa
+
             $person = $this->personRepository->create($data_lead['person']);
 
             $data_lead['person']['id'] = $person->id;
             $data_lead['person_id'] = $person->id;
             $data_lead['lead_value'] = request('grand_total');
 
-            //Salvando Ordem
             $lead = Lead::create($data_lead);
+
             $data_quote = $request->all();
             $data_quote['person']['id'] = $person->id;
             $data_quote['person_id'] = $person->id;
@@ -160,7 +157,7 @@ class QuoteController extends Controller
             $stage = $lead->pipeline->stages()
             ->where('id',$data_lead['lead_pipeline_stage_id'])
             ->firstOrFail();
-            
+
             if($stage->email_template_id){
                 Event::dispatch('quote.post_create.actions', ['lead' => $lead, 'email_id' => $stage->email_template_id]);
             }
@@ -181,9 +178,9 @@ class QuoteController extends Controller
             Event::dispatch('quote.create.after', $quote);
 
             session()->flash('success', trans('admin::app.quotes.index.create-success'));
-
             return redirect()->route('admin.quotes.index');
         } catch (\Exception $exception) {
+            \Log::info($exception);
             return response()->json([
                 'message' => trans('admin::app.quotes.index.delete-failed'),
             ], 400);

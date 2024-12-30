@@ -40,7 +40,7 @@
                     ::id="attribute.code"
                     ::name="`${attribute['code']}[${index}][value]`"
                     class="rounded-r-none"
-                    ::rules="getValidation"
+                    ::rules=""
                     ::label="attribute.name"
                     v-model="contactNumber['value']"
                 />

@@ -82,8 +82,8 @@ class Lead
                 throw new \Exception("Template de e-mail não encontrado para envio, ID: $email_template_id");
             }
 
-            // Obtém as informações necessárias para o e-mail, por exemplo, o lead e a pessoa
             $person = $lead ? $lead->person : null;
+            $quote = $lead ? $lead->quotes[0] : null;
 
             $leadQuotes = QuoteProxy::with('items.product', 'paymentMethod', 'person')->whereHas('leads', function ($query) use ($lead) {
                 $query->where('lead_id', $lead->id);
@@ -98,6 +98,7 @@ class Lead
             $_lead = LeadProxy::where('id', $lead->id)->first();
             // Prepara os dados do e-mail com base no template
             $toEmail = $person->emails[0]['value'] ?? null; // Certifique-se de que o e-mail está disponível
+
             if (!$toEmail) {
                 throw new \Exception("Destinatário não encontrado para o envio de e-mail.");
             }
@@ -107,13 +108,15 @@ class Lead
                 $emailReplyContent = $this->mailTranslation->translateHtmlContent($this->processTemplate($emailTemplate->content, [
                     'person' => $person,
                     'lead'   => $_lead,
-                    'product' => $product
+                    'product' => $product,
+                    'quote' => $quote
                 ]));
             } else {
                 $emailReplyContent = $this->processTemplate($emailTemplate->content, [
                     'person' => $person,
                     'lead'   => $_lead,
-                    'product' => $product
+                    'product' => $product,
+                    'quote' => $quote
                 ]);
             }
 
@@ -144,7 +147,6 @@ class Lead
 
             Log::info("E-mail enviado com sucesso usando o template, ID: $email_template_id");
         } catch (\Exception $exception) {
-            // Tratamento de exceção
             return response()->json([
                 'message' => 'Erro ao enviar e-mail.',
                 'error' => $exception->getMessage(),
@@ -179,19 +181,38 @@ class Lead
                 'subject', 'sub_total', 'tax_amount', 'updated_at', 'user_id',
             ],
         ];
-    
-        // Percorre os campos e cria os placeholders dinamicamente
+        
+
         foreach ($fields as $entity => $entityFields) {
             if (isset($context[$entity])) {
                 foreach ($entityFields as $field) {
-                    // Gera o placeholder com o formato {% entity.field %}
-                    $placeholder = "{% {$entity}.{$field} %}";
-                    // Log::info($placeholder);
-                    // Log::info( $context[$entity]);
-                    // Log::info( $field);
 
-                    // Busca o valor do campo no contexto
+                    $placeholder = "{% {$entity}.{$field} %}";
+
                     $value = $context[$entity]->$field ?? '';
+
+                    if ($field === 'contact_numbers' && is_string($value)) {
+                        $decodedNumbers = json_decode($value, true);
+                        if (is_array($decodedNumbers)) {
+                            $value = implode(', ', array_column($decodedNumbers, 'value'));
+                        } else {
+                            $value = '';
+                        }
+                        continue;
+                    }
+
+                    if ($field === 'shipping_address' && is_array($value)) {
+
+                        $decodedAddress = $value;
+                        if (is_array($decodedAddress)) {
+                            foreach (['address', 'city', 'state', 'postcode'] as $key) {
+                                $subPlaceholder = "{% {$entity}.{$field}.{$key} %}";
+                                $placeholders[$subPlaceholder] = $decodedAddress[$key] ?? '';
+                            }
+                        }
+                        continue;
+                    }
+
                     // Verifica se o valor é um array com a estrutura [{"value": "data"}]
                     if (is_array($value) && isset($value[0]['value'])) {
                         $value = implode(', ', array_column($value, 'value')); // Extrai todos os "value" e concatena
@@ -207,7 +228,6 @@ class Lead
                         $value = ''; // Converte valores não escalares para string vazia
                     }
     
-                    // Adiciona ao array de placeholders
                     $placeholders[$placeholder] = (string) $value; // Garante que o valor seja uma string
                 }
             }
