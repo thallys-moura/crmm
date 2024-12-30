@@ -52,7 +52,7 @@
                         
                         <v-email-component
                             :attribute="{'code': 'person[emails]', 'name': 'Email'}"
-                            :value='@json(old("person.emails", $person->emails ?? []))'
+                            :value='@json(old("person.emails", $person->emails ?? ''))'
                             :hide-fields="true"
                         ></v-email-component>
                     </div>
