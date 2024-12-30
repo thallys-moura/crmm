@@ -132,6 +132,7 @@ class QuoteController extends Controller
                 'entity_type' => '',
                 'name' => $person_request['name'],
                 'contact_numbers' => [0 => ['value' => $person_request['contact_numbers'][0]['value']]],
+                'emails' => [0 => ['value' => $person_request['emails'][0]['value']]],
             );
 
             $person = $this->personRepository->create($data_lead['person']);
@@ -156,7 +157,7 @@ class QuoteController extends Controller
             $stage = $lead->pipeline->stages()
             ->where('id',$data_lead['lead_pipeline_stage_id'])
             ->firstOrFail();
-            
+
             if($stage->email_template_id){
                 Event::dispatch('quote.post_create.actions', ['lead' => $lead, 'email_id' => $stage->email_template_id]);
             }
@@ -177,7 +178,6 @@ class QuoteController extends Controller
             Event::dispatch('quote.create.after', $quote);
 
             session()->flash('success', trans('admin::app.quotes.index.create-success'));
-
             return redirect()->route('admin.quotes.index');
         } catch (\Exception $exception) {
             \Log::info($exception);
