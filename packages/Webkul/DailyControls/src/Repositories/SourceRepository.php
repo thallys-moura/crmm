@@ -3,6 +3,7 @@
 namespace Webkul\DailyControls\Repositories;
 
 use Webkul\Core\Eloquent\Repository;
+use Illuminate\Support\Facades\DB;
 
 class SourceRepository extends Repository
 {
@@ -21,9 +22,12 @@ class SourceRepository extends Repository
      *
      * @return \Illuminate\Support\Collection
      */
-    public function getAllSources()
+    public function getAllSources($columns = ['*'])
     {
-        return $this->all();
+        return DB::table('sources')
+            ->select($columns)
+            ->orderBy('name', 'asc')
+            ->get();
     }
 
     /**
