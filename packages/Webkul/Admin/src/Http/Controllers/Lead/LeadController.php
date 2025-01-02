@@ -359,11 +359,18 @@ class LeadController extends Controller
 
             //Se O stage de destino estiver contido no array
             if(in_array($stage->id, [LeadStages::STAGE_FOLLOWUP_ID])  ){
-                //Aciona Evento para enviar email do estágio ao interessado da compra
-                Event::dispatch('lead.stage.transition.actions', ['lead' => $lead, 'email_id' => $emailTemplateId]);
+                if($emailTemplateId){
+                    //Aciona Evento para enviar email do estágio ao interessado da compra
+                    Event::dispatch('lead.stage.transition.actions', ['lead' => $lead, 'email_id' => $emailTemplateId]);
+                }
             }
             
+            //Se O stage de destino estiver contido no array
             if(in_array($stage->id, [LeadStages::STAGE_PROSPECT_ID])){
+                if($emailTemplateId){
+                    Event::dispatch('lead.stage.transition.actions', ['lead' => $lead, 'email_id' => $emailTemplateId]);
+                }
+
                 $person = $this->personRepository->findOrFail($lead->person_id);
 
                 if($person->contact_numbers){
