@@ -106,12 +106,12 @@ class DailyControlsRepository extends Repository
             ->get();
     }
     
-    public function getProductGroups()
-    {
+    public function getProductGroups($columns = ['*'])
+    {   
         return DB::table('product_group')
-            ->select('id', 'name')
+            ->select($columns)
             ->orderBy('name', 'asc')
             ->get();
+            
     }
-
 }

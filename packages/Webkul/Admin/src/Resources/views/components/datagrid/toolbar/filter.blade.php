@@ -939,7 +939,7 @@
 
                     isShowSavedFilters: false,
 
-                    isFilterDirty: false,
+                    isFilterDirty: true,
                 };
             },
 
@@ -1154,9 +1154,9 @@
                             case 'date':
                             case 'datetime':
                                 this.applyColumnValues(column, options.name);
-
+                                
                                 break;
-
+                            
                             default:
                                 break;
                         }
@@ -1191,7 +1191,7 @@
                  */
                 applyColumnValues(column, requestedValue, additional = {}) {
                     let appliedColumn = this.findAppliedColumn(column?.index);
-
+                    
                     if (
                         requestedValue === undefined ||
                         requestedValue === '' ||
