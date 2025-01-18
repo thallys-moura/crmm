@@ -35,5 +35,6 @@ Route::controller(DailyControlsController::class)->prefix('daily-controls')->gro
 
     Route::get('stats', 'stats')->name('admin.daily_controls.stats');
 
+    Route::get('product-groups', 'getProductGroups')->name('admin.daily_controls.product_groups');
 
 });
