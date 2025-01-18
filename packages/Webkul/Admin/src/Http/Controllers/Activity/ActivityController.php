@@ -66,7 +66,7 @@ class ActivityController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(): RedirectResponse|JsonResponse
-    {
+    {   
         $this->validate(request(), [
             'type'          => 'required',
             'comment'       => 'required_if:type,note',

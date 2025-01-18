@@ -29,16 +29,29 @@ class Activity
     {
         if (request()->input('lead_id')) {
             $lead = $this->leadRepository->find(request()->input('lead_id'));
+            $person = $this->personRepository->find($lead->person_id);
 
             if (! $lead->activities->contains($activity->id)) {
                 $lead->activities()->attach($activity->id);
+                $person->activities()->attach($activity->id);
             }
+
         } elseif (request()->input('person_id')) {
             $person = $this->personRepository->find(request()->input('person_id'));
+            $leads = $this->personRepository->getLeadsByPerson(request()->input('person_id'));
 
             if (! $person->activities->contains($activity->id)) {
                 $person->activities()->attach($activity->id);
             }
+
+            foreach ($leads as $lead) {
+                $lead = $this->leadRepository->find($lead->id);
+            
+                if ($lead) {
+                    $lead->activities()->attach($activity->id);
+                }
+            }
+            
         } elseif (request()->input('warehouse_id')) {
             $warehouse = $this->warehouseRepository->find(request()->input('warehouse_id'));
 
