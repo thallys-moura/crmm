@@ -3,6 +3,7 @@
 namespace Webkul\User\Repositories;
 
 use Webkul\Core\Eloquent\Repository;
+use Illuminate\Support\Facades\DB;
 
 class UserRepository extends Repository
 {
@@ -43,4 +44,13 @@ class UserRepository extends Repository
 
         return $userIds;
     }
+
+    public function getAllUsers($columns = ['*'])
+    {
+        return DB::table('users')
+            ->select($columns)
+            ->orderBy('name', 'asc')
+            ->get();
+    }
+
 }

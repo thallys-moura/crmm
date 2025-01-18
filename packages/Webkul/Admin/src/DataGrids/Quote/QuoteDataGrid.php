@@ -7,8 +7,17 @@ use Illuminate\Support\Facades\DB;
 use Webkul\DataGrid\DataGrid;
 use Illuminate\Support\Facades\Log;
 
+use Webkul\User\Repositories\UserRepository;
+use Webkul\Product\Repositories\ProductRepository;
+
 class QuoteDataGrid extends DataGrid
 {
+    public function __construct(
+        protected UserRepository $userRepository,
+        protected ProductRepository $productRepository
+    ) {
+    }
+
     /**
      * Prepare query builder.
      */
@@ -113,14 +122,9 @@ class QuoteDataGrid extends DataGrid
             'type'               => 'string',
             'sortable'           => true,
             'filterable'         => true,
+            'searchable'         => true,
             'filterable_type'    => 'searchable_dropdown',
-            'filterable_options' => [
-                'repository' => \Webkul\User\Repositories\UserRepository::class,
-                'column'     => [
-                    'label' => 'name',
-                    'value' => 'name',
-                ],
-            ],
+            'filterable_options' => $this->userRepository->getAllUsers(['name as label', 'id as value'])->toArray(),
         ]);
 
         $this->addColumn([
@@ -129,6 +133,7 @@ class QuoteDataGrid extends DataGrid
             'type'               => 'string',
             'sortable'           => true,
             'filterable'         => true,
+            'searchable'         => true,
             'filterable_type'    => 'searchable_dropdown',
             'filterable_options' => [
                 'repository' => \Webkul\Contact\Repositories\PersonRepository::class,
@@ -150,6 +155,7 @@ class QuoteDataGrid extends DataGrid
             'type'       => 'string',
             'filterable' => true,
             'sortable'   => true,
+            'searchable' => true,
             'closure'    => fn ($row) => $row->person_email, 
         ]);
 

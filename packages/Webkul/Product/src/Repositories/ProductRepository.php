@@ -4,6 +4,7 @@ namespace Webkul\Product\Repositories;
 
 use Illuminate\Container\Container;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use Webkul\Attribute\Repositories\AttributeRepository;
 use Webkul\Attribute\Repositories\AttributeValueRepository;
 use Webkul\Core\Eloquent\Repository;
@@ -188,5 +189,13 @@ class ProductRepository extends Repository
         }
 
         return $warehouses;
+    }
+
+    public function getAllProducts($columns = ['*'])
+    {
+        return DB::table('products')
+            ->select($columns)
+            ->orderBy('name', 'asc')
+            ->get();
     }
 }
