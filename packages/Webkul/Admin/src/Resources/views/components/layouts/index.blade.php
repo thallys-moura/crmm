@@ -53,6 +53,11 @@
     />
 
     <link
+        rel="stylesheet"
+        href="{{ asset('icomoon_herblux/style.css') }}"
+    />
+
+    <link
         rel="preload"
         as="image"
         href="{{ url('cache/logo/bagisto.png') }}"

@@ -7,6 +7,9 @@ use Webkul\EmailTemplate\Repositories\EmailTemplateRepository;
 use Webkul\Lead\Models\LeadProxy;
 use Webkul\Lead\Repositories\LeadRepository;
 use Webkul\Email\Mails\Email;
+use Webkul\Product\Models\Product;
+use Webkul\Product\Repositories\ProductRepository;
+
 use Webkul\Quote\Models\QuoteProxy;
 use Webkul\Email\Helpers\MailTranslation;
 
@@ -25,6 +28,7 @@ class Lead
     public function __construct(protected EmailRepository $emailRepository,
     protected LeadRepository $leadRepository,
     protected EmailTemplateRepository $emailTemplateRepository,
+    protected ProductRepository $productRepository,
     ) {
         $this->mailTranslation = new MailTranslation();
     }
@@ -89,7 +93,10 @@ class Lead
                 $query->where('lead_id', $lead->id);
             })->get();
 
-            $product = $leadQuotes[0]->items[0] ?? null;
+            $product_id = $leadQuotes[0]->items[0]->product_id;
+            
+            //$product = $leadQuotes[0]->items[0] ?? null;
+            $product = $this->productRepository->find($product_id);
 
             if (!$person) {
                 throw new \Exception("Pessoa associada ao lead não encontrada.");
@@ -104,7 +111,7 @@ class Lead
             }
 
             // Pessoa é espanhola?
-            if ($leadQuotes[0]->raca != true) {
+            if ($leadQuotes[0]->raca != 0) {
                 $emailReplyContent = $this->mailTranslation->translateHtmlContent($this->processTemplate($emailTemplate->content, [
                     'person' => $person,
                     'lead'   => $_lead,
@@ -156,7 +163,7 @@ class Lead
     protected function processTemplate($content, $context)
     {
         $placeholders = [];
-    
+
         // Defina os campos para as tabelas
         $fields = [
             'lead' => [
@@ -171,7 +178,7 @@ class Lead
                 'name', 'organization_id', 'updated_at', 'user_id',
             ],
             'product' => [
-                'created_at', 'description', 'email_template_id', 'id', 'image', 
+                'created_at', 'description', 'email_template_id', 'id', 'image', 'image_email',
                 'name', 'price', 'quantity', 'sku', 'updated_at',
             ],
             'quote' => [
@@ -184,12 +191,24 @@ class Lead
         
 
         foreach ($fields as $entity => $entityFields) {
+
             if (isset($context[$entity])) {
-                foreach ($entityFields as $field) {
+                foreach ($entityFields as $field) {    
 
                     $placeholder = "{% {$entity}.{$field} %}";
-
                     $value = $context[$entity]->$field ?? '';
+
+                    if ($field === 'image_email' && !empty($value)) {
+                        $path = public_path("images/products/{$value}.png");
+                        $imageData = $value = '';
+   
+                        if (file_exists($path)) {
+
+                            $imageData = base64_encode(file_get_contents($path));
+                            $value = "data:image/png;base64,{$imageData}";
+                            $value = "<img src='{$value}' alt='Produto' style='max-width: 100%; height: auto;'>";
+                        }
+                    }
 
                     if ($field === 'contact_numbers' && is_string($value)) {
                         $decodedNumbers = json_decode($value, true);
@@ -240,9 +259,5 @@ class Lead
         
         return $content;
     }
-    
-    
-    
-    
 }
 
