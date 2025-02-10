@@ -99,7 +99,7 @@ class Lead
             $product = $this->productRepository->find($product_id);
 
             if (!$person) {
-                throw new \Exception("Pessoa associada ao lead não encontrada.");
+                throw new \Exception("Cliente associada ao venda não encontrada.");
             }
 
             $_lead = LeadProxy::where('id', $lead->id)->first();

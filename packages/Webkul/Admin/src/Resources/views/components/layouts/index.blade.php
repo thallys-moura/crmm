@@ -52,11 +52,11 @@
         rel="stylesheet"
     />
 
+ <!-- Linhas adicionadas na branch nv_1_1 -->
     <link
         rel="stylesheet"
         href="{{ asset('icomoon_herblux/style.css') }}"
     />
-
     <link
         rel="preload"
         as="image"
@@ -78,6 +78,22 @@
             sizes="16x16"
         />
     @endif
+
+ <!-- Incluir CSS do NProgress -->
+ <link
+        rel="stylesheet"
+        href="{{ asset('admin/build/assets/nprogress.css') }}"
+    >
+
+    <!-- Incluir JS do NProgress -->
+    <script src="{{ asset('admin/build/assets/nprogress.js') }}"></script>
+
+    <!-- Iniciar NProgress após o DOM estar pronto -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            NProgress.start();
+        });
+    </script>
 
     @stack('styles')
 
@@ -115,9 +131,12 @@
 
             <div class="max-w-full flex-1 bg-gray-100 px-4 pb-6 pt-3 transition-all duration-300 dark:bg-gray-950 max-lg:!px-4 ltr:pl-[85px] rtl:pr-[85px]">
                 @if (isset($canAccess) && !$canAccess)
-                    <div class="alert alert-warning">
-                        <h3>@lang('admin::app.user.account.permission-denied')</h3>
-                    </div>
+                <div class="custom-alert">
+                    <img src="{{ vite()->asset('images/alert.svg') }}" alt="Alert Icon" style="max-width: 50px; margin-bottom: 10px;">
+                    <h3>@lang('admin::app.user.account.permission-denied')</h3>
+                </div>
+
+
                 @else
                     {{ $slot }}
                 @endif
@@ -142,6 +161,7 @@
          */
         window.addEventListener("load", function(event) {
             app.mount("#app");
+            NProgress.done();
         });
     </script>
 

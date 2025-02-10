@@ -1191,753 +1191,794 @@
             {!! view_render_event('admin.mail.view.action_mail.after', ['email' => $email]) !!}
         </script>
 
-        <!-- Email List Vue Component -->
-        <script type="module">
-            app.component('v-email-list', {
-                template: '#v-email-list-template',
+        <!-- Componente v-email-list -->
+<script type="module">
+    app.component('v-email-list', {
+        template: '#v-email-list-template',
 
-                data() {
-                    return {
-                        email: @json($email),
+        data() {
+            return {
+                email: @json($email) || {},
 
-                        action: {},
-                    };
-                },
-                
-                mounted() {
-                    this.$emitter.on('on-email-save', (email) => {
-                        this.email.emails.push(email);
+                action: {},
+            };
+        },
+        
+        mounted() {
+            this.$emitter.on('on-email-save', (email) => {
+                if (!this.email.emails) {
+                    this.email.emails = [];
+                }
 
-                        this.action = {};
+                this.email.emails.push(email);
 
-                        setTimeout(() => this.scrollBottom(), 0);
-                    });
-                },
+                this.action = {};
 
-                methods: {
-                    emailAction(action) {
-                        this.action[action.email.id] = action;
+                setTimeout(() => this.scrollBottom(), 0);
+            });
+        },
 
-                        if (! this.action.email) {
-                            this.action.email = this.lastEmail();
-                        }
-                    },
+        methods: {
+            emailAction(action) {
+                if (action.email && action.email.id) {
+                    this.action[action.email.id] = action;
+                } else {
+                    console.error('action.email ou action.email.id está indefinido');
+                }
 
-                    scrollBottom() {
-                        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                if (! this.action.email) {
+                    this.action.email = this.lastEmail();
+                }
+            },
 
-                        const windowHeight = window.innerHeight;
+            scrollBottom() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
-                        const scrollBottom = scrollTop + windowHeight;
+                const windowHeight = window.innerHeight;
 
-                        window.scrollTo({
-                            top: scrollBottom,
-                            behavior: 'smooth',
+                const scrollBottom = scrollTop + windowHeight;
+
+                window.scrollTo({
+                    top: scrollBottom,
+                    behavior: 'smooth',
+                });
+            },
+
+            lastEmail() {
+                if (
+                    this.email.emails === undefined 
+                    || ! this.email.emails.length
+                ) {
+                    return this.email;
+                }
+
+                return this.email.emails[this.email.emails.length - 1];
+            },
+        },
+    });
+</script>
+
+<!-- Componente v-email-item -->
+<script type="module">
+    app.component('v-email-item', {
+        template: '#v-email-item-template',
+
+        props: {
+            index: {
+                type: Number,
+                required: true,
+            },
+            email: {
+                type: Object,
+                required: true,
+            },
+            action: {
+                type: Object,
+                default: () => ({}),
+            },
+        },
+
+        emits: ['on-discard'],
+
+        data() {
+            return {
+                hovering: '',
+            };
+        },
+
+        methods: {
+            emailAction(type) {
+                if (type != 'delete') {
+                    if (this.email) {
+                        this.$emit('onEmailAction', {type, email: this.email});
+                    } else {
+                        console.error('email está indefinido');
+                    }
+                } else {
+                    if (this.email && this.email.id) {
+                        this.$emitter.emit('open-confirm-modal', {
+                            agree: () => {
+                                this.$axios.post(`{{ route('admin.mail.delete', ':id') }}`.replace(':id', this.email.id), {
+                                    _method: 'DELETE',
+                                    type: 'trash'
+                                })
+                                .then ((response) => {
+                                    if (response.status == 200) {
+                                        this.$emitter.emit('add-flash', { type: 'success', message: response.data.message });
+
+                                        this.$emit('on-discard');
+                                    }
+                                });
+                            }
                         });
-                    },
-
-                    lastEmail() {
-                        if (
-                            this.email.emails === undefined 
-                            || ! this.email.emails.length
-                        ) {
-                            return this.email;
-                        }
-
-                        return this.email.emails[this.email.emails.length - 1];
-                    },
-                },
-            });
-        </script>
-
-        <!-- Email Item Vue Component -->
-        <script type="module">
-            app.component('v-email-item', {
-                template: '#v-email-item-template',
-
-                props: ['index', 'email', 'action'],
-
-                emits: ['on-discard'],
-
-                data() {
-                    return {
-                        hovering: '',
-                    };
-                },
-    
-                methods: {
-                    emailAction(type) {
-                        if (type != 'delete') {
-                            this.$emit('onEmailAction', {type, email: this.email});
-                        } else {
-                            this.$emitter.emit('open-confirm-modal', {
-                                agree: () => {
-                                    this.$axios.post(`{{ route('admin.mail.delete', ':id') }}`.replace(':id', this.email.id), {
-                                        _method: 'DELETE',
-                                        type: 'trash'
-                                    })
-                                    .then ((response) => {
-                                        if (response.status == 200) {
-                                            this.$emitter.emit('add-flash', { type: 'success', message: response.data.message });
-    
-                                            this.$emit('on-discard');
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                    },
-                },
-            });
-        </script>
-
-        <!-- Email Form Vue Component -->
-        <script type="module">
-            app.component('v-email-form', {
-                template: '#v-email-form-template',
-
-                props: ['action', 'email'],
-
-                data() {
-                    return {
-                        showCC: false,
-
-                        showBCC: false,
-
-                        isStoring: false,
-                    };
-                },
-
-                computed: {
-                    reply_to() {
-                        if (this.getActionType == 'forward') {
-                            return [];
-                        }
-
-                        if (this.getActionType == 'reply-all') {
-                            
-                            return [
-                                this.action.email.from,
-                                ...(this.action.email?.cc || []),
-                                ...(this.action.email?.bcc || []),
-                            ];
-                        }
-
-                        return [this.action.email.from];
-                    },
-
-                    cc() {
-                        if (this.getActionType != 'reply-all') {
-                            return [];
-                        }
-
-                        return this.action.email.cc;
-                    },
-
-                    bcc() {
-                        if (this.getActionType != 'reply-all') {
-                            return [];
-                        }
-
-                        return this.action.email.bcc;
-                    },
-
-                    reply() {
-                        if (this.getActionType == 'forward') {
-                            return this.action.email.reply;
-                        }
-
-                        return '';
-                    },
-
-                    getActionType() {
-                        return this.action[this.email.id].type;
-                    },
-                },
-
-                methods: {
-                    save(params, { resetForm, setErrors  }) {
-                        let formData = new FormData(this.$refs.mailActionForm);
-
-                        this.isStoring = true;
-
-                        this.$axios.post("{{ route('admin.mail.store') }}", formData, {
-                                headers: {
-                                    'Content-Type': 'multipart/form-data'
-                                }
-                            })
-                            .then ((response) => {
-                                this.isStoring = false;
-
-                                this.$emitter.emit('on-email-save', response.data.data);
-                                
-                                this.$emitter.emit('add-flash', { type: 'success', message: response.data.message });
-                            })
-                            .catch ((error) => {
-                                this.isStoring = false;
-
-                                if (error.response.status == 422) {
-                                    setErrors(error.response.data.errors);
-                                } else {
-                                    this.$emitter.emit('add-flash', { type: 'error', message: error.response.data.message });
-                                }
-                            });
-                    },
-                },
-            });
-        </script>
-
-        <!-- Contact Lookup Component -->
-        <script type="module">
-            app.component('v-contact-lookup', {
-                template: '#v-contact-lookup-template',
-
-                props: ['email', 'unlinking', 'tagTextColor'],
-
-                emits: ['link-contact', 'unlink-contact', 'open-contact-modal'],
-
-                data() {
-                    return {
-                        showPopup: false,
-
-                        searchTerm: '',
-
-                        selectedItem: {},
-
-                        searchedResults: [],
-
-                        isSearching: false,
-
-                        cancelToken: null,
-                    };
-                },
-
-                mounted() {
-                    if (this.value) {
-                        this.selectedItem = this.value;
+                    } else {
+                        console.error('email ou email.id está indefinido');
                     }
-                },
+                }
+            },
+        },
+    });
+</script>
 
-                created() {
-                    window.addEventListener('click', this.handleFocusOut);
-                },
+<!-- Componente v-email-form -->
+<script type="module">
+    app.component('v-email-form', {
+        template: '#v-email-form-template',
 
-                beforeDestroy() {
-                    window.removeEventListener('click', this.handleFocusOut);
-                },
+        props: ['action', 'email'],
 
-                watch: {
-                    searchTerm(newVal, oldVal) {
-                        this.search();
-                    },
-                },
+        data() {
+            return {
+                showCC: false,
 
-                computed: {
-                    /**
-                     * Filter the searchedResults based on the search query.
-                     * 
-                     * @return {Array}
-                     */
-                    persons() {
-                        return this.searchedResults.filter(item => 
-                            item.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-                        );
+                showBCC: false,
+
+                isStoring: false,
+            };
+        },
+
+        computed: {
+            reply_to() {
+                if (this.getActionType === 'forward') {
+                    return [];
+                }
+
+                if (this.getActionType === 'reply-all') {
+                    if (this.action.email) {
+                        return [
+                            this.action.email.from,
+                            ...(this.action.email?.cc || []),
+                            ...(this.action.email?.bcc || []),
+                        ];
+                    } else {
+                        return [];
                     }
-                },
-                
-                methods: {
-                    /**
-                     * Toggle the popup.
-                     * 
-                     * @return {void}
-                     */
-                    toggle() {
-                        this.showPopup = ! this.showPopup;
+                }
 
-                        if (this.showPopup) {
-                            this.$nextTick(() => this.$refs.searchInput.focus());
+                if (this.action.email && this.action.email.from) {
+                    return [this.action.email.from];
+                } else {
+                    return [];
+                }
+            },
+
+            cc() {
+                if (this.getActionType !== 'reply-all') {
+                    return [];
+                }
+
+                return this.action.email ? this.action.email.cc : [];
+            },
+
+            bcc() {
+                if (this.getActionType !== 'reply-all') {
+                    return [];
+                }
+
+                return this.action.email ? this.action.email.bcc : [];
+            },
+
+            reply() {
+                if (this.getActionType === 'forward') {
+                    return this.action.email ? this.action.email.reply : '';
+                }
+
+                return '';
+            },
+
+            getActionType() {
+                if (this.email && this.email.id && this.action[this.email.id]) {
+                    return this.action[this.email.id].type;
+                } else {
+                    console.error('email, email.id ou action[email.id] está indefinido');
+                    return null;
+                }
+            },
+        },
+
+        methods: {
+            save(params, { resetForm, setErrors  }) {
+                let formData = new FormData(this.$refs.mailActionForm);
+
+                this.isStoring = true;
+
+                this.$axios.post("{{ route('admin.mail.store') }}", formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
                         }
-                    },
+                    })
+                    .then ((response) => {
+                        this.isStoring = false;
 
-                    /**
-                     * Select an item from the list.
-                     * 
-                     * @param {Object} item
-                     * 
-                     * @return {void}
-                     */
-                    linkContact(person) {
-                        this.showPopup = false;
-
-                        this.searchTerm = '';
-
-                        this.selectedItem = person;
-
-                        this.$emit('link-contact', person);
-                    },
-
-                    unlinkContact() {
-                        this.selectedItem = {};
-
-                        this.$emit('unlink-contact');
-                    },
-
-                    /**
-                     * Initialize the items.
-                     * 
-                     * @return {void}
-                     */
-                    search() {
-                        if (this.searchTerm.length <= 2) {
-                            this.searchedResults = [];
-
-                            this.isSearching = false;
-
-                            return;
-                        }
-
-                        this.isSearching = true;
-
-                        if (this.cancelToken) {
-                            this.cancelToken.cancel();
-                        }
-
-                        this.cancelToken = this.$axios.CancelToken.source();
-
-                        this.$axios.get('{{ route('admin.contacts.persons.search') }}', {
-                                params: { 
-                                    ...this.params,
-                                    query: this.searchTerm
-                                },
-                                cancelToken: this.cancelToken.token, 
-                            })
-                            .then(response => {
-                                this.searchedResults = response.data.data;
-                            })
-                            .catch(error => {
-                                if (! this.$axios.isCancel(error)) {
-                                    console.error("Search request failed:", error);
-                                }
-
-                                this.isSearching = false;
-                            })
-                            .finally(() => this.isSearching = false);
-                    },
-
-                    /**
-                     * Handle the focus out event.
-                     * 
-                     * @param {Event} event
-                     * 
-                     * @return {void}
-                     */
-                    handleFocusOut(event) {
-                        const lookup = this.$refs.lookup;
-
-                        if (
-                            lookup && 
-                            ! lookup.contains(event.target)
-                        ) {
-                            this.showPopup = false;
-                        }
-                    },
-
-                    toggleContactModal() {
-                        this.showPopup = false;
-
-                        this.$emit('open-contact-modal');
-                    },
-                },
-            });
-        </script>
-
-        <!-- Contact Lookup Component -->
-        <script type="module">
-            app.component('v-lead-lookup', {
-                template: '#v-lead-lookup-template',
-
-                props: ['email', 'unlinking', 'tagTextColor'],
-
-                emits: ['link-lead', 'unlink-lead', 'open-lead-modal'],
-
-                data() {
-                    return {
-                        showPopup: false,
-
-                        searchTerm: '',
-
-                        selectedItem: {},
-
-                        searchedResults: [],
-
-                        isSearching: false,
-
-                        cancelToken: null,
-                    };
-                },
-
-                mounted() {
-                    if (this.value) {
-                        this.selectedItem = this.value;
-                    }
-                },
-
-                created() {
-                    window.addEventListener('click', this.handleFocusOut);
-                },
-
-                beforeDestroy() {
-                    window.removeEventListener('click', this.handleFocusOut);
-                },
-
-                watch: {
-                    searchTerm(newVal, oldVal) {
-                        this.search();
-                    },
-                },
-
-                computed: {
-                    /**
-                     * Filter the searchedResults based on the search query.
-                     * 
-                     * @return {Array}
-                     */
-                    leads() {
-                        return this.searchedResults.filter(item => 
-                            item.title.toLowerCase().includes(this.searchTerm.toLowerCase())
-                        );
-                    },
-                },
-                
-                methods: {
-                    /**
-                     * Toggle the popup.
-                     * 
-                     * @return {void}
-                     */
-                    toggle() {
-                        this.showPopup = ! this.showPopup;
-
-                        if (this.showPopup) {
-                            this.$nextTick(() => this.$refs.searchInput.focus());
-                        }
-                    },
-
-                    /**
-                     * Select an item from the list.
-                     * 
-                     * @param {Object} item
-                     * 
-                     * @return {void}
-                     */
-                    linkLead(lead) {
-                        this.showPopup = false;
-
-                        this.searchTerm = '';
-
-                        this.selectedItem = lead;
-
-                        this.$emit('link-lead', lead);
-                    },
-
-                    unlinkLead() {
-                        this.selectedItem = {};
-
-                        this.$emit('unlink-lead');
-                    },
-
-                    /**
-                     * Initialize the items.
-                     * 
-                     * @return {void}
-                     */
-                    search() {
-                        if (this.searchTerm.length <= 2) {
-                            this.searchedResults = [];
-
-                            this.isSearching = false;
-
-                            return;
-                        }
-
-                        this.isSearching = true;
-
-                        if (this.cancelToken) {
-                            this.cancelToken.cancel();
-                        }
-
-                        this.cancelToken = this.$axios.CancelToken.source();
-
-                        this.$axios.get('{{ route('admin.leads.search') }}', {
-                                params: { 
-                                    ...this.params,
-                                    query: this.searchTerm
-                                },
-                                cancelToken: this.cancelToken.token, 
-                            })
-                            .then(response => {
-                                this.searchedResults = response.data.data;
-                            })
-                            .catch(error => {
-                                if (! this.$axios.isCancel(error)) {
-                                    console.error("Search request failed:", error);
-                                }
-
-                                this.isSearching = false;
-                            })
-                            .finally(() => this.isSearching = false);
-                    },
-
-                    /**
-                     * Handle the focus out event.
-                     * 
-                     * @param {Event} event
-                     * 
-                     * @return {void}
-                     */
-                    handleFocusOut(event) {
-                        const lookup = this.$refs.lookup;
-
-                        if (
-                            lookup && 
-                            ! lookup.contains(event.target)
-                        ) {
-                            this.showPopup = false;
-                        }
-                    },
-
-                    toggleLeadModal() {
-                        this.showPopup = false;
-
-                        this.$emit('open-lead-modal');
-                    },
-                },
-            });
-        </script>
-
-        <!-- Create Contact Modal Component -->
-        <script type="module">
-            app.component('v-create-contact', {
-                template: '#v-create-contact-template',
-
-                data() {
-                    return {
-                        isStoring: false,
-                    };
-                },
-
-                methods: {
-                    toggleModal({ isActive }) {
-                        if (! isActive) {
-                            this.$parent.$refs.emailLinkDrawer.toggle();
-                        }
-                    },
-
-                    create(params, { setErrors }) {
-                        this.isStoring = true;
-
-                        const formData = new FormData(this.$refs.contactForm);
-
-                        this.$axios.post('{{ route('admin.contacts.persons.store') }}', formData)
-                            .then(response => {
-                                this.$emitter.emit('add-flash', { type: 'success', message: response.data.message });
-
-                                this.$refs.contactModal.close();
-                            })
-                            .catch(error => {
-                                if (error.response.status == 422) {
-                                    setErrors(error.response.data.errors);
-                                } else {
-                                    this.$emitter.emit('add-flash', { type: 'error', message: error.response.data.message });
-                                }
-                            })
-                            .finally(() => {
-                                this.isStoring = false;
-
-                                this.$parent.$refs.emailLinkDrawer.open();
-                            });
-                    },
-                },
-            });
-        </script>
-
-        <!-- Create Lead Modal Component -->
-        <script type="module">
-            app.component('v-create-lead', {
-                template: '#v-create-lead-template',
-
-                data() {
-                    return {
-                        isStoring: false,
-
+                        this.$emitter.emit('on-email-save', response.data.data);
                         
-                        selectedType: "lead",
+                        this.$emitter.emit('add-flash', { type: 'success', message: response.data.message });
+                    })
+                    .catch ((error) => {
+                        this.isStoring = false;
 
-                        types: [
-                            {
-                                name: 'lead',
-                                label: "{{ trans('admin::app.mail.view.lead-details') }}",
-                            }, {
-                                name: 'person',
-                                label: "{{ trans('admin::app.mail.view.contact-person') }}",
-                            }, {
-                                name: 'product',
-                                label: "{{ trans('admin::app.mail.view.product') }}",
-                            },
-                        ],
-                    };
-                },
-
-                methods: {
-                    toggleModal({ isActive }) {
-                        if (! isActive) {
-                            this.$parent.$refs.emailLinkDrawer.toggle();
+                        if (error.response.status == 422) {
+                            setErrors(error.response.data.errors);
+                        } else {
+                            this.$emitter.emit('add-flash', { type: 'error', message: error.response.data.message });
                         }
-                    },
+                    });
+            },
+        },
+    });
+</script>
 
-                    create(params, { setErrors }) {
-                        this.isStoring = true;
+<!-- Componente v-contact-lookup -->
+<script type="module">
+    app.component('v-contact-lookup', {
+        template: '#v-contact-lookup-template',
 
-                        const formData = new FormData(this.$refs.leadForm);
+        props: ['email', 'unlinking', 'tagTextColor'],
 
-                        formData.append('lead_pipeline_stage_id', 1)
+        emits: ['link-contact', 'unlink-contact', 'open-contact-modal'],
 
-                        this.$axios.post('{{ route('admin.leads.store') }}', formData)
-                            .then(response => {
-                                this.$emitter.emit('add-flash', { type: 'success', message: response.data.message });
+        data() {
+            return {
+                showPopup: false,
 
-                                this.$refs.leadModal.close();
-                            })
-                            .catch(error => {
-                                if (error.response.status == 422) {
-                                    setErrors(error.response.data.errors);
-                                } else {
-                                    this.$emitter.emit('add-flash', { type: 'error', message: error.response.data.message });
-                                }
-                            })
-                            .finally(() => {
-                                this.isStoring = false;
+                searchTerm: '',
 
-                                this.$parent.$refs.emailLinkDrawer.open();
-                            });
-                    },
-                },
-            });
-        </script>
+                selectedItem: {},
 
-        <!-- Link to mail Component -->
-        <script type="module">
-            app.component('v-action-email', {
-                template: '#v-action-email-template',
+                searchedResults: [],
 
-                data() {
-                    return {
-                        link: 'contact',
+                isSearching: false,
 
-                        email: @json($email->getAttributes()),
+                cancelToken: null,
+            };
+        },
 
-                        unlinking: {
-                            lead: false,
-                            contact: false,
+        mounted() {
+            if (this.value) {
+                this.selectedItem = this.value;
+            }
+        },
+
+        created() {
+            window.addEventListener('click', this.handleFocusOut);
+        },
+
+        beforeDestroy() {
+            window.removeEventListener('click', this.handleFocusOut);
+        },
+
+        watch: {
+            searchTerm(newVal, oldVal) {
+                this.search();
+            },
+        },
+
+        computed: {
+            /**
+             * Filtra os resultados com base na consulta.
+             * 
+             * @return {Array}
+             */
+            persons() {
+                return this.searchedResults.filter(item => 
+                    item.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+                );
+            }
+        },
+        
+        methods: {
+            /**
+             * Alterna o popup.
+             * 
+             * @return {void}
+             */
+            toggle() {
+                this.showPopup = ! this.showPopup;
+
+                if (this.showPopup) {
+                    this.$nextTick(() => this.$refs.searchInput.focus());
+                }
+            },
+
+            /**
+             * Seleciona um item da lista.
+             * 
+             * @param {Object} item
+             * 
+             * @return {void}
+             */
+            linkContact(person) {
+                this.showPopup = false;
+
+                this.searchTerm = '';
+
+                this.selectedItem = person;
+
+                this.$emit('link-contact', person);
+            },
+
+            unlinkContact() {
+                this.selectedItem = {};
+
+                this.$emit('unlink-contact');
+            },
+
+            /**
+             * Inicializa os itens.
+             * 
+             * @return {void}
+             */
+            search() {
+                if (this.searchTerm.length <= 2) {
+                    this.searchedResults = [];
+
+                    this.isSearching = false;
+
+                    return;
+                }
+
+                this.isSearching = true;
+
+                if (this.cancelToken) {
+                    this.cancelToken.cancel();
+                }
+
+                this.cancelToken = this.$axios.CancelToken.source();
+
+                this.$axios.get('{{ route('admin.contacts.persons.search') }}', {
+                        params: { 
+                            ...this.params,
+                            query: this.searchTerm
                         },
+                        cancelToken: this.cancelToken.token, 
+                    })
+                    .then(response => {
+                        this.searchedResults = response.data.data;
+                    })
+                    .catch(error => {
+                        if (! this.$axios.isCancel(error)) {
+                            console.error("Falha na solicitação de pesquisa:", error);
+                        }
 
-                        tagTextColor: {
-                            '#FEE2E2': '#DC2626',
-                            '#FFEDD5': '#EA580C',
-                            '#FEF3C7': '#D97706',
-                            '#FEF9C3': '#CA8A04',
-                            '#ECFCCB': '#65A30D',
-                            '#DCFCE7': '#16A34A',
+                        this.isSearching = false;
+                    })
+                    .finally(() => this.isSearching = false);
+            },
+
+            /**
+             * Lida com o evento de foco fora.
+             * 
+             * @param {Event} event
+             * 
+             * @return {void}
+             */
+            handleFocusOut(event) {
+                const lookup = this.$refs.lookup;
+
+                if (
+                    lookup && 
+                    ! lookup.contains(event.target)
+                ) {
+                    this.showPopup = false;
+                }
+            },
+
+            toggleContactModal() {
+                this.showPopup = false;
+
+                this.$emit('open-contact-modal');
+            },
+        },
+    });
+</script>
+
+<!-- Componente v-lead-lookup -->
+<script type="module">
+    app.component('v-lead-lookup', {
+        template: '#v-lead-lookup-template',
+
+        props: ['email', 'unlinking', 'tagTextColor'],
+
+        emits: ['link-lead', 'unlink-lead', 'open-lead-modal'],
+
+        data() {
+            return {
+                showPopup: false,
+
+                searchTerm: '',
+
+                selectedItem: {},
+
+                searchedResults: [],
+
+                isSearching: false,
+
+                cancelToken: null,
+            };
+        },
+
+        mounted() {
+            if (this.value) {
+                this.selectedItem = this.value;
+            }
+        },
+
+        created() {
+            window.addEventListener('click', this.handleFocusOut);
+        },
+
+        beforeDestroy() {
+            window.removeEventListener('click', this.handleFocusOut);
+        },
+
+        watch: {
+            searchTerm(newVal, oldVal) {
+                this.search();
+            },
+        },
+
+        computed: {
+            /**
+             * Filtra os resultados com base na consulta.
+             * 
+             * @return {Array}
+             */
+            leads() {
+                return this.searchedResults.filter(item => 
+                    item.title.toLowerCase().includes(this.searchTerm.toLowerCase())
+                );
+            },
+        },
+        
+        methods: {
+            /**
+             * Alterna o popup.
+             * 
+             * @return {void}
+             */
+            toggle() {
+                this.showPopup = ! this.showPopup;
+
+                if (this.showPopup) {
+                    this.$nextTick(() => this.$refs.searchInput.focus());
+                }
+            },
+
+            /**
+             * Seleciona um item da lista.
+             * 
+             * @param {Object} item
+             * 
+             * @return {void}
+             */
+            linkLead(lead) {
+                this.showPopup = false;
+
+                this.searchTerm = '';
+
+                this.selectedItem = lead;
+
+                this.$emit('link-lead', lead);
+            },
+
+            unlinkLead() {
+                this.selectedItem = {};
+
+                this.$emit('unlink-lead');
+            },
+
+            /**
+             * Inicializa os itens.
+             * 
+             * @return {void}
+             */
+            search() {
+                if (this.searchTerm.length <= 2) {
+                    this.searchedResults = [];
+
+                    this.isSearching = false;
+
+                    return;
+                }
+
+                this.isSearching = true;
+
+                if (this.cancelToken) {
+                    this.cancelToken.cancel();
+                }
+
+                this.cancelToken = this.$axios.CancelToken.source();
+
+                this.$axios.get('{{ route('admin.leads.search') }}', {
+                        params: { 
+                            ...this.params,
+                            query: this.searchTerm
                         },
-                    };
+                        cancelToken: this.cancelToken.token, 
+                    })
+                    .then(response => {
+                        this.searchedResults = response.data.data;
+                    })
+                    .catch(error => {
+                        if (! this.$axios.isCancel(error)) {
+                            console.error("Falha na solicitação de pesquisa:", error);
+                        }
+
+                        this.isSearching = false;
+                    })
+                    .finally(() => this.isSearching = false);
+            },
+
+            /**
+             * Lida com o evento de foco fora.
+             * 
+             * @param {Event} event
+             * 
+             * @return {void}
+             */
+            handleFocusOut(event) {
+                const lookup = this.$refs.lookup;
+
+                if (
+                    lookup && 
+                    ! lookup.contains(event.target)
+                ) {
+                    this.showPopup = false;
+                }
+            },
+
+            toggleLeadModal() {
+                this.showPopup = false;
+
+                this.$emit('open-lead-modal');
+            },
+        },
+    });
+</script>
+
+<!-- Componente v-create-contact -->
+<script type="module">
+    app.component('v-create-contact', {
+        template: '#v-create-contact-template',
+
+        data() {
+            return {
+                isStoring: false,
+            };
+        },
+
+        methods: {
+            toggleModal({ isActive }) {
+                if (! isActive) {
+                    this.$parent.$refs.emailLinkDrawer.toggle();
+                }
+            },
+
+            create(params, { setErrors }) {
+                this.isStoring = true;
+
+                const formData = new FormData(this.$refs.contactForm);
+
+                this.$axios.post('{{ route('admin.contacts.persons.store') }}', formData)
+                    .then(response => {
+                        this.$emitter.emit('add-flash', { type: 'success', message: response.data.message });
+
+                        this.$refs.contactModal.close();
+                    })
+                    .catch(error => {
+                        if (error.response.status == 422) {
+                            setErrors(error.response.data.errors);
+                        } else {
+                            this.$emitter.emit('add-flash', { type: 'error', message: error.response.data.message });
+                        }
+                    })
+                    .finally(() => {
+                        this.isStoring = false;
+
+                        this.$parent.$refs.emailLinkDrawer.open();
+                    });
+            },
+        },
+    });
+</script>
+
+<!-- Componente v-create-lead -->
+<script type="module">
+    app.component('v-create-lead', {
+        template: '#v-create-lead-template',
+
+        data() {
+            return {
+                isStoring: false,
+
+                selectedType: "lead",
+
+                types: [
+                    {
+                        name: 'lead',
+                        label: "{{ trans('admin::app.mail.view.lead-details') }}",
+                    }, {
+                        name: 'person',
+                        label: "{{ trans('admin::app.mail.view.contact-person') }}",
+                    }, {
+                        name: 'product',
+                        label: "{{ trans('admin::app.mail.view.product') }}",
+                    },
+                ],
+            };
+        },
+
+        methods: {
+            toggleModal({ isActive }) {
+                if (! isActive) {
+                    this.$parent.$refs.emailLinkDrawer.toggle();
+                }
+            },
+
+            create(params, { setErrors }) {
+                this.isStoring = true;
+
+                const formData = new FormData(this.$refs.leadForm);
+
+                formData.append('lead_pipeline_stage_id', 1)
+
+                this.$axios.post('{{ route('admin.leads.store') }}', formData)
+                    .then(response => {
+                        this.$emitter.emit('add-flash', { type: 'success', message: response.data.message });
+
+                        this.$refs.leadModal.close();
+                    })
+                    .catch(error => {
+                        if (error.response.status == 422) {
+                            setErrors(error.response.data.errors);
+                        } else {
+                            this.$emitter.emit('add-flash', { type: 'error', message: error.response.data.message });
+                        }
+                    })
+                    .finally(() => {
+                        this.isStoring = false;
+
+                        this.$parent.$refs.emailLinkDrawer.open();
+                    });
+            },
+        },
+    });
+</script>
+
+<!-- Componente v-action-email -->
+<script type="module">
+    app.component('v-action-email', {
+        template: '#v-action-email-template',
+
+        data() {
+            return {
+                link: 'contact',
+
+                email: @json($email->getAttributes()) || {},
+
+                unlinking: {
+                    lead: false,
+                    contact: false,
                 },
 
-                created() {
-                    @if ($email->person)
-                        this.email.person = @json($email->person);
-                    @endif
-
-                    @if ($email->lead)
-                        this.email.lead = @json($email->lead);
-                    @endif
+                tagTextColor: {
+                    '#FEE2E2': '#DC2626',
+                    '#FFEDD5': '#EA580C',
+                    '#FEF3C7': '#D97706',
+                    '#FEF9C3': '#CA8A04',
+                    '#ECFCCB': '#65A30D',
+                    '#DCFCE7': '#16A34A',
                 },
+            };
+        },
 
-                methods: {
-                    openDrawer() {
-                        this.$refs.emailLinkDrawer.open();
-                    },
+        created() {
+            @if ($email->person)
+                this.email.person = @json($email->person);
+            @endif
 
-                    linkContact(person) {
-                        this.email['person'] = person;
+            @if ($email->lead)
+                this.email.lead = @json($email->lead);
+            @endif
+        },
 
-                        this.email['person_id'] = person.id;
+        methods: {
+            openDrawer() {
+                this.$refs.emailLinkDrawer.open();
+            },
 
-                        this.$axios.post('{{ route('admin.mail.update', $email->id) }}', {
-                            _method: 'PUT',
-                            person_id: person.id,
-                        })
-                            .then (response => {                            
-                                this.$emitter.emit('add-flash', { type: 'success', message: response.data.message });
-                            })
-                            .catch (error => {});
-                    },
+            linkContact(person) {
+                this.email['person'] = person;
 
-                    unlinkContact() {
-                        this.unlinking.contact = true;
+                this.email['person_id'] = person.id;
 
-                        this.$axios.post('{{ route('admin.mail.update', $email->id) }}', {
-                            _method: 'PUT',
-                            person_id: null,
-                        })
-                            .then (response => {
-                                this.email['person'] = this.email['person_id'] = null;
+                this.$axios.post('{{ route('admin.mail.update', $email->id) }}', {
+                    _method: 'PUT',
+                    person_id: person.id,
+                })
+                    .then (response => {                            
+                        this.$emitter.emit('add-flash', { type: 'success', message: response.data.message });
+                    })
+                    .catch (error => {});
+            },
 
-                                this.$emitter.emit('add-flash', { type: 'success', message: response.data.message });
-                            })
-                            .catch (error => {})
-                            .finally(() => this.unlinking.contact = false);
-                    },
+            unlinkContact() {
+                this.unlinking.contact = true;
 
-                    linkLead(lead) {
-                        this.email['lead'] = lead;
+                this.$axios.post('{{ route('admin.mail.update', $email->id) }}', {
+                    _method: 'PUT',
+                    person_id: null,
+                })
+                    .then (response => {
+                        this.email['person'] = this.email['person_id'] = null;
 
-                        this.email['lead_id'] = lead.id;
+                        this.$emitter.emit('add-flash', { type: 'success', message: response.data.message });
+                    })
+                    .catch (error => {})
+                    .finally(() => this.unlinking.contact = false);
+            },
 
-                        this.$axios.post('{{ route('admin.mail.update', $email->id) }}', {
-                            _method: 'PUT',
-                            lead_id: lead.id,
-                        })
-                            .then (response => {
-                                this.$emitter.emit('add-flash', { type: 'success', message: response.data.message });
-                            })
-                            .catch (error => {});
-                    },
+            linkLead(lead) {
+                this.email['lead'] = lead;
 
-                    unlinkLead() {
-                        this.unlinking.lead = true;
+                this.email['lead_id'] = lead.id;
 
-                        this.$axios.post('{{ route('admin.mail.update', $email->id) }}', {
-                            _method: 'PUT',
-                            lead_id: null,
-                        })
-                            .then (response => {
-                                this.email['lead'] = this.email['lead_id'] = null;
+                this.$axios.post('{{ route('admin.mail.update', $email->id) }}', {
+                    _method: 'PUT',
+                    lead_id: lead.id,
+                })
+                    .then (response => {
+                        this.$emitter.emit('add-flash', { type: 'success', message: response.data.message });
+                    })
+                    .catch (error => {});
+            },
 
-                                this.$emitter.emit('add-flash', { type: 'success', message: response.data.message });
-                            })
-                            .catch (error => {})
-                            .finally(() => this.unlinking.lead = false);
-                    },
+            unlinkLead() {
+                this.unlinking.lead = true;
 
-                    openContactModal() {
-                        this.$refs.createContact.$refs.contactModal.open();
-                    },
+                this.$axios.post('{{ route('admin.mail.update', $email->id) }}', {
+                    _method: 'PUT',
+                    lead_id: null,
+                })
+                    .then (response => {
+                        this.email['lead'] = this.email['lead_id'] = null;
 
-                    openLeadModal() {
-                        this.$refs.createLead.$refs.leadModal.open();
-                    },
-                },
-            });
-        </script>
+                        this.$emitter.emit('add-flash', { type: 'success', message: response.data.message });
+                    })
+                    .catch (error => {})
+                    .finally(() => this.unlinking.lead = false);
+            },
+
+            openContactModal() {
+                this.$refs.createContact.$refs.contactModal.open();
+            },
+
+            openLeadModal() {
+                this.$refs.createLead.$refs.leadModal.open();
+            },
+        },
+    });
+</script>
+
     @endPushOnce
 </x-admin::layouts>

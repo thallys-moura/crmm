@@ -37,9 +37,9 @@
                 {!! view_render_event('admin.expenses.create.save_button.after') !!}
             </div>
             <div class="grid w-full">
-                <div class="flex flex-col gap-1">
+                <div class="flex flex-col gap-1" style="padding: 25px;">
                     <div class="w-full" style="width: 50rem;">
-                        <!-- Expense Type -->
+                         <!-- Expense Type -->
                         <div class="mb-4">
                             <label class="mb-1.5 flex items-center gap-1 text-sm font-normal text-gray-800 dark:text-white required">
                                 @lang('admin::app.expenses.create.type')

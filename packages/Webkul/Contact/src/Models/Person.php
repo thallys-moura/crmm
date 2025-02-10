@@ -87,7 +87,11 @@ class Person extends Model implements PersonContract
     {
         return $this->belongsToMany(TagProxy::modelClass(), 'person_tags');
     }
-
+    public function leads()
+    {
+        return $this->hasMany(\Webkul\Lead\Models\Lead::class, 'person_id');
+    }
+    
     /**
      * Create a new factory instance for the model.
      *

@@ -17,36 +17,38 @@ class QuoteDataGrid extends DataGrid
         $tablePrefix = DB::getTablePrefix();
 
         $queryBuilder = DB::table('quotes')
-            ->addSelect(
-                'quotes.id',
-                'quotes.subject',
-                'quotes.expired_at',
-                'quotes.sub_total',
-                'quotes.discount_amount',
-                'quotes.tax_amount',
-                'quotes.adjustment_amount',
-                'quotes.grand_total',
-                'billing_status.status',
-                'leads.billing_status_id',
-                'quotes.created_at',
-                'users.id as user_id',
-                'users.name as sales_person',
-                'persons.id as person_id',
-                'persons.name as person_name',
-                DB::raw("JSON_UNQUOTE(JSON_EXTRACT(persons.emails, '$[0].value')) as person_email"),
-                'quotes.expired_at as expired_quotes',
-                'products.name as product',
-                'payment_methods.name as payment_method'
-            )
-            ->leftJoin('users', 'quotes.user_id', '=', 'users.id')
-            ->leftJoin('persons', 'quotes.person_id', '=', 'persons.id')
-            ->leftJoin('lead_quotes', 'quotes.id', '=', 'lead_quotes.quote_id')
-            ->leftJoin('leads', 'lead_quotes.lead_id', '=', 'leads.id')
-            ->leftJoin('lead_products', 'lead_products.lead_id', '=', 'leads.id')
-            ->leftJoin('quote_items', 'quote_items.quote_id', '=', 'quotes.id')
-            ->leftJoin('products', 'products.id', '=', 'quote_items.product_id')
-            ->leftJoin('billing_status', 'leads.billing_status_id', '=', 'billing_status.id')
-            ->leftJoin('payment_methods', 'quotes.payment_method_id', '=', 'payment_methods.id');
+        ->addSelect(
+            'quotes.id',
+            'quotes.subject',
+            'quotes.expired_at',
+            'quotes.sub_total',
+            'quotes.discount_amount',
+            'quotes.tax_amount',
+            'quotes.adjustment_amount',
+            'quotes.grand_total',
+            'billing_status.status',
+            'leads.billing_status_id',
+            'quotes.created_at',
+            'users.id as user_id',
+            'users.name as sales_person',
+            'persons.id as person_id',
+            'persons.name as person_name',
+            'persons.emails as person_email',
+            'persons.contact_numbers as person_contact_numbers', // Adicionado aqui
+            'quotes.expired_at as expired_quotes',
+            'products.name as product',
+            'payment_methods.name as payment_method'
+        )
+        ->leftJoin('users', 'quotes.user_id', '=', 'users.id')
+        ->leftJoin('persons', 'quotes.person_id', '=', 'persons.id')
+        ->leftJoin('lead_quotes', 'quotes.id', '=', 'lead_quotes.quote_id')
+        ->leftJoin('leads', 'lead_quotes.lead_id', '=', 'leads.id')
+        ->leftJoin('lead_products', 'lead_products.lead_id', '=', 'leads.id')
+        ->leftJoin('quote_items', 'quote_items.quote_id', '=', 'quotes.id')
+        ->leftJoin('products', 'products.id', '=', 'quote_items.product_id')
+        ->leftJoin('billing_status', 'leads.billing_status_id', '=', 'billing_status.id')
+        ->leftJoin('payment_methods', 'quotes.payment_method_id', '=', 'payment_methods.id');
+    
     
         if ($userIds = bouncer()->getAuthorizedUserIds()) {
             $queryBuilder->whereIn('quotes.user_id', $userIds);
@@ -84,17 +86,17 @@ class QuoteDataGrid extends DataGrid
             'closure'    => function ($row) {
                 // Adicione a lógica condicional para o status
                 if ($row->billing_status_id == 1) {
-                    return '<span style="background-color: green; color: white; border-radius: 10px; padding: 3px 8px;">Pago</span>';
+                    return '<span style="background-color: rgb(220, 252, 231); color: rgb(22, 163, 74); border-radius: 5px; padding: 4px 5px;;">Pago</span>';
                 } elseif ($row->billing_status_id == 2) {
-                    return '<span style="background-color: #23af91; color: white; border-radius: 10px; padding: 2px 5px;">Pagou Parc.</span>';
+                    return '<span style="background-color: #ccfff4; color: #23af91; border-radius: 5px; padding: 4px 5px;;">Pagou Parc.</span>';
                 } elseif ($row->billing_status_id == 3) {
-                    return '<span style="background-color: red; color: white; border-radius: 10px; padding: 2px 5px;">Não Pagou</span>';
+                    return '<span style="background-color: rgb(254, 226, 226); color: rgb(220, 38, 38); border-radius: 5px; padding: 4px 5px;;">Não Pagou</span>';
                 } elseif ($row->billing_status_id == 4) {
-                    return '<span style="background-color: red; color: white; border-radius: 10px; padding: 2px 5px;">Cancelado</span>';
+                    return '<span style="background-color: rgb(254, 226, 226); color: rgb(220, 38, 38); border-radius: 5px; padding: 4px 5px;;">Cancelado</span>';
                 } elseif ($row->billing_status_id == 5) {
-                    return '<span style="background-color: yellow; color: black; border-radius: 10px; padding: 2px 5px;">Pendente</span>';                    
+                    return '<span style="background-color: rgb(254, 249, 195); color: rgb(202, 138, 4); border-radius: 5px; padding: 4px 5px;;">Pendente</span>';                    
                 } else {
-                    return '<span style="background-color: gray; color: white; border-radius: 10px; padding: 2px 5px;">Valor inválido</span>';
+                    return '<span style="background-color: gray; color: white; border-radius: 5px; padding: 4px 5px;;">Valor inválido</span>';
                 }
             }
         ]);
@@ -138,20 +140,41 @@ class QuoteDataGrid extends DataGrid
                 ],
             ],
             'closure'    => function ($row) {
-                $route = route('admin.contacts.persons.view', $row->person_id);
+                $route = route('admin.leads.view', $row->person_id);
 
                 return "<a class=\"text-brandColor transition-all hover:underline\" href='".$route."'>".$row->person_name.'</a>';
             },
         ]);
-
+        
+        $this->addColumn([
+            'index'      => 'person_contact_numbers',
+            'label'      => trans('admin::app.quotes.index.datagrid.phone'),
+            'type'       => 'string',
+            'filterable' => false,
+            'sortable'   => false,
+            'closure'    => function ($row) {
+                // Decodifica o JSON armazenado no campo `contact_numbers`
+                $contactNumbers = json_decode($row->person_contact_numbers, true);
+        
+                // Retorna o primeiro número de contato, ou 'N/A' se não houver
+                return isset($contactNumbers[0]['value']) ? $contactNumbers[0]['value'] : 'N/A';
+            },
+        ]);
+        
         $this->addColumn([
             'index'      => 'email',
             'label'      => trans('admin::app.quotes.index.datagrid.email'),
             'type'       => 'string',
             'filterable' => true,
             'sortable'   => true,
-            'closure'    => fn ($row) => $row->person_email, 
+            'closure'    => function ($row) {
+                $emails = json_decode($row->person_email, true);
+        
+                // Verifica se o JSON é válido e contém o campo 'value'
+                return isset($emails[0]['value']) ? $emails[0]['value'] : 'N/A';
+            },
         ]);
+        
 
         $this->addColumn([
             'index'      => 'payment_method',

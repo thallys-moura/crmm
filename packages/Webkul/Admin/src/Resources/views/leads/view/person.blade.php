@@ -9,7 +9,7 @@
                 <a
                     href="{{ route('admin.contacts.persons.edit', $lead->person->id) }}"
                     class="icon-edit rounded-md p-1 text-2xl transition-all hover:bg-gray-100 dark:hover:bg-gray-950"
-                    target="_blank"
+                    
                 ></a>
             @endif
         </h4>

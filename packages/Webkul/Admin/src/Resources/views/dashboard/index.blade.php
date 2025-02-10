@@ -53,7 +53,7 @@
             <div class="flex gap-4 [&>*]:flex-1">
             <!-- Total Products -->
             @include('admin::dashboard.index.top-selling-products')
-
+            @include('admin::dashboard.index.top-persons')
             <!-- Formulário de Filtros de Relatórios Quantitativos por Vendedor -->
             @include('admin::dashboard.index.revenue-by-report-quantitative-filters')
 

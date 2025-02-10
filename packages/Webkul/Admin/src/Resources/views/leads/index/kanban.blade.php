@@ -749,7 +749,7 @@
                                         <br/>
                                         <!-- Texto de Observação -->
                                         <span class="text-xs font-medium dark:text-white">
-                                            Observação:
+                                            Motivo:
                                         </span>
 
                                         <!-- Campo de Observação -->
@@ -762,8 +762,8 @@
 
                                         <!-- Botões de Ação -->
                                         <div class="button-group">
-                                            <button @click="save" class="primary-button">Salvar</button>
                                             <button @click="closeDialog" class="secondary-button">Cancelar</button>
+                                            <button @click="save" class="primary-button">Adicionar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -824,24 +824,26 @@
                             <Teleport to="body">
                                 <div v-if="isOpen" class="dialog-overlay">
                                     <div class="dialog-content">
-                                        
+                                         <!-- Cabeçalho do Modal -->
+                                        <h3 class="dialog-title">Adicione o Codigo de Rastreio</h3>
+                                        <br/>
 
                                         <span class="text-xs font-medium dark:text-white">
-                                            Informe o Link de Rastreio
+                                            Informe o Codigo de Rastreio
                                         </span>
 
                                         <!-- Campo de input para o link de rastreamento -->
                                         <input 
                                             v-model="trackingLink" 
                                             type="text" 
-                                            placeholder="Insira o link de rastreio"
+                                            placeholder="Insira o Codigo de rastreio"
                                             class="input-field"
                                         />
 
                                         <!-- Botões de ação -->
-                                        <div class="button-group">
-                                            <button @click="saveTrackingLink" class="primary-button">Salvar</button>
+                                        <div class="button-group">                                         
                                             <button @click="closeDialog" class='secondary-button'>Cancelar</button>
+                                            <button @click="saveTrackingLink" class="primary-button">Adicionar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -923,34 +925,27 @@
             padding: 20px;
             border-radius: 8px;
             position: relative;
-            width: 300px;
+            width: 90%;
+            max-width: 400px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .dialog-title {
             font-weight: bold;
-            font-size: 1.25rem; /* Tamanho do título (opcional) */
+            font-size: 1.20rem; /* Tamanho do título (opcional) */
+            text-align: center;
         }
 
-        .primary-button {
-            background: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+  
 
-        .primary-button:hover {
-            background: #0056b3;
-        }
+    
 
         .secondary-button {
             background: #f8f9fa;
             color: #343a40;
             border: 1px solid #dee2e6;
             padding: 10px 20px;
-            border-radius: 4px;
+            border-radius: 9px;
             cursor: pointer;
         }
 
@@ -959,10 +954,11 @@
         }
         .input-field {
             width: 100%;
-            padding: 10px;
+            padding: 8px;
             margin: 10px 0;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
+            border: 1px solid #ccccccbf;
+            border-radius: 6px;
+            margin-bottom: 30px;
         }
 
         .input-field:focus {
@@ -979,13 +975,7 @@
             cursor: pointer;
         }
         
-        .input-field {
-            width: 100%;
-            padding: 8px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
+  
         
         .button-group {
             display: flex;

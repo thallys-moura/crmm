@@ -47,7 +47,7 @@
                             {!! view_render_event('admin.components.modal.observacao.form_controls.modal.header.title.before') !!}
 
                             <h3 class="text-base font-semibold dark:text-white">
-                               Teste
+                               Faturamento
                             </h3>
 
                             {!! view_render_event('admin.components.modal.observacao.form_controls.modal.header.title.after') !!}
@@ -194,7 +194,7 @@
                         if (response.status === 200) {
                             // Fechar modal ou notificar sucesso
                             this.$refs.observacaoModal.close();
-                            alert('Observação salva com sucesso!');
+                           
                         }
                     } catch (error) {
                         this.$refs.observacaoModal.close();
