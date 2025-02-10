@@ -65,6 +65,9 @@ class Kernel extends ConsoleKernel
                 \Log::error('Erro ao enviar lead para o Zárpon: ' . $e->getMessage());
             }
         })->cron('*/30 * * * *');
+
+        // Novo schedule para verificar e-mails via IMAP
+        $schedule->job(new \App\Jobs\FetchEmailsJobs())->everyFiveMinutes();
     }
 
     /**

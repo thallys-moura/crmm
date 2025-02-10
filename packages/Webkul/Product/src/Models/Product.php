@@ -30,6 +30,7 @@ class Product extends Model implements ProductContract
         'quantity',
         'price',
         'email_template_id',
+        'image_email',
     ];
 
     /**

@@ -52,7 +52,16 @@
         rel="stylesheet"
     />
 
-
+ <!-- Linhas adicionadas na branch nv_1_1 -->
+    <link
+        rel="stylesheet"
+        href="{{ asset('icomoon_herblux/style.css') }}"
+    />
+    <link
+        rel="preload"
+        as="image"
+        href="{{ url('cache/logo/bagisto.png') }}"
+    >
 
     @if ($favicon = core()->getConfigData('general.design.admin_logo.favicon'))
         <link
