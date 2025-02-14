@@ -3,6 +3,10 @@
 namespace Webkul\Expenses\Repositories;
 
 use Webkul\Core\Eloquent\Repository;
+use Illuminate\Support\Facades\DB;
+use Webkul\Admin\Constants\ExpenseTypes;
+use Webkul\Admin\Constants\BillingStatus;
+use Webkul\DataGrid\ColumnTypes\Boolean;
 
 class ExpenseRepository extends Repository
 {
@@ -60,7 +64,7 @@ class ExpenseRepository extends Repository
     {
         $today = now()->startOfDay();
         $yesterday = now()->subDay()->startOfDay();
-    
+
         return [
             'today' => [
                 'revenue' => $this->getTotalByDateAndType($today, true),  // Receitas
@@ -72,15 +76,28 @@ class ExpenseRepository extends Repository
             ],
         ];
     }
-    
+
     private function getTotalByDateAndType(\Carbon\Carbon $date, bool $isRevenue): float
     {
-        return $this->model
-            ->whereDate('created_at', $date)
-            ->whereHas('type', function ($query) use ($isRevenue) {
-                $query->where('is_revenue', $isRevenue);
+        $expenseRevenueTotal = $this->model
+            ->whereHas('type', function ($query) {
+                $query->where('type_id', [ExpenseTypes::RECEITA_BRL, ExpenseTypes::RECEITA_USD]);
             })
             ->sum('value');
+
+        $leadRevenueTotal = DB::table('leads')
+            ->where('billing_status_id', BillingStatus::STATUS_PAGO)
+            ->sum('lead_value');
+
+        $expenseTotal = $this->model
+            ->whereIn('type_id', [ExpenseTypes::DESPESAS_BRL, ExpenseTypes::DESPESAS_USD])
+            ->sum('value');
+
+        if($isRevenue === true){
+            return $expenseRevenueTotal + $leadRevenueTotal;
+        }else{
+            return $expenseTotal;
+        }
     }
 
     public function getRevenueTypes()
@@ -93,15 +110,24 @@ class ExpenseRepository extends Repository
         return $this->model->where('is_revenue', false)->get();
     }
 
-    public function getCurrentRevenueBalances(): array
+    public function getCurrentRevenueBalances(): float
     {
-        return $this->model
-            ->selectRaw('expense_types.name, SUM(expenses.value) as total')
-            ->join('expense_types', 'expenses.type_id', '=', 'expense_types.id')
-            ->where('expense_types.is_revenue', true)
-            ->groupBy('expense_types.id', 'expense_types.name')
-            ->pluck('total', 'expense_types.name')
-            ->toArray();
+        $expenseRevenueTotal = $this->model
+        ->whereHas('type', function ($query) {
+            $query->where('is_revenue', true);
+        })
+        ->sum('value');
+
+        $leadRevenueTotal = DB::table('leads')
+            ->where('billing_status_id', BillingStatus::STATUS_PAGO)
+            ->sum('lead_value');
+
+        $expenseTotal = $this->model
+            ->whereIn('type_id', [ExpenseTypes::DESPESAS_BRL, ExpenseTypes::DESPESAS_USD])
+            ->sum('value');
+
+        return ($expenseRevenueTotal + $leadRevenueTotal) - $expenseTotal;
+
     }
 
 }

@@ -15,7 +15,7 @@
                     <div class="text-xl font-bold dark:text-white">
                         @lang('admin::app.bank.index.title')
                     </div>
-                    
+
                 </div>
             </div>
 
@@ -25,10 +25,7 @@
     </v-bank>
 
     @pushOnce('scripts')
-        <script
-            type="text/x-template"
-            id="v-bank-template"
-        >
+        <script type="text/x-template" id="v-bank-template">
             <div class="flex flex-col gap-4">
                 <div class="flex items-center justify-between rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300">
                     <div class="flex flex-col gap-2">
@@ -41,58 +38,50 @@
                             @lang('admin::app.bank.index.title')
                         </div>
                     </div>
-
-                    <div class="flex items-center gap-x-2.5">
-                        <!-- Create button for Bank -->
-                        <div class="flex items-center gap-x-2.5">
-                            {!! view_render_event('admin.bank.index.create_button.before') !!}
-
-                            {!! view_render_event('admin.bank.index.create_button.after') !!}
-                        </div>
-                    </div>
-                    
                 </div>
-                <div class="flex flex-col gap-4">
-                    <div class="flex items-center justify-between rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300">
-                        <div class="grid grid-cols-2 gap-8">
-                            <!-- Coluna 1: Hoje e Ontem -->
-                            <div class="flex flex-col gap-4">
-                                <h2 class="text-xl font-bold dark:text-white">Hoje</h2>
-                                <div class="flex justify-between mt-2 gap-4">
-                                    <span class="text font-bold dark:text-white">Recebidos: <span class="text-green-500">USD$ {{ number_format($todayRevenue, 2, ',', '.') }}</span></span>
-                                    <span class="text font-bold dark:text-white">Gastos: <span class="text-red-500">USD$ {{ number_format($todayExpense, 2, ',', '.') }}</span></span>
-                                </div>
-                        
-                                <h2 class="text-xl font-bold dark:text-white mt-4">Ontem</h2>
-                                <div class="flex justify-between mt-2 gap-4">
-                                    <span class="text font-bold dark:text-white">Recebidos: <span class="text-green-500">USD$ {{ number_format($yesterdayRevenue, 2, ',', '.') }}</span></span>
-                                    <span class="text font-bold dark:text-white">Gastos: <span class="text-red-500">USD$ {{ number_format($yesterdayExpense, 2, ',', '.') }}</span></span>
-                                </div>
+
+                <!-- Grid Principal -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 border border-gray-200 dark:border-gray-800">
+                        <h2 class="text-lg font-bold text-gray-800 dark:text-white">Movimentação Financeira</h2>
+                        <div class="mt-4">
+                            <h3 class="text-md font-semibold text-gray-700 dark:text-gray-300">Hoje</h3>
+                            <div class="flex justify-between mt-2 border-b">
+                                <span class="text-gray-700 dark:text-gray-300">Recebidos:</span>
+                                <span class="font-bold text-green-500">USD$ {{ number_format($todayRevenue, 2, ',', '.') }}</span>
                             </div>
-                        
-                            <!-- Coluna 2: Saldo Atual de Receitas por Tipo -->
-                            <div class="flex flex-col gap-4">
-                                <h2 class="text-xl font-bold dark:text-white">Saldo Atual de Receitas por Tipo</h2>
-                                @forelse ($revenueBalances as $type => $balance)
-                                    <div class="flex justify-between">
-                                        <span class="text font-bold dark:text-white">{{ $type }}:</span>
-                                        <span class="text-green-500">USD$ {{ number_format($balance, 2, ',', '.') }}</span>
-                                    </div>
-                                @empty
-                                    <p class="text-gray-500">Nenhuma receita registrada.</p>
-                                @endforelse
+                            <div class="flex justify-between border-b">
+                                <span class="text-gray-700 dark:text-gray-300">Gastos:</span>
+                                <span class="font-bold text-red-500">USD$ {{ number_format($todayExpense, 2, ',', '.') }}</span>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <h3 class="text-md font-semibold text-gray-700 dark:text-gray-300">Ontem</h3>
+                            <div class="flex justify-between mt-2 border-b">
+                                <span class="text-gray-700 dark:text-gray-300">Recebidos:</span>
+                                <span class="font-bold text-green-500">USD$ {{ number_format($yesterdayRevenue, 2, ',', '.') }}</span>
+                            </div>
+                            <div class="flex justify-between border-b">
+                                <span class="text-gray-700 dark:text-gray-300">Gastos:</span>
+                                <span class="font-bold text-red-500">USD$ {{ number_format($yesterdayExpense, 2, ',', '.') }}</span>
                             </div>
                         </div>
                     </div>
 
+                    <div class="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 border border-gray-200 dark:border-gray-800">
+                        <h2 class="text-lg font-bold text-gray-800 dark:text-white">Saldo Atual  (Receitas - Despesas)</h2>
+                            <div class="flex justify-between mt-2 border-b pb-2">
+                                <span class="text-gray-700 dark:text-gray-300 font-medium">Saldo Atual:</span>
+                                <span class="font-bold text-green-500">USD$ {{ number_format($revenueBalances, 2, ',', '.') }}</span>
+                            </div>
+                    </div>
                 </div>
 
-                {!! view_render_event('admin.bank.index.datagrid.before') !!}
-
-                <!-- DataGrid -->
-                <x-admin::datagrid :src="route('admin.bank.index')" />
-
-                {!! view_render_event('admin.bank.index.datagrid.after') !!}
+                <div class="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 border border-gray-200 dark:border-gray-800">
+                    {!! view_render_event('admin.bank.index.datagrid.before') !!}
+                    <x-admin::datagrid :src="route('admin.bank.index')" />
+                    {!! view_render_event('admin.bank.index.datagrid.after') !!}
+                </div>
             </div>
         </script>
 
