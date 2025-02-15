@@ -21,10 +21,16 @@ use Webkul\Admin\DataGrids\Expense\ExpenseDataGrid;
 
 use Webkul\Expenses\Repositories\ExpenseTypeRepository;
 use Webkul\Expenses\Repositories\ExpenseRepository;
+use Webkul\Admin\Helpers\BankHelper;
 
 class BankController extends Controller
 {
-    /**
+
+    protected $typeFunctions = [
+        'revenue-stats' => 'getRevenueStats',
+        'balance-stats' => 'getBalanceStats',
+    ];
+        /**
      * Cria uma nova instância do controller.
      *
      * @param  BankRepository  $bankRepository
@@ -34,40 +40,40 @@ class BankController extends Controller
         protected UserRepository $userRepository,
         protected BankRepository $bankRepository,
         protected ExpenseTypeRepository $expenseTypeRepository,
-        protected ExpenseRepository $expenseRepository
+        protected ExpenseRepository $expenseRepository,
+        protected BankHelper $bankHelper,
     ) {
         $this->expenseTypeRepository = $expenseTypeRepository;
         $this->expenseRepository = $expenseRepository;
+        $this->bankRepository = $bankRepository;
 
     }
 
     /**
      * Exibe a lista de registros de banco.
      */
-    public function index(): View|JsonResponse
-    {
-        if (request()->ajax()) {
-            //As informações salvas no módulo de despesas são listadas no banco
-            return datagrid(ExpenseDataGrid::class)->process();
-        }
-
-        // Obter totais agrupados por tipo (receita e despesa)
-        $totals = $this->expenseRepository->getDailyTotals();
-        // Obter os saldos de receitas por tipo
-        $revenueBalances = $this->expenseRepository->getCurrentRevenueBalances();
-
-
-
-        return view('admin::bank.index', [
-            'todayRevenue' => $totals['today']['revenue'],
-            'todayExpense' => $totals['today']['expense'],
-            'yesterdayRevenue' => $totals['yesterday']['revenue'],
-            'yesterdayExpense' => $totals['yesterday']['expense'],
-            'revenueBalances' => $revenueBalances,
-        ]);
-
+public function index(): View|JsonResponse
+{
+    if (request()->ajax()) {
+        return datagrid(ExpenseDataGrid::class)->process();
     }
 
+
+    $startDate = $this->bankHelper->getStartDate();
+    $endDate   = $this->bankHelper->getEndDate();
+
+    $totals = $this->expenseRepository->getDailyTotals($startDate, $endDate);
+    //$revenueBalances = $this->expenseRepository->getCurrentRevenueBalances($startDate, $endDate);
+
+    return view('admin::bank.index', [
+        'todayRevenue' => $totals['today']['revenue'],
+        'todayExpense' => $totals['today']['expense'],
+        'yesterdayRevenue' => $totals['yesterday']['revenue'],
+        'yesterdayExpense' => $totals['yesterday']['expense'],
+        'startDate' => $this->bankHelper->getStartDate(),
+        'endDate' => $this->bankHelper->getEndDate(),
+    ]);
+}
     /**
      * Exibe o formulário para criar um novo registro de banco.
      */
@@ -145,4 +151,21 @@ class BankController extends Controller
             ], 400);
         }
     }
+
+    public function stats(): JsonResponse
+    {
+        $type = request()->query('type');
+
+        if (!isset($this->typeFunctions[$type])) {
+            return response()->json(['error' => 'Tipo de estatística inválido'], 400);
+        }
+
+        $stats = $this->bankHelper->{$this->typeFunctions[$type]}();
+
+        return response()->json([
+            'statistics' => $stats,
+            'date_range' => $this->bankHelper->getDateRange(),
+        ]);
+    }
+
 }
