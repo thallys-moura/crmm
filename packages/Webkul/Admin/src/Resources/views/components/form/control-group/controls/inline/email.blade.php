@@ -286,7 +286,7 @@
                 },
 
                 updateOrCreate(params) {
-                    this.inputValue = params.contact_emails;
+                    this.inputValue = params.emails;
 
                     if (this.url) {
                         this.$axios.put(this.url, {

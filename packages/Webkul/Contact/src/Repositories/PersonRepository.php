@@ -7,6 +7,7 @@ use Webkul\Attribute\Repositories\AttributeRepository;
 use Webkul\Attribute\Repositories\AttributeValueRepository;
 use Webkul\Contact\Contracts\Person;
 use Webkul\Core\Eloquent\Repository;
+use Illuminate\Support\Facades\DB;
 
 class PersonRepository extends Repository
 {
@@ -119,5 +120,12 @@ class PersonRepository extends Repository
             ->whereBetween('created_at', [$startDate, $endDate])
             ->get()
             ->count();
+    }
+
+    public function getLeadsByPerson(int $personId)
+    {
+        return DB::table('leads')
+            ->where('person_id', $personId)
+            ->get();
     }
 }

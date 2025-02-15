@@ -97,13 +97,32 @@
                             placeholder="@lang('admin::app.daily_controls.index.end-date')"
                         />
                     </x-admin::flat-picker.date>
+
+                    <!-- Filtro Por Grupo de Produto -->
+                    <div class="!w-[140px]">
+                    <select
+                        class="flex min-h-[39px] w-full rounded-md border px-3 py-2 text-sm text-gray-600 transition-all hover:border-gray-400 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-gray-400"
+                        v-model="filters.productGroup"
+                    >
+                        <option value="">@lang('admin::app.daily_controls.index.all-groups')</option>
+                        <option
+                            v-for="group in productGroups"
+                            :key="group.id"
+                            :value="group.id"
+                        >
+                            @{{ group.name }}
+                        </option>
+                    </select>
                 </div>
+                </div>
+
                 {!! view_render_event('admin.daily_controls.index.revenue.before') !!}
                 
                 <div class="mt-3.5 flex gap-4 max-xl:flex-wrap">
                     <div class="flex flex-1 flex-col gap-4 max-xl:flex-auto">
                         @include('admin::daily_controls.revenue')
                         @include('admin::daily_controls.total-expenses-stats')
+                        @include('admin::daily_controls.over-all')
 
                     </div>
                     <div class="flex w-[378px] max-w-full flex-col gap-4 max-sm:w-full">
@@ -138,10 +157,30 @@
                             start: "{{ $startDate->format('Y-m-d') }}",
 
                             end: "{{ $endDate->format('Y-m-d') }}",
-                        }
+
+                            productGroups: @json($productGroups),
+                        },
+
+                        productGroups: @json($productGroups),
+
                     }
                 },
+                mounted(){
+                    this.getProductGroups();
+                },
 
+                methods: {
+                    getProductGroups() {
+                        this.$axios
+                            .get("{{ route('admin.daily_controls.product_groups') }}")
+                            .then((response) => {
+                                this.productGroups = response.data;
+                            })
+                            .catch((error) => {
+                                console.error(error);
+                            });
+                    },
+                },
                 watch: {
                     filters: {
                         handler() {

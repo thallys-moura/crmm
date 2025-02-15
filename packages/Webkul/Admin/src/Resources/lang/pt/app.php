@@ -1870,7 +1870,9 @@ return [
         'index' => [
             'title'      => 'Controle Diário',
             'create-btn' => 'Adicionar Controle Diário',
-    
+            'product-group' => 'Grupo de Produtos',
+            'all-groups' => 'Todos os Grupos',
+            
             'datagrid' => [
                 'id'                  => 'ID',
                 'user'                => 'Usuário',
@@ -1970,6 +1972,17 @@ return [
             'title'       => 'Despesas por Grupo de Produto',
             'empty-title' => 'Nenhum grupo de produto encontrado',
             'empty-info'  => 'Não há dados disponíveis para despesas por grupo de produto neste momento.',
+        ],
+
+        'over-all' => [
+            'average-dailycontrols' => 'Média de Receita Controles Diários',
+            'total-dailycontrols' => 'Total de Controles Diários',
+            'average-expenses-dailycontrols' => 'Média de Despesas',
+            'total-revenue' => 'Total de Receita',
+            'average-leads-per-day' => 'Média de Leads por Dia',
+            'average-cost-per-lead' =>  'Custo Médio por Lead',
+            'average-calls-per-day' => 'Média de Ligações por Dia',
+            'average-sales-per-day' => 'Média de Vendas por Dia',
         ],
 
         'common' => [
