@@ -18,7 +18,7 @@ class DailyControlsController extends Controller
 
     protected $dailyControls;
 
-    
+
     protected $typeFunctions = [
         'over-all' => 'getOverAllStats',
         'total_dailycontrols' => 'getTotalDailyControls',
@@ -27,10 +27,11 @@ class DailyControlsController extends Controller
         'revenue-by-source'   => 'getTotalExpensesBySources',
         'expenses-by-product-group' => 'getTotalExpensesByProductGroups',
         'total-expenses'          => 'getTotalDailyControlsStats',
-        'average_leads_per_day'   => 'getAverageLeadsPerDayValueProgress',   
+        'average_leads_per_day'   => 'getAverageLeadsPerDayValueProgress',
         'average_cost_per_lead'   => 'getAverageCostPerLead',
         'average_calls_per_day'   => 'getAverageCallsPerDay',
         'average_sales_per_day'   => 'getAverageSalesPerDay',
+        'roi'   => 'getROI',
     ];
 
     /**
@@ -85,14 +86,14 @@ class DailyControlsController extends Controller
 
             $this->dailyControlRepository->create($data);
 
-            
+
         } catch (\Exception $e) {
 
             return redirect()->back()
                 ->with('error', __('Ocorreu um erro ao salvar o controle diário.'))
                 ->withInput();
         }
-       
+
 
         return redirect()->route('admin.daily_controls.index')
             ->with('success', trans('admin::app.daily_controls.index.create-success'));
@@ -156,8 +157,8 @@ class DailyControlsController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function stats()
-    {   \Log::info(request());
-        
+    {
+
         $stats = $this->dailyControlsHelper->{$this->typeFunctions[request()->query('type')]}();
         return response()->json([
             'statistics' => $stats,

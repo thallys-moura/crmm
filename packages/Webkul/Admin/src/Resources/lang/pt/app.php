@@ -425,7 +425,7 @@ return [
                 'expired-at'     => 'Expirado em',
                 'created-at'     => 'Criado em',
                 'expired-quotes' => 'Venda Expirada',
-                'person'         => 'Cliente',               
+                'person'         => 'Cliente',
                 'subtotal'       => 'Subtotal',
                 'discount'       => 'Disconto',
                 'tax'            => 'Imposto',
@@ -535,7 +535,7 @@ return [
             'action'            => 'Ação',
             'created-at'        => 'Data da venda',
         ],
-        
+
         'common' => [
             'contact' => [
                 'name'           => 'Nome',
@@ -543,7 +543,7 @@ return [
                 'contact-number' => 'Número de Contato',
                 'organization'   => 'Organização',
             ],
-    
+
             'products' => [
                 'product-name' => 'Nome do Produto',
                 'quantity'     => 'Quantidade',
@@ -1866,13 +1866,13 @@ return [
         'destroy-success'   => 'Controle Diário excluído com sucesso.',
         'destroy-failed'    => 'Não foi possível excluir o controle diário.',
         'warning'           => 'Já existe um registro para este usuário nesta data.',
-    
+
         'index' => [
             'title'      => 'Controle Diário',
             'create-btn' => 'Adicionar Controle Diário',
             'product-group' => 'Grupo de Produtos',
             'all-groups' => 'Todos os Grupos',
-            
+
             'datagrid' => [
                 'id'                  => 'ID',
                 'user'                => 'Usuário',
@@ -1888,7 +1888,7 @@ return [
                 'yes'                 => 'Sim',
             ],
         ],
-    
+
         'create' => [
             'title'       => 'Adicionar Controle Diário',
             'save-btn'    => 'Salvar',
@@ -1903,10 +1903,10 @@ return [
             'product-group'       => 'Grupo de Produtos',
             'source'              => 'Fonte',
             'fields' => [
-         
+
             ],
         ],
-    
+
         'edit' => [
             'title' => 'Editar Controle Diário',
             'save-btn' => 'Salvar Alterações',
@@ -1919,7 +1919,7 @@ return [
             'product-group' => 'Grupo de Produtos',
             'daily-ad-spending' => 'Gasto Diário em Anúncios',
         ],
-    
+
         'view' => [
             'title'       => 'Detalhes do Controle Diário',
             'tabs'        => [
@@ -1935,12 +1935,12 @@ return [
                 'source'              => 'Fonte',
             ],
         ],
-    
+
         'mass-actions' => [
             'delete-success' => 'Registro(s) selecionado(s) excluído(s) com sucesso.',
             'delete-failed'  => 'Não foi possível excluir os registro(s) selecionado(s).',
         ],
-    
+
         'filters' => [
             'apply-filters' => 'Aplicar Filtros',
             'clear-all'     => 'Limpar Tudo',
@@ -1983,6 +1983,7 @@ return [
             'average-cost-per-lead' =>  'Custo Médio por Lead',
             'average-calls-per-day' => 'Média de Ligações por Dia',
             'average-sales-per-day' => 'Média de Vendas por Dia',
+            'roi'   => 'ROI'
         ],
 
         'common' => [
@@ -2248,7 +2249,7 @@ return [
                 'status'    => 'Status do Pagamento',
                 'payment_date' => 'Data do Pagamento ou Cancelamento',
             ]
-            
+
         ],
     ],
 
@@ -2402,12 +2403,12 @@ return [
         'leads'                => 'Ordens',
         'quotes'               => 'Vendas',
         'quote'                => 'Venda',
-        'expenses'             => 'Despesas',  
-        'bank'                 => 'Banco', 
+        'expenses'             => 'Despesas',
+        'bank'                 => 'Banco',
         'blacklist'            => 'Blacklist',
         'remarketing'          => 'Remarketing',
         'daily-controls'       => 'Controle Diário',
-           
+
         'mail'                 => [
             'title'   => 'Email',
             'compose' => 'Compor',

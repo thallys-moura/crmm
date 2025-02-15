@@ -75,7 +75,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="flex flex-col gap-2 rounded-lg border border-gray-200 bg-white px-4 py-5 dark:border-gray-800 dark:bg-gray-900">
                     <p class="text-xs font-medium text-gray-600 dark:text-gray-300">
                         @lang('admin::app.daily_controls.over-all.average-leads-per-day')
@@ -132,18 +132,18 @@
                     <p class="text-xs font-medium text-gray-600 dark:text-gray-300">
                         @lang('admin::app.daily_controls.over-all.average-calls-per-day')
                     </p>
-                
+
                     <div class="flex gap-2">
                         <p class="text-xl font-bold dark:text-gray-300">
                             @{{ report.statistics.average_calls_per_day.current }}
                         </p>
-                
+
                         <div class="flex items-center gap-0.5">
                             <span
                                 class="text-base !font-semibold"
                                 :class="[report.statistics.average_calls_per_day.progress < 0 ? 'icon-stats-down text-red-500 dark:!text-red-500' : 'icon-stats-up text-green-500 dark:!text-green-500']"
                             ></span>
-                
+
                             <p
                                 class="text-xs font-semibold"
                                 :class="[report.statistics.average_calls_per_day.progress < 0 ? 'text-red-500' : 'text-green-500']"
@@ -158,18 +158,18 @@
                     <p class="text-xs font-medium text-gray-600 dark:text-gray-300">
                         @lang('admin::app.daily_controls.over-all.average-sales-per-day')
                     </p>
-                
+
                     <div class="flex gap-2">
                         <p class="text-xl font-bold dark:text-gray-300">
                             @{{ report.statistics.average_sales_per_day.current }}
                         </p>
-                
+
                         <div class="flex items-center gap-0.5">
                             <span
                                 class="text-base !font-semibold"
                                 :class="[report.statistics.average_sales_per_day.progress < 0 ? 'icon-stats-down text-red-500 dark:!text-red-500' : 'icon-stats-up text-green-500 dark:!text-green-500']"
                             ></span>
-                
+
                             <p
                                 class="text-xs font-semibold"
                                 :class="[report.statistics.average_sales_per_day.progress < 0 ? 'text-red-500' : 'text-green-500']"
@@ -180,9 +180,29 @@
                     </div>
                 </div>
 
+                <div class="flex flex-col gap-2 rounded-lg border border-gray-200 bg-white px-4 py-5 dark:border-gray-800 dark:bg-gray-900">
+                    <p class="text-xs font-medium text-gray-600 dark:text-gray-300">
+                        @lang('admin::app.daily_controls.over-all.roi')
+                    </p>
 
+                    <div class="flex gap-2">
+                        <p class="text-xl font-bold dark:text-gray-300">
+                            @{{ report.statistics.roi?.current?.toFixed(2) ?? 0 }}%
+                        </p>
 
+                        <div class="flex items-center gap-0.5">
+                            <span
+                                class="text-base !font-semibold"
+                                :class="[report.statistics.roi.progress < 0 ? 'icon-stats-down text-red-500 dark:!text-red-500' : 'icon-stats-up text-green-500 dark:!text-green-500']"
+                            ></span>
 
+                            <p class="text-xs font-semibold"
+                                :class="[report.statistics.roi?.progress < 0 ? 'text-red-500' : 'text-green-500']">
+                                @{{ Math.abs(report.statistics.roi?.progress?.toFixed(2) ?? 0) }}%
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
 
@@ -218,7 +238,6 @@
                         .get("{{ route('admin.daily_controls.stats') }}", { params: filters })
                         .then((response) => {
                             this.report = response.data;
-                            console.log(this.report);
                             this.isLoading = false;
                         })
                         .catch((error) => {

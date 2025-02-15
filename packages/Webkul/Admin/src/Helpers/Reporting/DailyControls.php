@@ -12,10 +12,10 @@ class DailyControls extends AbstractReporting
     protected $productGroupId;
 
     public function __construct(protected DailyControlsRepository $dailyControlsRepository)
-    {   
+    {
 
         $this->setProductGroupId(request()['productGroup']);
-       
+
         parent::__construct();
     }
 
@@ -119,7 +119,7 @@ class DailyControls extends AbstractReporting
         ];
     }
 
-    
+
     /**
      * Retrieves average DailyControls value and their progress.
      */
@@ -185,7 +185,7 @@ class DailyControls extends AbstractReporting
             'progress'        => $this->getPercentageChange($previous, $current),
         ];
     }
-    
+
     public function getAverageCostPerLeadValueProgress(): array
     {
         return [
@@ -288,14 +288,14 @@ class DailyControls extends AbstractReporting
             })
             ->selectRaw('SUM(leads_count) as total_leads, COUNT(DISTINCT date) as days_with_leads')
             ->first();
- 
+
         $totalLeads = $result->total_leads ?? 0;
         $daysWithLeads = $result->days_with_leads ?? 0;
 
         if ($daysWithLeads === 0) {
             return 0;
         }
-    
+
         return $totalLeads / $daysWithLeads;
     }
     /**
@@ -388,6 +388,33 @@ class DailyControls extends AbstractReporting
             ->whereBetween('created_at', [$startDate, $endDate])
             ->avg('total_revenue') ?? 0;
     }
+
+    public function getROI(): array
+    {
+        return [
+            'previous'        => $previous = $this->getROIDailyControls($this->lastStartDate, $this->lastEndDate),
+            'current'         => $current = $this->getROIDailyControls($this->startDate, $this->endDate),
+            'formatted_total' => number_format($current, 2) . '%',
+            'progress'        => $this->getROIDailyControls($previous, $current),
+        ];
+    }
+
+    public function getROIDailyControls($startDate, $endDate): float
+    {
+        return $this->dailyControlsRepository
+            ->resetModel()
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->when($this->productGroupId, function ($query) {
+                $query->where('product_group_id', $this->productGroupId);
+            })
+            ->whereNotNull('total_revenue')
+            ->get()
+            ->map(function ($dailyControl) {
+                return ($dailyControl->total_revenue - $dailyControl->daily_ad_spending) / $dailyControl->daily_ad_spending * 100;
+            })
+            ->average() ?? 0;
+    }
+
 
     /**
      * Retrieves average Expenses DailyControls value

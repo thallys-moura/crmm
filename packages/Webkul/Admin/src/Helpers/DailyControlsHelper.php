@@ -32,7 +32,7 @@ class DailyControlsHelper
         ];
     }
 
-    
+
     /**
      * Get the start date for the control period.
      *
@@ -79,7 +79,7 @@ class DailyControlsHelper
         return $this->dailyControlReporting->getExpensesBySources();
     }
 
-    
+
     public function getTotalExpensesByProductGroups(): mixed
     {
         return $this->dailyControlReporting->getExpensesByDailyControls();
@@ -105,6 +105,11 @@ class DailyControlsHelper
         return $this->dailyControlReporting->getAverageSalesPerDayValueProgress();
     }
 
+    public function getROI(): mixed
+    {
+        return $this->dailyControlReporting->getROI();
+    }
+
     /**
      * Returns daily controls statistics grouped by product group.
      */
@@ -123,7 +128,7 @@ class DailyControlsHelper
         return $stats;
     }
 
-    
+
     /**
      * Returns the overall statistics.
      */
@@ -137,6 +142,8 @@ class DailyControlsHelper
             'average_cost_per_lead' => $this->dailyControlReporting->getAverageCostPerLeadValueProgress(),
             'average_calls_per_day' => $this->dailyControlReporting->getAverageCallsPerDayValueProgress(),
             'average_sales_per_day' => $this->dailyControlReporting->getAverageSalesPerDayValueProgress(),
+            'roi' => $this->dailyControlReporting->getROI(),
+
         ];
     }
 }
