@@ -60,45 +60,74 @@ class ExpenseRepository extends Repository
         return parent::delete($id);
     }
 
-    public function getDailyTotals(): array
+    public function getDailyTotals(\Carbon\Carbon $startDate, \Carbon\Carbon $endDate): array
     {
-        $today = now()->startOfDay();
-        $yesterday = now()->subDay()->startOfDay();
-
         return [
             'today' => [
-                'revenue' => $this->getTotalByDateAndType($today, true),  // Receitas
-                'expense' => $this->getTotalByDateAndType($today, false), // Despesas
+                'revenue' => [
+                    'formatted_total' => core()->formatBasePrice(
+                        $this->getTotalByDateAndType($startDate, $endDate, true)
+                    ),
+                    'current' => $this->getTotalByDateAndType($startDate, $endDate, true),
+                ],
+                'expense' => [
+                    'formatted_total' => core()->formatBasePrice(
+                        $this->getTotalByDateAndType($startDate, $endDate, false)
+                    ),
+                    'current' => $this->getTotalByDateAndType($startDate, $endDate, false),
+                ],
             ],
             'yesterday' => [
-                'revenue' => $this->getTotalByDateAndType($yesterday, true), // Receitas
-                'expense' => $this->getTotalByDateAndType($yesterday, false), // Despesas
+                'revenue' => [
+                    'formatted_total' => core()->formatBasePrice(
+                        $this->getTotalByDateAndType($startDate->copy()->subDay(), $endDate->copy()->subDay(), true)
+                    ),
+                    'current' => $this->getTotalByDateAndType($startDate->copy()->subDay(), $endDate->copy()->subDay(), true),
+                ],
+                'expense' => [
+                    'formatted_total' => core()->formatBasePrice(
+                        $this->getTotalByDateAndType($startDate->copy()->subDay(), $endDate->copy()->subDay(), false)
+                    ),
+                    'current' => $this->getTotalByDateAndType($startDate->copy()->subDay(), $endDate->copy()->subDay(), false),
+                ],
             ],
         ];
     }
 
-    private function getTotalByDateAndType(\Carbon\Carbon $date, bool $isRevenue): float
+
+    private function getTotalByDateAndType($startDate, $endDate, bool $isRevenue): float
     {
-        $expenseRevenueTotal = $this->model
-            ->whereHas('type', function ($query) {
-                $query->where('type_id', [ExpenseTypes::RECEITA_BRL, ExpenseTypes::RECEITA_USD]);
-            })
-            ->sum('value');
+        try {
 
-        $leadRevenueTotal = DB::table('leads')
-            ->where('billing_status_id', BillingStatus::STATUS_PAGO)
-            ->sum('lead_value');
+            $expenseRevenueTotal = $this
+                ->resetModel()
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->whereHas('type', function ($query) {
+                    $query->where('type_id', [ExpenseTypes::RECEITA_BRL, ExpenseTypes::RECEITA_USD]);
+                })->sum('value');
 
-        $expenseTotal = $this->model
-            ->whereIn('type_id', [ExpenseTypes::DESPESAS_BRL, ExpenseTypes::DESPESAS_USD])
-            ->sum('value');
+            $leadRevenueTotal = DB::table('leads')
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->where('billing_status_id', BillingStatus::STATUS_PAGO)
+                ->sum('lead_value');
+ $expenseTotal =  $this
+                ->resetModel()
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->whereIn('type_id', [ExpenseTypes::DESPESAS_BRL, ExpenseTypes::DESPESAS_USD])
+                ->sum('value');
 
-        if($isRevenue === true){
-            return $expenseRevenueTotal + $leadRevenueTotal;
-        }else{
-            return $expenseTotal;
+            if($isRevenue === true){
+                return $expenseRevenueTotal + $leadRevenueTotal;
+            }else{
+                return $expenseTotal;
+            }
+
+        } catch (\Exception $ex) {
+            throw new \Exception("Erro ao calcular valores: " . $ex->getMessage());
         }
     }
+
+
 
     public function getRevenueTypes()
     {

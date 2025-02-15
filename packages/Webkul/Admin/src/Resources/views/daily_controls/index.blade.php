@@ -46,7 +46,7 @@
         <script
             type="text/x-template"
             id="v-daily-controls-template"
-        >   
+        >
 
 
             <div class="flex flex-col gap-4">
@@ -69,7 +69,7 @@
                             {!! view_render_event('admin.daily_controls.index.create_button.before') !!}
 
                             @if (bouncer()->hasPermission('daily_controls.create'))
-                                <a 
+                                <a
                                     href="{{ route('admin.daily_controls.create') }}"
                                     class="primary-button"
                                 >
@@ -89,7 +89,7 @@
                             placeholder="@lang('admin::app.daily_controls.index.start-date')"
                         />
                     </x-admin::flat-picker.date>
-    
+
                     <x-admin::flat-picker.date class="!w-[140px]" ::allow-input="false">
                         <input
                             class="flex min-h-[39px] w-full rounded-md border px-3 py-2 text-sm text-gray-600 transition-all hover:border-gray-400 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-gray-400"
@@ -99,7 +99,7 @@
                     </x-admin::flat-picker.date>
                 </div>
                 {!! view_render_event('admin.daily_controls.index.revenue.before') !!}
-                
+
                 <div class="mt-3.5 flex gap-4 max-xl:flex-wrap">
                     <div class="flex flex-1 flex-col gap-4 max-xl:flex-auto">
                         @include('admin::daily_controls.revenue')
@@ -123,7 +123,7 @@
                     <x-admin::datagrid :src="route('admin.daily_controls.index')" />
 
                 {!! view_render_event('admin.daily_controls.index.datagrid.after') !!}
-                
+
             </div>
         </script>
 
