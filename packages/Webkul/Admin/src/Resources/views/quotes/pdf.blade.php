@@ -38,7 +38,7 @@
 
         <!-- lang supports inclusion -->
         <style type="text/css">
-            
+
             * {
                 margin: 0;
                 padding: 0;
@@ -86,6 +86,109 @@
                 height: auto;
             }
 
+            .page-break {
+                page-break-before: always;
+            }
+
+            .legal-terms {
+                font-family: 'Times New Roman', serif;
+                font-size: 14px;
+                line-height: 1.8;
+                text-align: justify;
+                margin: 60px;
+            }
+
+            .legal-terms h1 {
+                font-size: 20px;
+                font-weight: bold;
+                text-align: center;
+                margin-bottom: 30px;
+            }
+
+            .legal-terms h2 {
+                font-size: 16px;
+                font-weight: bold;
+                margin-top: 25px;
+            }
+
+            .legal-terms p {
+                font-size: 12px;
+                margin-bottom: 15px;
+            }
+
+            .customer-signature {
+                display: block;
+                max-width: 200px;
+                height: auto;
+                margin-top: 5px;
+                padding-bottom: 10px;
+            }
+
+            .footer {
+                padding-top: 20px;
+            }
+
+            .footer img {
+                padding-top: 20px;
+                width: 200px;
+            }
+
+            .signature-footer {
+                position: absolute;
+                bottom: 20px;
+                left: 0;
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 60px;
+                margin-top: 50px;
+                padding-top: 10px;
+            }
+
+            .signature {
+                font-size: 18px;
+                font-weight: bold;
+                text-align: left;
+                margin-top: 50px;
+            }
+
+            .signature-line {
+                display: inline-block;
+                width: 300px;
+                border-bottom: 2px solid black;
+            }
+
+            .compliance-image {
+                max-width: 300px;
+                height: auto;
+                align-items: flex-end;
+                padding-left: 500px;
+            }
+
+            .footer {
+                align-items: right;
+                align-content: right;
+            }
+
+            .dotted-list {
+                font-size: 12px;
+                margin-left: 50px;
+                padding-left: 30px;
+            }
+
+            .dotted-list ul {
+                list-style-type: disc;
+                margin-left: 30px;
+                padding-left: 10px;
+            }
+
+            .dotted-list li {
+                margin-bottom: 8px;
+                font-size: 12px;
+                font-weight: bold;
+            }
+
             .page-header b {
                 display: inline-block;
                 vertical-align: middle;
@@ -101,7 +204,7 @@
                 border-collapse: separate;
                 margin-bottom: 16px;
             }
-            
+
             table thead th {
                 background-color: #E9EFFC;
                 color: #000DBB;
@@ -172,10 +275,10 @@
                                 : $defaultImage;
             @endphp
 
-            <img src="{{ $productImage }}" 
-            alt="{{$quote->id}}" 
+            <img src="{{ $productImage }}"
+            alt="{{$quote->id}}"
             style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; height: auto; opacity: 0.1; z-index: -1;">
-                        
+
             <!-- Header -->
             <div class="page-header">
                 <b>@lang('admin::app.quotes.index.pdf.title')</b>
@@ -187,7 +290,7 @@
                         <tr>
                             <td style="width: 50%; padding: 2px 18px;border:none;">
                                 <b>
-                                    @lang('admin::app.quotes.index.pdf.sales-person'): 
+                                    @lang('admin::app.quotes.index.pdf.sales-person'):
                                 </b>
 
                                 <span>
@@ -195,7 +298,7 @@
                                 </span>
                             </td>
                         </tr>
-                        
+
                         <tr>
                             <td style="width: 50%; padding: 2px 18px;border:none;">
                                 <b>
@@ -255,7 +358,7 @@
                                     <div>{{ core()->country_name($quote->billing_address['country'] ?? '') }}</div>
                                 </td>
                             @endif
-                            
+
                             @if ($quote->shipping_address)
                                 <td style="width: 50%">
                                     <div>{{ $quote->shipping_address['address'] ?? ''}}</div>
@@ -322,7 +425,7 @@
                                     <td class="text-center">{!! core()->formatBasePrice($item->discount_amount, true) !!}</td>
 
                                     <td class="text-center">{!! core()->formatBasePrice($item->tax_amount, true) !!}</td>
-                                    
+
                                     <td class="text-center">{!! core()->formatBasePrice($item->total + $item->tax_amount - $item->discount_amount, true) !!}</td>
                                 </tr>
                             @endforeach
@@ -339,25 +442,25 @@
                                 <td>-</td>
                                 <td>{!! core()->formatBasePrice($quote->sub_total, true) !!}</td>
                             </tr>
-        
+
                             <tr>
                                 <td>@lang('admin::app.quotes.index.pdf.tax')</td>
                                 <td>-</td>
                                 <td>{!! core()->formatBasePrice($quote->tax_amount, true) !!}</td>
                             </tr>
-        
+
                             <tr>
                                 <td>@lang('admin::app.quotes.index.pdf.discount')</td>
                                 <td>-</td>
                                 <td>{!! core()->formatBasePrice($quote->discount_amount, true) !!}</td>
                             </tr>
-        
+
                             <tr>
                                 <td>@lang('admin::app.quotes.index.pdf.adjustment')</td>
                                 <td>-</td>
                                 <td>{!! core()->formatBasePrice($quote->adjustment_amount, true) !!}</td>
                             </tr>
-        
+
                             <tr>
                                 <td><strong>@lang('admin::app.quotes.index.pdf.grand-total')</strong></td>
                                 <td><strong>-</strong></td>
@@ -386,5 +489,55 @@
                 </div>
             </div>
         </div>
+        @if (!empty($remarketing))
+
+            <div class="page-break"></div>
+            <div class="legal-terms">
+                <h1>Legal Terms and Customer Responsibility</h1>
+
+                <p>By signing this document, the customer <strong>{{ $quote->person->name ?? '_____________________________' }}</strong> confirms that they are fully aware of and in complete agreement with the terms set forth below. This document serves as abinding contract and acknowledgment of the fi nancial obligation related to the purchase of theBeMother product.</p>
+
+                <h2>1. Payment Obligation</h2>
+                <p>This order was placed under the Cash on Delivery (COD) model, where payment must be made within 24 hours of product delivery using one of the following accepted payment methods: <strong>Zelle, Venmo, CashApp, Credit and debit card, Klarna.</strong></p>
+                <p>The customer expressly agrees to fulfi ll the payment obligation within the specifi ed timeframe andusing the accepted payment methods. The signature on this document constitutes a legally bindingand enforceable commitment to settle the due amount.</p>
+
+                <h2>2. Non-Payment and Legal Consequences</h2>
+                <p>If the customer fails to make the payment within 24 hours or attempts to evade the agreed-upon obligation, the outstanding debt may be immediately forwarded for collection, subjecting the debtor to legal proceedings under U.S. debt collection laws, including but not limited to:</p>
+                <div class="dotted-list">
+                    <ul>
+                        <li>Fair Debt Collection Practices Act (FDCPA - 15 U.S.C. §§ 1692-1692p)</li>
+                        <li>Uniform Commercial Code (UCC - §2-709)</li>
+                        <li>Small Claims Court & Civil Litigation</li>
+                    </ul>
+                </div>
+
+                <p>Additionally, non-payment may result in additional penalties and restrictions on future purchases.</p>
+
+                <h2>3. Fraud and Criminal Actions</h2>
+                <p>Any attempt to deny the payment obligation after receiving the product may be considered financial fraud under U.S. commercial fraud statutes. The company reserves the right to report recurringdelinquencies to collection agencies and credit reporting organizations, potentially negativelyimpacting the customer's credit score.</p>
+                <h2>4. Purpose of Signature</h2>
+                <p>The signature on this document confi rms the acceptance of all the above terms and our PrivacyPolicy. It also serves as legal evidence in any future legal actions to recover unpaid amounts.</p>
+                <h2>5. Immediate Action</h2>
+                <p>In the event of non-payment or breach of this contract, the case will be immediately referred to thelegal department for appropriate measures, which may result in extrajudicial and judicial collectionproceedings.</p>
+                <div class="signature-footer">
+                    <div class="signature">
+                        <p>Customer Signature:</p>
+                        <div class="signature-line">
+                            @if (!empty($remarketing->signature))
+
+                                <img src="{{ $remarketing->signature }}" class="customer-signature" alt="Customer Signature">
+                            @else
+                                <div class="signature-placeholder"></div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <img src="{{ public_path('images/logos/compliance_usa.PNG') }}" alt="Compliance USA" class="compliance-image">
+                </div>
+            </div>
+        @endif
+
     </body>
 </html>

@@ -6,6 +6,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Event;
 use Illuminate\View\View;
+use Illuminate\Http\Request;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Webkul\Admin\DataGrids\Product\ProductDataGrid;
 use Webkul\Admin\Http\Controllers\Controller;
@@ -154,14 +155,21 @@ class ProductController extends Controller
     /**
      * Search product results
      */
-    public function search(): JsonResource
+    public function search(Request $request): JsonResource
     {
+        if ($request->has('id')) {
+            $product = $this->productRepository->find($request->id);
+
+            return new ProductResource($product);
+        }
+
         $products = $this->productRepository
             ->pushCriteria(app(RequestCriteria::class))
             ->all();
 
         return ProductResource::collection($products);
     }
+
 
     /**
      * Returns product inventories grouped by warehouse.

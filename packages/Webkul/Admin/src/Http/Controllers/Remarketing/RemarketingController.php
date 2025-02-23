@@ -4,7 +4,9 @@ namespace Webkul\Admin\Http\Controllers\Remarketing;
 
 use Illuminate\Http\Request;
 use Webkul\Admin\Http\Controllers\Controller;
+use Webkul\Product\Repositories\ProductRepository;
 use Webkul\Remarketing\Repositories\RemarketingRepository;
+use Webkul\Contact\Repositories\PersonRepository;
 use Webkul\Admin\Http\Requests\MassDestroyRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Event;
@@ -12,6 +14,7 @@ use Illuminate\View\View;
 use Webkul\Admin\DataGrids\Remarketing\RemarketingDatagrid;
 use Webkul\Lead\Repositories\LeadRepository;
 use Webkul\Quote\Models\PaymentMethod;
+use Illuminate\Support\Facades\Auth;
 
 class RemarketingController extends Controller
 {
@@ -19,15 +22,21 @@ class RemarketingController extends Controller
      * @var RemarketingRepository
      */
     protected $remarketingRepository;
+    protected $personRepository;
+    protected $productRepository;
 
     /**
      * Create a new controller instance.
-     *
-     * @param  RemarketingRepository  $remarketingRepository
      */
-    public function __construct(RemarketingRepository $remarketingRepository)
+    public function __construct(
+        RemarketingRepository $remarketingRepository,
+        PersonRepository $personRepository,
+        ProductRepository $productRepository
+    )
     {
+        $this->personRepository = $personRepository;
         $this->remarketingRepository = $remarketingRepository;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -41,7 +50,7 @@ class RemarketingController extends Controller
             // Retorna os dados em formato JSON para carregamento via datagrid
             return datagrid(RemarketingDatagrid::class)->process();
         }
-    
+
         // Retornar a view com os dados
         return view('admin::remarketing.index');
     }
@@ -145,19 +154,19 @@ class RemarketingController extends Controller
     {
         // Obter os registros a serem excluídos
         $remarketingItems = $this->remarketingRepository->findWhereIn('id', $massDestroyRequest->input('indices'));
-    
+
         try {
             foreach ($remarketingItems as $remarketing) {
                 // Evento antes de excluir
                 Event::dispatch('remarketing.delete.before', $remarketing->id);
-    
+
                 // Excluir o registro
                 $this->remarketingRepository->delete($remarketing->id);
-    
+
                 // Evento após excluir
                 Event::dispatch('remarketing.delete.after', $remarketing->id);
             }
-    
+
             return response()->json([
                 'message' => trans('admin::app.remarketing.index.delete-success'),
             ]);

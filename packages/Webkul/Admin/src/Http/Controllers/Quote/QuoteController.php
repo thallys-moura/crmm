@@ -18,6 +18,7 @@ use Webkul\Admin\Http\Resources\QuoteResource;
 use Webkul\Core\Traits\PDFHandler;
 use Webkul\Lead\Repositories\LeadRepository;
 use Webkul\Contact\Repositories\PersonRepository;
+use Webkul\Remarketing\Repositories\RemarketingRepository;
 use Webkul\Lead\Models\Lead;
 use Illuminate\Support\Facades\Log;
 use Webkul\Quote\Repositories\QuoteRepository;
@@ -40,6 +41,7 @@ class QuoteController extends Controller
         protected QuoteRepository $quoteRepository,
         protected LeadRepository $leadRepository,
         protected PersonRepository $personRepository,
+        protected RemarketingRepository $remarketingRepository,
         ZarponService $zarponService
     ) {
         request()->request->add(['entity_type' => 'quotes']);
@@ -64,10 +66,27 @@ class QuoteController extends Controller
      */
     public function create(): View
     {
+        $remarketing = null;
+        if( key_exists('remarketing_id', request()->all()) == true){
+            $remarketing = (object) [
+                'person'    => request()->all()['person'],
+                'product_id'   => request()->all()['product_id'],
+                'quantity'     => request()->all()['quantity'],
+                'price'        => request()->all()['price'],
+                'address'      => request()->all()['address'],
+                'city'         => request()->all()['city'],
+                'zipcode'      => request()->all()['zipcode'],
+                'emails'       => [['value' => request()->all()['email'] ?? '']],
+                'phone_number' => [['value' => request()->all()['phone_number'] ?? '']],
+                'remarketing_id' => request()->all()['remarketing_id'],
+            ];
+        }
+
+
         $lead = $this->leadRepository->find(request('id'));
         $paymentMethods = PaymentMethod::pluck('name', 'id'); // Obtenha todos os métodos de pagamento
 
-        return view('admin::quotes.create', compact('lead', 'paymentMethods'));
+        return view('admin::quotes.create', compact('lead', 'paymentMethods', 'remarketing'));
     }
 
     public function getPaymentMethods()
@@ -81,18 +100,18 @@ class QuoteController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(AttributeForm $request): RedirectResponse
-    {   
+    {
 
         //Pessoa da Requisição
         $person_request = request('person');
-        
         try{
+
             // Verificação na Blacklist pelo Nome da Pessoa
             $isBlacklistedByName = DB::table('black_list')
             ->join('persons', 'black_list.person_id', '=', 'persons.id')
             ->where('persons.name', $person_request['name'])
             ->exists();
-            
+
             // Verificação na Blacklist pelo Endereço
             $shippingAddress = $request->get('shipping_address');
             $addressString = implode(' ', array_filter([
@@ -154,6 +173,16 @@ class QuoteController extends Controller
                 $lead->quotes()->attach($quote->id);
             }
 
+            if($request->get('remarketing_id')){
+                $remarketing = $this->remarketingRepository->find($request->get('remarketing_id'));
+                if ($remarketing) {
+                    $remarketing->update([
+                        'lead_id'  => $lead->id,
+                        'quote_id' => $quote->id,
+                    ]);
+                }
+            }
+
             $stage = $lead->pipeline->stages()
             ->where('id',$data_lead['lead_pipeline_stage_id'])
             ->firstOrFail();
@@ -165,7 +194,7 @@ class QuoteController extends Controller
             if($person->contact_numbers){
                 $nome = $person->name;
                 $numero = $person->contact_numbers[0]['value'];
-                $id = $lead->id; 
+                $id = $lead->id;
                 if(request('raca') == true){
                     $isEspano = request('raca');
                 }else{
@@ -180,7 +209,6 @@ class QuoteController extends Controller
             session()->flash('success', trans('admin::app.quotes.index.create-success'));
             return redirect()->route('admin.quotes.index');
         } catch (\Exception $exception) {
-            \Log::info($exception);
             return response()->json([
                 'message' => trans('admin::app.quotes.index.delete-failed'),
             ], 400);
@@ -228,7 +256,7 @@ class QuoteController extends Controller
 
         // Atualizar os dados da pessoa
         $person = $lead->person;
-        
+
         $person->update([
             'name' => $person_request['name'],
             'emails' => [0 => ['value' => $person_request['emails'][0]['value']]],
@@ -287,7 +315,7 @@ class QuoteController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $quote = $this->quoteRepository->findOrFail($id);
-        
+
         try {
             Event::dispatch('quote.delete.before', $id);
 
@@ -323,7 +351,7 @@ class QuoteController extends Controller
                 Event::dispatch('quote.delete.before', $quotes->id);
 
                 $leads = $quotes->leads;
-                
+
                 $this->quoteRepository->delete($quotes->id);
 
                 foreach ($leads as $lead) {

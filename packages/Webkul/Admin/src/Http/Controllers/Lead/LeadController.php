@@ -26,6 +26,7 @@ use Webkul\Admin\Http\Resources\LeadResource;
 use Webkul\Admin\Http\Resources\StageResource;
 use Webkul\Attribute\Repositories\AttributeRepository;
 use Webkul\Contact\Repositories\PersonRepository;
+use Webkul\Remarketing\Repositories\RemarketingRepository;
 use Webkul\DataGrid\Enums\DateRangeOptionEnum;
 use Webkul\Lead\Repositories\LeadRepository;
 use Webkul\Lead\Repositories\PipelineRepository;
@@ -62,6 +63,7 @@ class LeadController extends Controller
         protected LeadRepository $leadRepository,
         protected ProductRepository $productRepository,
         protected PersonRepository $personRepository,
+        protected RemarketingRepository $remarketingRepository,
         ZarponService $zarponService
     ) {
         request()->request->add(['entity_type' => 'leads']);
@@ -83,11 +85,11 @@ class LeadController extends Controller
         } else {
             $pipeline = $this->pipelineRepository->getDefaultPipeline();
         }
-        
+
         $stagesConstants = [
-            'STAGE_FOLLOWUP_ID' => LeadStages::STAGE_FOLLOWUP_ID, 
-            'STAGE_NEW_ID' => LeadStages::STAGE_NEW_ID, 
-            'STAGE_WOW_ID' => LeadStages::STAGE_WOW_ID, 
+            'STAGE_FOLLOWUP_ID' => LeadStages::STAGE_FOLLOWUP_ID,
+            'STAGE_NEW_ID' => LeadStages::STAGE_NEW_ID,
+            'STAGE_WOW_ID' => LeadStages::STAGE_WOW_ID,
             'STAGE_LOST_ID'=> LeadStages::STAGE_LOST_ID,
         ];
 
@@ -102,7 +104,7 @@ class LeadController extends Controller
      * Returns a listing of the resource.
      */
     public function get(): JsonResponse
-    {   
+    {
         if (request()->query('pipeline_id')) {
             $pipeline = $this->pipelineRepository->find(request()->query('pipeline_id'));
         } else {
@@ -148,7 +150,7 @@ class LeadController extends Controller
                 'stage',
                 'attribute_values',
             ])->paginate(10);
-            
+
             // Processando os leads manualmente e coletando os quotes, sem converter para array
             foreach ($leads as $lead) {
                 // Carrega os quotes com os produtos associados aos quote_items
@@ -364,7 +366,7 @@ class LeadController extends Controller
                     Event::dispatch('lead.stage.transition.actions', ['lead' => $lead, 'email_id' => $emailTemplateId]);
                 }
             }
-            
+
             //Se O stage de destino estiver contido no array
             if(in_array($stage->id, [LeadStages::STAGE_PROSPECT_ID])){
                 if($emailTemplateId){
@@ -428,7 +430,7 @@ class LeadController extends Controller
                     $quote->delete();
                 }
             }
-            
+
             $this->leadRepository->delete($id);
 
             Event::dispatch('lead.delete.after', $id);
@@ -583,14 +585,14 @@ class LeadController extends Controller
     }
 
     /***
-     * Salva um link de Rastreio no Objeto Lead 
+     * Salva um link de Rastreio no Objeto Lead
      */
     public function saveTrackingLink(Request $request)
-    {   
+    {
         $data = $request->all();
         $id = $data['lead_id'];
         $default_path = 'https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=';
-        
+
         $lead = $this->leadRepository->findOrFail($id);
 
         Event::dispatch('lead.update.before', $lead->id);
@@ -599,7 +601,7 @@ class LeadController extends Controller
         $request->validate([
             'tracking_link' => 'required'
         ]);
-        
+
         // Limpa espaços e caracteres especiais do código de rastreamento
         $tracking_code = preg_replace('/\s+/', '', $data['tracking_link']);
         $lead->tracking_link = $default_path . $tracking_code;
@@ -615,7 +617,7 @@ class LeadController extends Controller
     }
 
     public function saveObservacao(Request $request)
-    {   
+    {
         // Validação dos dados do formulário
         $validated = $request->validate([
             'status_id' => 'required|integer',
@@ -623,10 +625,10 @@ class LeadController extends Controller
             'lead_id' => 'required|integer',
             'payment_date' => 'required|date'
         ]);
-    
+
         // Busca o lead correspondente
         $lead = $this->leadRepository->find($request->input('lead_id'));
-        
+
         // Verifica se o lead foi encontrado
         if (!$lead) {
             return response()->json(['error' => 'Lead não encontrado.'], 404);  // Retorna erro 404 se o lead não for encontrado
@@ -651,7 +653,7 @@ class LeadController extends Controller
 
         // Dispara o evento após a atualização
         Event::dispatch('lead.update.after', $lead);
-        
+
         // Retorna uma resposta ou redireciona
         return redirect()->route('admin.leads.view', $lead->id)
                             ->with('success', 'Observação salva com sucesso!');
@@ -661,32 +663,36 @@ class LeadController extends Controller
      * Print and download the for the specified resource.
      */
     public function print($id): Response|StreamedResponse
-    {   
-        try{ 
-
+    {
+        try {
             $lead = $this->leadRepository->findOrFail($id);
             $quote = null;
-            
-            if($lead->quotes()->first()){
-                $quote = $lead->quotes()->with(['items.product'])->first();
-            }   
+            $remarketing = null;
 
-            // Definir o idioma com base na raça do cliente
+            if ($lead->quotes()->first()) {
+                $quote = $lead->quotes()->with(['items.product'])->first();
+            }
+
+            if ($quote) {
+                $remarketing = $this->remarketingRepository
+                    ->where('quote_id', $quote->id)
+                    ->first();
+            }
+
             if ($quote->raca == 1) {
-                App::setLocale('es');  // Espanhol
+                App::setLocale('es');
             } else {
-                App::setLocale('pt');  // Português (ou o idioma padrão)
+                App::setLocale('pt');
             }
 
             return $this->downloadPDF(
-                view('admin::quotes.pdf', compact('quote'))->render(),
+                view('admin::quotes.pdf', compact('quote', 'remarketing'))->render(),
                 'Quote_'.$quote->id.'_'.$quote->created_at->format('d-m-Y')
             );
 
         } catch (\Exception $th) {
             return response()->make('Falha ao tentar imprimir recibo: ' . $th->getMessage(), 500);
         }
-        
     }
 
     /**
