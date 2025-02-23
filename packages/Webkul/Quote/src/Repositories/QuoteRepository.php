@@ -54,13 +54,15 @@ class QuoteRepository extends Repository
      *
      * @return \Webkul\Quote\Contracts\Quote
      */
-    public function create(array $data)
+    public function create(array $data, $isRemarketing = false)
     {
-        $quote = parent::create($data);
 
-        $this->attributeValueRepository->save(array_merge($data, [
-            'entity_id' => $quote->id,
-        ]));
+        $quote = parent::create($data);
+        if($isRemarketing != true){
+            $this->attributeValueRepository->save(array_merge($data, [
+                'entity_id' => $quote->id,
+            ]));
+        }
 
         foreach ($data['items'] as $itemData) {
             $this->quoteItemRepository->create(array_merge($itemData, [

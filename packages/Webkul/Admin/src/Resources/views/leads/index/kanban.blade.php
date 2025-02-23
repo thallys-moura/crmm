@@ -68,7 +68,7 @@
                         </div>
 
                         {!! view_render_event('admin.leads.index.kanban.content.stage.header.after') !!}
-                       
+
                         {!! view_render_event('admin.leads.index.kanban.content.stage.body.before') !!}
 
                         <!-- Draggable Stage Lead Cards -->
@@ -85,13 +85,13 @@
                             @change="updateStage(stage, $event)"
                         >
                             <template #header>
-                                <div 
+                                <div
                                     class="flex flex-col items-center justify-center"
                                     v-if="! stage.leads.data.length"
                                 >
                                     <img
                                         class="dark:mix-blend-exclusion dark:invert"
-                                        src="{{ vite()->asset('images/empty-placeholders/pipedrive.svg') }}"    
+                                        src="{{ vite()->asset('images/empty-placeholders/pipedrive.svg') }}"
                                     >
 
                                     <div class="flex flex-col items-center gap-4">
@@ -122,7 +122,7 @@
                                     <div class="flex items-start justify-between">
                                         <div class="flex items-center gap-1">
                                             <x-admin::avatar ::name="element.person.name" />
-                                  
+
                                             <div class="flex flex-col gap-0.5">
                                                 <span class="text-xs font-medium">
                                                     @{{ element.person.name }}
@@ -133,7 +133,7 @@
                                                 </span>
                                             </div>
                                         </div>
-                                        
+
                                         <div
                                             class="group relative"
                                             v-if="element.rotten_days > 0"
@@ -184,14 +184,14 @@
                                             v-if="element.user"
                                         >
                                             <span class="icon-settings-user text-sm"></span>
-                                            
+
                                             @{{ element.user.name }}
                                         </div>
-                                        
+
                                         <div class="rounded-xl bg-gray-200 px-2 py-1 text-xs font-medium dark:bg-gray-800 dark:text-white" @click.stop style="user-select: text;">
                                             @{{ element.formatted_lead_value }}
                                         </div>
-                                        
+
                                         <div class="rounded-xl bg-gray-200 px-2 py-1 text-xs font-medium dark:bg-gray-800 dark:text-white" @click.stop style="user-select: text;">
                                             @{{element.quotes[0].paymentMethod.name}}
                                         </div>
@@ -207,7 +207,7 @@
                                         <div v-if="element.tracking_link" class="rounded-xl bg-green-200 px-2 py-1 text-xs font-medium dark:bg-gray-800 dark:text-white">
                                             <!-- Verifica se há um tracking link vinculado -->
                                             <button v-if="element.tracking_link"
-                                                    @click.stop="openTrackingLink(element)" 
+                                                    @click.stop="openTrackingLink(element)"
                                                     class="tracking-button">
                                                 @lang('admin::app.leads.index.kanban.track-shipment')
                                             </button>
@@ -259,7 +259,7 @@
                             columns: [],
                         }
                     },
-                    
+
                     stagesConstants: @json($stages),
                     stages: @json($pipeline->stages->toArray()),
 
@@ -739,7 +739,7 @@
 
         // Modal (Dialog) Component
         app.component('v-dialog-blacklist', {
-            template: `   
+            template: `
                         <template>
                             <Teleport to="body">
                                 <div v-if="isOpen" class="dialog-overlay">
@@ -753,8 +753,8 @@
                                         </span>
 
                                         <!-- Campo de Observação -->
-                                        <textarea 
-                                            v-model="observacao_blacklist" 
+                                        <textarea
+                                            v-model="observacao_blacklist"
                                             placeholder="Adicione uma observação..."
                                             class="input-field"
                                             rows="4"
@@ -768,7 +768,7 @@
                                     </div>
                                 </div>
                             </Teleport>
-                        </template>  
+                        </template>
             `,
 
             data() {
@@ -819,7 +819,7 @@
 
         // Modal (Dialog) Component
         app.component('v-dialog', {
-            template: `   
+            template: `
                         <template>
                             <Teleport to="body">
                                 <div v-if="isOpen" class="dialog-overlay">
@@ -833,22 +833,22 @@
                                         </span>
 
                                         <!-- Campo de input para o link de rastreamento -->
-                                        <input 
-                                            v-model="trackingLink" 
-                                            type="text" 
+                                        <input
+                                            v-model="trackingLink"
+                                            type="text"
                                             placeholder="Insira o Codigo de rastreio"
                                             class="input-field"
                                         />
 
                                         <!-- Botões de ação -->
-                                        <div class="button-group">                                         
+                                        <div class="button-group">
                                             <button @click="closeDialog" class='secondary-button'>Cancelar</button>
                                             <button @click="saveTrackingLink" class="primary-button">Adicionar</button>
                                         </div>
                                     </div>
                                 </div>
                             </Teleport>
-                        </template>  
+                        </template>
             `,
 
             data() {
@@ -891,9 +891,9 @@
 
                             // Atualiza o tracking_link do lead no frontend
                             this.lead.tracking_link = this.trackingLink;
-                            
+
                             this.$emitter.emit('add-flash', {type: 'success', message: response.data.message });
-                            
+
                             // Chama o callback de confirmação passado (se definido)
                             if (typeof this.onConfirm === 'function') {
                                 this.onConfirm(this.lead); // Passa o lead ou outros dados necessários
@@ -919,7 +919,7 @@
             justify-content: center;
             align-items: center;
         }
-        
+
         .dialog-content {
             background-color: white;
             padding: 20px;
@@ -936,9 +936,9 @@
             text-align: center;
         }
 
-  
 
-    
+
+
 
         .secondary-button {
             background: #f8f9fa;
@@ -974,9 +974,9 @@
             font-size: 18px;
             cursor: pointer;
         }
-        
-  
-        
+
+
+
         .button-group {
             display: flex;
             justify-content: space-between;

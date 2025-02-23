@@ -32,7 +32,7 @@ class DailyControlsHelper
         ];
     }
 
-    
+
     /**
      * Get the start date for the control period.
      *
@@ -79,29 +79,71 @@ class DailyControlsHelper
         return $this->dailyControlReporting->getExpensesBySources();
     }
 
-    /**
-     * Returns expenses statistics by product groups.
-     */
+
     public function getTotalExpensesByProductGroups(): mixed
     {
         return $this->dailyControlReporting->getExpensesByDailyControls();
     }
 
-    /**
- * Returns daily controls statistics grouped by product group.
- */
-public function getTotalDailyControlsStats(): array
-{
-    $productGroups = DB::table('product_group')->pluck('name', 'id')->toArray();
-
-    $stats = [];
-
-    foreach ($productGroups as $groupId => $groupName) {
-        $stats[$groupName] = [
-            'over_time' => $this->dailyControlReporting->getDailyControlsOverTimeByGroup($groupId),
-        ];
+    public function getAverageLeadsPerDay(): mixed
+    {
+        return $this->dailyControlReporting->getAverageLeadsPerDayValueProgress();
     }
 
-    return $stats;
-}
+    public function getAverageCostPerLead(): mixed
+    {
+        return $this->dailyControlReporting->getAverageCostPerLeadValueProgress();
+    }
+
+    public function getAverageCallsPerDay(): mixed
+    {
+        return $this->dailyControlReporting->getAverageCallsPerDayValueProgress();
+    }
+
+    public function getAverageSalesPerDay(): mixed
+    {
+        return $this->dailyControlReporting->getAverageSalesPerDayValueProgress();
+    }
+
+    public function getROI(): mixed
+    {
+        return $this->dailyControlReporting->getROI();
+    }
+
+    /**
+     * Returns daily controls statistics grouped by product group.
+     */
+    public function getTotalDailyControlsStats(): array
+    {
+        $productGroups = DB::table('product_group')->pluck('name', 'id')->toArray();
+
+        $stats = [];
+
+        foreach ($productGroups as $groupId => $groupName) {
+            $stats[$groupName] = [
+                'over_time' => $this->dailyControlReporting->getDailyControlsOverTimeByGroup($groupId),
+            ];
+        }
+
+        return $stats;
+    }
+
+
+    /**
+     * Returns the overall statistics.
+     */
+    public function getOverAllStats(): array
+    {
+        return [
+            'total_dailycontrols'           => $this->dailyControlReporting->getTotalDailyControlsProgress(),
+            'average_dailycontrols' => $this->dailyControlReporting->getAverageDailyControlsRevenueValueProgress(),
+            'average_expenses' => $this->dailyControlReporting->getAverageExpenses(),
+            'average_leads_per_day' => $this->dailyControlReporting->getAverageLeadsPerDayValueProgress(),
+            'average_cost_per_lead' => $this->dailyControlReporting->getAverageCostPerLeadValueProgress(),
+            'average_calls_per_day' => $this->dailyControlReporting->getAverageCallsPerDayValueProgress(),
+            'average_sales_per_day' => $this->dailyControlReporting->getAverageSalesPerDayValueProgress(),
+            'roi' => $this->dailyControlReporting->getROI(),
+
+        ];
+    }
 }

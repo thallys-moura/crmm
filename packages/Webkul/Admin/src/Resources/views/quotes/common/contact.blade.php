@@ -1,27 +1,29 @@
 {!! view_render_event('admin.quotes.create.contact_person.form_controls.before') !!}
 
-<v-contact-component :data="{{ json_encode($person ?? []) }}"></v-contact-component>
-{!! view_render_event('admin.quotes.create.contact_person.form_controls.after') !!}
+<v-contact-component
+    :data="{{ json_encode(isset($person) ? (is_array($person) ? (object) $person : $person) : (object) []) }}"
+></v-contact-component>
 
+{!! view_render_event('admin.quotes.create.contact_person.form_controls.after') !!}
 @pushOnce('scripts')
-    <script 
-        type="text/x-template" 
+    <script
+        type="text/x-template"
         id="v-contact-component-template"
-    >   
+    >
             <div class="grid w-full">
 
                 <!-- Person Name -->
                 <x-admin::form.control-group>
                         <x-admin::form.control-group.label class="required">
                             @lang('admin::app.quotes.common.contact.name')
-                        </x-admin::form.control-group.label>    
+                        </x-admin::form.control-group.label>
                         <div class="flex gap-4">
                             <x-admin::form.control-group.control
                                 type="text"
-                                id="name" 
+                                id="name"
                                 name="person[name]"
-                                value="{{ old('person.name', $person->name ?? '') }}"
-                                label="Person" 
+                                value="{{ old('person.name', (isset($person) && is_array($person)) ? $person['name'] : $person->name ?? '') }}"
+                                label="Person"
                             />
                             <label class="relative inline-flex cursor-pointer items-center">
                                 <input type="hidden" name="raca" value="0">
@@ -40,7 +42,7 @@
                             </label>
                         </div>
                 </x-admin::form.control-group>
-                
+
                 <!-- Person Email -->
                 <x-admin::form.control-group>
                     <x-admin::form.control-group.label>
@@ -49,16 +51,16 @@
                     <div class="flex gap-4">
 
                         <x-admin::attributes.edit.email />
-                        
+
                         <v-email-component
                             :attribute="{'code': 'person[emails]', 'name': 'Email'}"
-                            :value='@json(old("person.emails", $person->emails ?? ''))'
+                            :value='@json(old("person.emails", (isset($person) && is_array($person)) ? $person['emails'] : $person->emails ?? ''))'
                             :hide-fields="true"
                         ></v-email-component>
                     </div>
                 </x-admin::form.control-group>
-            
-        
+
+
                 <!-- Person Contact Numbers -->
                 <x-admin::form.control-group>
                     <x-admin::form.control-group.label class="required">
@@ -69,7 +71,7 @@
 
                         <v-phone-component
                             :attribute="{'code': 'person[contact_numbers]', 'name': 'Contact Numbers', 'type': 'phone'}"
-                            :value='@json(old("person.contact_numbers", $person->contact_numbers ?? []))'
+                            :value='@json(old("person.contact_numbers", (isset($person) && is_array($person)) ? $person['contact_numbers'] : $person->contact_numbers ?? []))'
                             validations="required"
                             :hide-fields="true"
                         ></v-phone-component>
@@ -81,7 +83,7 @@
     <script type="module">
         app.component('v-contact-component', {
             template: '#v-contact-component-template',
-            
+
             props: ['data'],
 
             data: function () {
@@ -112,11 +114,11 @@
             },
 
             methods: {
-                
+
             },
 
             mounted() {
-                
+
             }
         });
     </script>

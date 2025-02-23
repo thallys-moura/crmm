@@ -4,6 +4,7 @@ namespace Webkul\Activity\Repositories;
 
 use Illuminate\Container\Container;
 use Webkul\Core\Eloquent\Repository;
+use Webkul\Lead\Models\Lead;
 
 class ActivityRepository extends Repository
 {
@@ -35,7 +36,7 @@ class ActivityRepository extends Repository
      * @return \Webkul\Activity\Contracts\Activity
      */
     public function create(array $data)
-    {
+    {           
         $activity = parent::create($data);
 
         if (isset($data['file'])) {
@@ -57,6 +58,14 @@ class ActivityRepository extends Repository
         }
 
         foreach ($data['participants']['persons'] ?? [] as $personId) {
+            $activity->participants()->create([
+                'person_id' => $personId,
+            ]);
+        }
+
+        if(isset($data['lead_id'])){
+            $lead = Lead::find($data['lead_id']);
+
             $activity->participants()->create([
                 'person_id' => $personId,
             ]);

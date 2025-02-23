@@ -13,27 +13,34 @@ class RemarketingDatagrid extends DataGrid
      */
     public function prepareQueryBuilder(): Builder
     {
-        $tablePrefix = DB::getTablePrefix();
-
         $queryBuilder = DB::table('remarketing')
             ->select(
                 'remarketing.id',
+                'remarketing.first_name',
+                'remarketing.last_name',
+                'remarketing.address',
+                'remarketing.city',
+                'remarketing.zipcode',
+                'remarketing.bottle',
+                'remarketing.product_id',
+                'remarketing.user_id AS person_id',
                 'products.name as product_name',
-                'users.name as user_name',
-                'quotes.shipping_address',
+                'products.price as product_price',
+                'remarketing.email as email',
+                'remarketing.phone_number as phone_number',
+                DB::raw("CONCAT(remarketing.first_name, ' ', remarketing.last_name) AS user_name"),
+                DB::raw("CONCAT(remarketing.address, ', ', remarketing.zipcode) AS shipping_address"),
                 'remarketing.created_at'
             )
-            ->leftJoin('quotes', 'remarketing.quote_id', '=', 'quotes.id')
-            ->leftJoin('quote_items', 'quotes.id', '=', 'quote_items.quote_id')
-            ->leftJoin('products', 'quote_items.product_id', '=', 'products.id')
-            ->leftJoin('users', 'quotes.user_id', '=', 'users.id');
-
+            ->leftJoin('products', 'remarketing.product_id', '=', 'products.id')
+            ->whereNull('remarketing.quote_id')
+            ->whereNull('remarketing.lead_id');
         $this->setQueryBuilder($queryBuilder);
 
         // Filtros
         $this->addFilter('id', 'remarketing.id');
+        $this->addFilter('user_name', DB::raw("CONCAT(remarketing.first_name, ' ', remarketing.last_name)"));
         $this->addFilter('product_name', 'products.name');
-        $this->addFilter('user_name', 'users.name');
 
         return $queryBuilder;
     }
@@ -68,24 +75,27 @@ class RemarketingDatagrid extends DataGrid
         ]);
 
         $this->addColumn([
+            'index'      => 'bottle',
+            'label'      => 'Quantidade',
+            'type'       => 'integer',
+            'sortable'   => true,
+            'filterable' => false,
+        ]);
+
+        $this->addColumn([
+            'index'      => 'product_price',
+            'label'      => 'Preço Unitário',
+            'type'       => 'string',
+            'sortable'   => true,
+            'filterable' => false,
+        ]);
+
+        $this->addColumn([
             'index'      => 'shipping_address',
             'label'      => 'Endereço de Envio',
             'type'       => 'string',
             'sortable'   => false,
             'filterable' => false,
-            'closure'    => function ($row) {
-                $address = json_decode($row->shipping_address, true);
-                if ($address) {
-                    return implode(', ', [
-                        $address['address1'] ?? '',
-                        $address['city'] ?? '',
-                        $address['state'] ?? '',
-                        $address['postcode'] ?? '',
-                        $address['country'] ?? '',
-                    ]);
-                }
-                return 'Endereço não disponível';
-            },
         ]);
 
         $this->addColumn([
@@ -103,11 +113,22 @@ class RemarketingDatagrid extends DataGrid
     public function prepareActions(): void
     {
         $this->addAction([
-            'index'  => 'edit',
-            'icon'   => 'icon-edit',
-            'title'  => 'Editar',
+            'index'  => 'create',
+            'icon'   => 'icon-quote',
+            'title'  => 'Criar Venda',
             'method' => 'GET',
-            'url'    => fn ($row) => route('admin.remarketing.edit', $row->id),
+            'url'    => fn ($row) => route('admin.quotes.create', [
+                'remarketing_id' => $row->id,
+                'person'         => $row->first_name.' '.$row->last_name,
+                'product_id'     => $row->product_id,
+                'quantity'       => $row->bottle,
+                'price'          => $row->product_price,
+                'address'        => $row->address,
+                'city'           => $row->city,
+                'zipcode'        => $row->zipcode,
+                'email'          => $row->email,
+                'phone_number'   => $row->phone_number,
+            ]),
         ]);
 
         $this->addAction([

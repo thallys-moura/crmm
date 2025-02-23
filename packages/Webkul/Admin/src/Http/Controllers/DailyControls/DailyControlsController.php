@@ -18,12 +18,20 @@ class DailyControlsController extends Controller
 
     protected $dailyControls;
 
-    
+
     protected $typeFunctions = [
+        'over-all' => 'getOverAllStats',
+        'total_dailycontrols' => 'getTotalDailyControls',
+        'average_expenses' => 'getAverageExpenses',
         'revenue-stats' => 'getRevenueStats',
         'revenue-by-source'   => 'getTotalExpensesBySources',
         'expenses-by-product-group' => 'getTotalExpensesByProductGroups',
         'total-expenses'          => 'getTotalDailyControlsStats',
+        'average_leads_per_day'   => 'getAverageLeadsPerDayValueProgress',
+        'average_cost_per_lead'   => 'getAverageCostPerLead',
+        'average_calls_per_day'   => 'getAverageCallsPerDay',
+        'average_sales_per_day'   => 'getAverageSalesPerDay',
+        'roi'   => 'getROI',
     ];
 
     /**
@@ -51,6 +59,7 @@ class DailyControlsController extends Controller
         return view('admin::daily_controls.index')->with([
             'startDate' => $this->dailyControlsHelper->getStartDate(),
             'endDate'   => $this->dailyControlsHelper->getEndDate(),
+            'productGroups' => $this->dailyControlRepository->getProductGroups(),
         ]);
     }
 
@@ -77,14 +86,14 @@ class DailyControlsController extends Controller
 
             $this->dailyControlRepository->create($data);
 
-            
+
         } catch (\Exception $e) {
 
             return redirect()->back()
                 ->with('error', __('Ocorreu um erro ao salvar o controle diário.'))
                 ->withInput();
         }
-       
+
 
         return redirect()->route('admin.daily_controls.index')
             ->with('success', trans('admin::app.daily_controls.index.create-success'));
@@ -99,7 +108,7 @@ class DailyControlsController extends Controller
         $users = $this->userRepository->all();
         $sources = $this->dailyControlRepository->getSources();
         $groups = $this->dailyControlRepository->getProductGroups();
-        \Log::info($dailyControl);
+
         return view('admin::daily_controls.edit', compact('dailyControl', 'users', 'sources', 'groups'));
     }
 
@@ -148,13 +157,19 @@ class DailyControlsController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function stats()
-    {   
+    {
+
         $stats = $this->dailyControlsHelper->{$this->typeFunctions[request()->query('type')]}();
-        
         return response()->json([
             'statistics' => $stats,
             'date_range' => $this->dailyControlsHelper->getDateRange(),
         ]);
+    }
+
+    public function getProductGroups()
+    {
+        $productGroups = $this->dailyControlRepository->getProductGroups(); // Retorna os grupos necessários
+        return response()->json($productGroups);
     }
 
 }

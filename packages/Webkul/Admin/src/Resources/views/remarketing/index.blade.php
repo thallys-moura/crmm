@@ -42,21 +42,7 @@
                     </div>
 
                     <div class="flex items-center gap-x-2.5">
-                        <!-- Create button for Remarketing -->
-                        <div class="flex items-center gap-x-2.5">
-                            {!! view_render_event('admin.remarketing.index.create_button.before') !!}
 
-                            @if (bouncer()->hasPermission('remarketing.create'))
-                                <a 
-                                    href="{{ route('admin.remarketing.create') }}"
-                                    class="primary-button"
-                                >
-                                    @lang('admin::app.remarketing.index.create-btn')
-                                </a>
-                            @endif
-
-                            {!! view_render_event('admin.remarketing.index.create_button.after') !!}
-                        </div>
                     </div>
                 </div>
 
