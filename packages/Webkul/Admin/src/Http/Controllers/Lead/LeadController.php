@@ -42,6 +42,7 @@ use Webkul\Lead\Enums\LeadStages;
 use Webkul\User\Models\User;
 use Webkul\Blacklist\Models\Blacklist;
 use Webkul\Quote\Services\ZarponService;
+use Webkul\Admin\Constants\Stages;
 
 class LeadController extends Controller
 {
@@ -640,7 +641,7 @@ class LeadController extends Controller
 
         // Atualiza o pipeline se o status de faturamento for 1
         if ($validated['status_id'] == 1) {
-            $pipeline_stage_pago = 4;
+            $pipeline_stage_pago = Stages::PAGO;
             // Configura o `lead_pipeline_id` para 4 quando o `billing_status_id` for 1
             $lead->lead_pipeline_stage_id = $pipeline_stage_pago;
         }
