@@ -20,7 +20,7 @@ return [
         'name'       => 'admin::app.layouts.leads',
         'route'      => 'admin.leads.index',
         'sort'       => 2,
-        'icon-class' => 'icon-leads',
+        'icon-class' => 'icon-ordem',
     ],
 
     /**
@@ -31,7 +31,7 @@ return [
         'name'       => 'admin::app.layouts.quotes',
         'route'      => 'admin.quotes.index',
         'sort'       => 3,
-        'icon-class' => 'icon-quote',
+        'icon-class' => 'icon-cart',
     ],
 
     /**
@@ -130,7 +130,7 @@ return [
         'name'       => 'admin::app.layouts.products',
         'route'      => 'admin.products.index',
         'sort'       => 7,
-        'icon-class' => 'icon-product',
+        'icon-class' => 'icon-box',
     ],
 
     /**
@@ -141,7 +141,7 @@ return [
         'name'       => 'admin::app.layouts.bank',
         'route'      => 'admin.bank.index',
         'sort'       => 8,
-        'icon-class' => 'icon-dollar',
+        'icon-class' => 'icon-banco',
     ],
 
     /**
@@ -152,7 +152,7 @@ return [
         'name'       => 'admin::app.layouts.expenses',
         'route'      => 'admin.expenses.index',
         'sort'       => 9,
-        'icon-class' => 'icon-dollar',
+        'icon-class' => 'icon-despesa2',
     ],
 
     
@@ -164,7 +164,7 @@ return [
         'name'       => 'admin::app.layouts.blacklist',
         'route'      => 'admin.blacklist.index',
         'sort'       => 10,
-        'icon-class' => 'icon-contact',
+        'icon-class' => 'icon-blacklist',
     ],
 
 
@@ -187,7 +187,7 @@ return [
         'name'       => 'admin::app.layouts.daily-controls',
         'route'      => 'admin.daily_controls.index',
         'sort'       => 12,
-        'icon-class' => 'icon-stats-up',
+        'icon-class' => 'icon-controle',
     ],
 
     /**
@@ -198,7 +198,7 @@ return [
         'name'       => 'admin::app.layouts.settings',
         'route'      => 'admin.settings.index',
         'sort'       => 13,
-        'icon-class' => 'icon-setting',
+        'icon-class' => 'icon-settings',
     ], [
         'key'        => 'settings.user',
         'name'       => 'admin::app.layouts.user',

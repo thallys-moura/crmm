@@ -1,259 +1,271 @@
-.icon-notification {
+.icon-success {
+  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe956;');
+}
+.icon-settings {
+  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe955;');
+}
+.icon-box {
+  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe954;');
+}
+.icon-despesa2 {
+  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe950;');
+}
+.icon-despesa {
+  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe953;');
+}
+.icon-banco {
+  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe958;');
+}
+.icon-controle {
+  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe959;');
+}
+.icon-blacklist {
+  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe952;');
+}
+.icon-cart {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe900;');
 }
-.icon-configuration {
+.icon-ordem {
+  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe957;');
+}
+.icon-notification {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe901;');
 }
-.icon-note {
+.icon-configuration {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe902;');
 }
-.icon-edit {
+.icon-note {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe903;');
 }
-.icon-calender {
+.icon-edit {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe904;');
 }
-.icon-delete {
+.icon-calender {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe905;');
 }
-.icon-more {
+.icon-delete {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe906;');
 }
-.icon-checkbox-multiple {
+.icon-more {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe907;');
 }
-.icon-checkbox-select {
+.icon-checkbox-multiple {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe908;');
 }
-.icon-checkbox-outline {
+.icon-checkbox-select {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe909;');
 }
-.icon-message {
+.icon-checkbox-outline {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe90a;');
 }
-.icon-video {
+.icon-message {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe90b;');
 }
-.icon-attachment {
+.icon-video {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe90c;');
 }
-.icon-sent {
+.icon-attachment {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe90d;');
 }
-.icon-call {
+.icon-sent {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe90e;');
 }
-.icon-meeting {
+.icon-call {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe90f;');
 }
-.icon-ligh {
+.icon-meeting {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe910;');
 }
-.icon-dark {
+.icon-light {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe911;');
 }
-.icon-mail {
+.icon-dark {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe912;');
 }
-.icon-leads {
+.icon-mail {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe913;');
 }
-.icon-filter {
+.icon-leads {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe914;');
 }
-.icon-setting {
+.icon-filter {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe915;');
 }
-.icon-product {
+.icon-setting {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe916;');
 }
-.icon-contact {
+.icon-product {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe917;');
 }
-.icon-activity {
+.icon-contact {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe918;');
 }
-.icon-perosnal {
+.icon-activity {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe919;');
 }
-.icon-quote {
+.icon-perosnal {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe91a;');
 }
-.icon-dashboard {
+.icon-quote {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe91b;');
 }
-.icon-cross-large {
+.icon-dashboard {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe91c;');
 }
-.icon-left-arrow {
+.icon-cross-large {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe91d;');
 }
-.icon-right-arrow {
+.icon-left-arrow {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe91e;');
 }
-.icon-up-arrow {
+.icon-right-arrow {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe91f;');
 }
-.icon-down-arrow {
+.icon-up-arrow {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe920;');
 }
-.icon-search {
+.icon-down-arrow {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe921;');
 }
-.icon-add {
+.icon-search {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe922;');
 }
-.icon-add-2 {
+.icon-add {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe923;');
 }
-.icon-radio-selected {
+.icon-add-2 {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe924;');
 }
-.icon-radio-normal {
+.icon-radio-selected {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe925;');
 }
-.icon-folder {
+.icon-radio-normal {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe926;');
 }
-.icon-file {
+.icon-folder {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe927;');
 }
-.icon-eye {
+.icon-file {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe928;');
 }
-.icon-eye-hide {
+.icon-eye {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe929;');
 }
-.icon-percentage {
+.icon-eye-hide {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe92a;');
 }
-.icon-dollar {
+.icon-percentage {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe92b;');
 }
-.icon-bookmark-not-selected {
+.icon-dollar {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe92c;');
 }
-.icon-bookmark-selected {
+.icon-bookmark-not-selected {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe92d;');
 }
-.icon-list {
+.icon-bookmark-selected {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe92e;');
 }
-.icon-enter {
+.icon-list {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe92f;');
 }
-.icon-kanban {
+.icon-enter {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe930;');
 }
-.icon-tick {
+.icon-kanban {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe931;');
 }
-.icon-attached-file {
+.icon-tick {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe932;');
 }
-.icon-forward {
+.icon-attached-file {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe933;');
 }
-.icon-location {
+.icon-forward {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe934;');
 }
-.icon-pin {
+.icon-location {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe935;');
 }
-.icon-print {
+.icon-pin {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe936;');
 }
-.icon-reply-all {
+.icon-print {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe937;');
 }
-.icon-reply {
+.icon-reply-all {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe938;');
 }
-.icon-rotten {
+.icon-reply {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe939;');
 }
-.icon-tag {
+.icon-rotten {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe93a;');
 }
-.icon-settings-attributes {
+.icon-tag {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe93b;');
 }
-.icon-settings-flow {
+.icon-settings-attributes {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe93c;');
 }
-.icon-settings-group {
+.icon-settings-flow {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe93d;');
 }
-.icon-settings-mail {
+.icon-settings-group {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe93e;');
 }
-.icon-settings-pipedrive {
+.icon-settings-mail {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe93f;');
 }
-.icon-settings-roles {
+.icon-settings-pipedrive {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe940;');
 }
-.icon-settings-sources {
+.icon-settings-roles {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe941;');
 }
-.icon-settings-tag {
+.icon-settings-sources {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe942;');
 }
-.icon-settings-type {
+.icon-settings-tag {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe943;');
 }
-.icon-settings-user {
+.icon-settings-type {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe944;');
 }
-.icon-settings-webforms {
+.icon-settings-user {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe945;');
 }
-.icon-settings-webhooks {
+.icon-settings-webforms {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe946;');
 }
-.icon-attribute {
+.icon-settings-webhooks {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe947;');
 }
-.icon-download {
+.icon-attribute {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe948;');
 }
-.icon-move {
+.icon-download {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe949;');
 }
-.icon-organisation {
+.icon-move {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe94a;');
 }
-.icon-role {
+.icon-organisation {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe94b;');
 }
-.icon-user {
+.icon-role {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe94c;');
 }
-.icon-warehouse {
+.icon-user {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe94d;');
 }
-.icon-icon-settings-warehouse {
+.icon-warehouse {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe94e;');
 }
-.icon-controle-diario {
+.icon-icon-settings-warehouse {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe94f;');
 }
 .icon-sidebar {
-  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe950;');
-}
-.icon-blacklist {
   *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe951;');
-}
-.icon-cart {
-  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe952;');
-}
-.icon-bank {
-  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe953;');
-}
-.icon-despesa {
-  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe954;');
-}
-.icon-remarketing {
-  *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe955;');
 }
 

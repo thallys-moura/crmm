@@ -175,7 +175,7 @@
         <v-dark>
             <div class="flex">
                 <span
-                    class="{{ request()->cookie('dark_mode') ? 'icon-light' : 'icon-dark' }} p-1.5 rounded-md text-2xl cursor-pointer transition-all hover:bg-gray-100 dark:hover:bg-gray-950"
+                    class="{{ request()->cookie('dark_mode') ? 'icon-ligh' : 'icon-dark' }} p-1.5 rounded-md text-2xl cursor-pointer transition-all hover:bg-gray-100 dark:hover:bg-gray-950"
                 ></span>
             </div>
         </v-dark>
